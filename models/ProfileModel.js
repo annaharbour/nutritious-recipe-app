@@ -9,10 +9,6 @@ const ProfileSchema = new mongoose.Schema({
     bio: {
         type: String
     },
-    projects: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'plant'
-    }],
     createdAt: {
         type: Date,
         default: Date.now

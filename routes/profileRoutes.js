@@ -6,27 +6,39 @@ const { check, validationResult } = require('express-validator');
 const Profile = require('../models/ProfileModel');
 const User = require('../models/UserModel');
 const Post = require('../models/PostModel');
+const Recipe = require('../models/RecipeModel')
 
 //Get /profile/me
 //@desc Get current users profile
 //@access Private
 router.get('/me', auth, async (req, res) => {
-    try {
-        const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name']);
+  try {
+    const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name']);
 
-        if (!profile) {
-            return res.status(400).json({ msg: 'There is no profile for this user' });
-        }
-
-        // const plants = await Plant.find({ user: req.user.id } ??? Get plants for this user so we can display to the dashboard
-
-        res.json(profile);
-    
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
+    if (!profile) {
+      // Return an empty response with an empty array of recipes
+      return res.json({ recipes: [] });
     }
+
+    // Fetch the user's associated recipes using the userId field
+    const recipes = await Recipe.find({ userId: req.user.id });
+
+    const profileWithRecipes = {
+      _id: profile._id,
+      user: profile.user,
+      bio: profile.bio,
+      createdAt: profile.createdAt,
+      recipes: recipes, // Include the associated recipes in the profile
+    };
+
+    res.json(profileWithRecipes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
+
+
 
 //@route POST /profile/me
 //@desc Create or update user profile

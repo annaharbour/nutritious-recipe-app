@@ -10,7 +10,6 @@ const User = require('../models/UserModel');
 // @route POST api/posts
 //@desc Create a post
 // @access Private
-
 router.post('/', 
     auth,
     check('text', 'Text is required').notEmpty(),
@@ -21,10 +20,12 @@ router.post('/',
         }
         try {
             const user = await User.findById(req.user.id).select('-password');
+            const {text, recipeId } = req.body;
             const newPost = new Post({
-                text: req.body.text,
+                text,
                 name: user.name,
-                user: req.user.id
+                user: req.user.id,
+                recipe: recipeId,
             })
             const post = await newPost.save()
             res.json(post);
@@ -40,7 +41,9 @@ router.post('/',
 // @access   Private
 router.get('/', auth, async (req, res) => {
   try {
-    const posts = await Post.find().sort({ date: -1 });
+    const {recipeId} = req.query;
+    const query = recipeId ? { recipe: recipeId } : {};
+    const posts = await Post.find(query).sort({ date: -1 });
     res.json(posts);
   } catch (err) {
     console.error(err.message);
@@ -92,9 +95,6 @@ router.delete('/:id', [auth, checkObjectId('id')], async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
-
-
 
 // @route    PUT api/posts/like/:id
 // @desc     Like a post
@@ -166,7 +166,7 @@ router.post(
         const newComment = {
           text: req.body.text,
           name: user.name,
-          user: req.user.id
+          user: req.user.id,
         };
   
         post.comments.unshift(newComment);

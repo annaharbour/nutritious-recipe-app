@@ -19,14 +19,15 @@ router.get('/', (req, res) => res.send('Users Route'));
 router.post(
   '/register', [
   check('name', 'Name is required').notEmpty(),
-  check('email', 'Please include a valid email').isEmail().notEmpty(),
-  check('phone', 'Please enter a valid phone number').isLength({ min: 6 }).notEmpty(),
+  check('email', 'Please include a valid email').isEmail(),
+  check('phone', 'Please enter a valid phone number').matches(/^\d{9,}$/),
   check(
     'password',
     'Please enter a password with 6 or more characters'
-  ).isLength({ min: 6 }).notEmpty()
+  ).isLength({ min: 6 })
 ],
   async (req, res) => {
+    console.log(req.body.phone)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });

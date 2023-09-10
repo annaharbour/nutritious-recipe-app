@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = require('mongoose').Schema
 
 const PostSchema = new mongoose.Schema({
+    recipe: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'recipes',
+        required: true,
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
@@ -47,3 +52,4 @@ const PostSchema = new mongoose.Schema({
 });
 
 module.exports =  mongoose.model('post', PostSchema);
+
