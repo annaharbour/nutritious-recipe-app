@@ -16,6 +16,18 @@ router.get('/', async (req, res) => {
     }
   });
   
+// Route to fetch ingredient categories
+router.get('/categories', async (req, res) => {
+  try {
+    // Query your database to get a list of unique categories
+    const categories = await Ingredient.distinct('category');
+
+    res.json(categories);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
 
 // Route to get ingredients by category
 router.get('/:category', async (req, res) => {

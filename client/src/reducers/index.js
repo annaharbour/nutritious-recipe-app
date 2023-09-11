@@ -4,6 +4,7 @@ import auth from './auth';
 import profile from './profile';
 import post from './post';
 import recipes from './recipes'
+import ingredients from './ingredients';
 
 
 export default combineReducers({
@@ -11,5 +12,6 @@ export default combineReducers({
     auth,
     profile,
     post,
-    recipes
+    recipes,
+    ingredients
 });

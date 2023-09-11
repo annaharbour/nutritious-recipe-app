@@ -1,111 +1,79 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { createRecipe } from '../../actions/recipe';
+import { fetchIngredientCategories, fetchIngredientsByCategory } from '../../actions/ingredients';
 
-const initialState = {
-    name: '',
-    category: '',
-    ingredients: [],
-    isBowl: false,
-    toppings: [],
-}
+const RecipeForm = ({
+  categories,
+  fetchIngredientCategories,
+  fetchIngredientsByCategory,
+}) => {
+  useEffect(() => {
+    // Fetch ingredient categories when the component mounts
+    fetchIngredientCategories();
 
-const RecipeForm = ({createRecipe}) => {
-  const [formData, setFormData] = useState(initialState);
+    // Fetch ingredients for all categories when the component mounts
+    const fetchAllIngredients = async () => {
+      try {
+        // Create an array of promises for fetching ingredients for each category
+        const ingredientPromises = Object.keys(categories)
+          .filter((categoryName) => !['0', '1', '2', '3', '4'].includes(categoryName))
+          .map(async (category) => {
+            const response = await fetchIngredientsByCategory(category);
+            return {
+              category,
+              ingredients: response.data,
+            };
+          });
 
-  const { name, category, ingredients, isBowl, toppings } = formData;
+        // Wait for all promises to resolve
+        const allIngredients = await Promise.all(ingredientPromises);
 
-  const navigate = useNavigate();
+        // Now you have all ingredients, and you can handle them as needed
+        console.log('All ingredients:', allIngredients);
+      } catch (error) {
+        console.error('Error fetching ingredients:', error);
+      }
+    };
 
-  const onChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    fetchAllIngredients();
+  }, [fetchIngredientCategories, fetchIngredientsByCategory, categories]);
 
-  // Handle checkbox separately
-  if (type === 'checkbox') {
-    setFormData({
-      ...formData,
-      [name]: checked, // Set isBowl to the checkbox value (true/false)
-    });
-  } else {
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  }
-  };
-
-  const onSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    createRecipe(formData)
-      .then((success) => {
-        if (success) {
-          navigate('/dashboard'); // Redirect on success
-        }
-      });
+    // Handle form submission logic here
   };
-  
-
 
   return (
-    <section className='container'>
-        <h1 className='large text-primary'>Make a Smoothie</h1>
-        <p className='lead'>Let's get started</p>
-        <form className="form" onSubmit={onSubmit}>
-        <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={onChange}
-            placeholder="Recipe Name"
-        />
-        {/* Replace ingredients text input with mapping through of fruit, veg, protein, fat, superfoods from ingredients database like assignments by day in pony club app */}
-        <input
-            type="text"
-            name="ingredients"
-            value={ingredients}
-            onChange={onChange}
-            placeholder="Ingredients"
-        />
-        <label>
-        <input
-            type="checkbox"
-            name="isBowl"
-            value={isBowl}
-            checked={isBowl}
-            onChange={onChange}
-        />
-        Make a smoothie bowl
-        </label>
-        {/* Conditionally render the toppings field based on isBowl */}
-        <br></br>
-        {isBowl && (
-            <label>
-                <input
-                type="text"
-                name="toppings"
-                value={toppings}
-                onChange={onChange}
-                placeholder='Toppings'
-                />
-            </label>
-        )}
-        <button type="submit" className='btn btn primary my-1'>Create Recipe</button>
-        <Link className="btn btn-light my-1" to="/dashboard">
-            Go Back
-            </Link>
-        </form>
-    </section>
+    <div>
+      <h2>Create a Recipe</h2>
+      <form onSubmit={handleSubmit}>
+        {Object.keys(categories)
+          .filter((categoryName) => !['0', '1', '2', '3', '4'].includes(categoryName))
+          .map((categoryName) => (
+            <div key={categoryName}>
+              <h3>{categoryName}</h3>
+              <select name={categoryName}>
+                <option value="">Select an ingredient</option>
+                {Array.isArray(categories[categoryName]) &&
+                  categories[categoryName].map((ingredient) => (
+                    <option key={ingredient.id} value={ingredient.id}>
+                      {ingredient.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          ))}
+        <button type="submit">Create Recipe</button>
+      </form>
+    </div>
   );
 };
 
-RecipeForm.propTypes = {
-    createRecipe: PropTypes.func.isRequired
-}
-
 const mapStateToProps = (state) => ({
-    recipe: state.recipe
-})
+  categories: state.ingredients.categories,
+});
 
-export default connect(mapStateToProps, {createRecipe})(RecipeForm);
+export default connect(mapStateToProps, {
+  fetchIngredientCategories,
+  fetchIngredientsByCategory,
+})(RecipeForm);
