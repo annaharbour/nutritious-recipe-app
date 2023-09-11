@@ -36,7 +36,7 @@ const RecipeForm = ({
     };
 
     fetchAllIngredients();
-  }, [fetchIngredientCategories, fetchIngredientsByCategory, categories]);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
