@@ -1,12 +1,12 @@
+// require('dotenv').config();
+require('dotenv');
 const express = require('express');
-const connectDB = require('./config/db');
+const connectDB = require('./db');
 
 const app = express();
 
 // Middleware to parse incoming JSON data
 app.use(express.json());
-
-
 connectDB();
 
 app.get('/', (req, res) => res.send('API Running'));

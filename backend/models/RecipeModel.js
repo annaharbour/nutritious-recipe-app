@@ -9,12 +9,12 @@ const toppingSchema = new mongoose.Schema({
 
 const recipeSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    // change ingredients to refs after seeding ingredients database
+    // TODO: change ingredients to refs after seeding ingredients database
     ingredients: [{
         type: String,
         required: true
     }],
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Link to the user who created the recipe,
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // TODO: Link to the user who created the recipe,
     isBowl: {
         type: Boolean,
         default: false
