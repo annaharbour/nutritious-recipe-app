@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const jwtSecret = process.env.JWT_SECRET;
+const jwtSecret = process.env.jwtSecret;
 const {check, validationResult} = require('express-validator');
 
 const User = require('../models/UserModel');
@@ -11,7 +11,6 @@ const User = require('../models/UserModel');
 //@desc
 //@access Public
 router.get('/', (req, res) => res.send('Users Route'));
-
 
 // @route    POST api/users
 // @desc     Register user
