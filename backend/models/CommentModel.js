@@ -1,22 +1,20 @@
 const mongoose = require('mongoose');
 const Schema = require('mongoose').Schema
 
-const PostSchema = new mongoose.Schema({
+const CommentModel = new mongoose.Schema({
     recipe: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'recipes',
         required: true,
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'users',
+        required: true,
     },
     text: {
         type: String,
         required: true
-    },
-    name: {
-        type: String
     },
     likes: [
         {
@@ -26,7 +24,7 @@ const PostSchema = new mongoose.Schema({
             }
         }
     ],
-    comments: [
+    responses: [
         {
             user: {
                 type: Schema.Types.ObjectId,
@@ -51,5 +49,5 @@ const PostSchema = new mongoose.Schema({
     }
 });
 
-module.exports =  mongoose.model('post', PostSchema);
+module.exports =  mongoose.model('comment', CommentModel);
 

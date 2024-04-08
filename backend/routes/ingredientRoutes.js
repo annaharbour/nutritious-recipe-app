@@ -1,8 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const auth = require('../middleware/auth');
-const checkObjectId = require('../middleware/checkObjectId');
 const Ingredient = require('../models/IngredientModel'); // Import your Mongoose Ingredient model
 
 // Route to get all ingredients
