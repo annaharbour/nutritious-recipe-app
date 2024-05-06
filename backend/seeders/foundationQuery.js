@@ -25,7 +25,7 @@ const getFoodData = async (ids) => {
 	} catch (error) {
 		console.error("Error fetching data:", error);
 	}
-};
+}; 
 
 const formatFoodData = (foods) => {
 	return foods.map((food) => ({
