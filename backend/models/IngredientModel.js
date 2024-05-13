@@ -18,4 +18,5 @@ const ingredientSchema = new mongoose.Schema({
     gramWeight: Number,
   }]
 });
+
   module.exports =  mongoose.model('ingredient', ingredientSchema);
