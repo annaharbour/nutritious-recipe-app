@@ -1,4 +1,4 @@
-const Ingredient = require("../models/IngredientModel"); // Import your Mongoose Ingredient model
+const Ingredient = require("../models/IngredientModel"); 
 
 const getAllIngredients = async (req, res) => {
 	try {

@@ -1,7 +1,6 @@
 const User = require("../models/UserModel");
 const Comment = require("../models/CommentModel");
 const Recipe = require("../models/RecipeModel");
-const Profile = require("../models/ProfileModel");
 
 const getUsers = async (req, res) => {
 	try {

@@ -1,27 +1,10 @@
-const { check, validationResult } = require("express-validator");
 const Recipe = require("../models/RecipeModel");
 
 const createRecipe = async (req, res) => {
-	const validateInputs = [
-		check("ingredients", "Please include at least one ingredient").isArray({
-			min: 1,
-		}),
-		check("isBowl", "isSmoothieBowl must be a boolean").isBoolean(),
-		check("toppings", "Toppings must be an array if it is a smoothie bowl")
-			.optional()
-			.isArray(),
-	];
-	validateInputs.forEach((validation) => validation.run(req));
-
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
-	}
-
 	const { name, ingredients, isBowl, toppings } = req.body;
 	const userId = req.user.id;
 
-	const newRecipe = new Recipe({
+	const recipe = new Recipe({
 		name,
 		ingredients,
 		userId,
@@ -30,10 +13,17 @@ const createRecipe = async (req, res) => {
 	});
 
 	try {
-		const recipe = await newRecipe.save();
+		await recipe.save();
+		try {
+			await recipe.calculateNutrition();
+		} catch(err) {
+			console.log(err)
+		}
+		
 		return res.json(recipe);
-	} catch (err) {
-		return res.status(500).json({ error: "Failed to create the recipe." });
+	}
+	catch (err) {
+		return res.status(500).json({ error: "Failed to create recipe." });
 	}
 };
 
