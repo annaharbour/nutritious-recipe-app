@@ -1,7 +1,9 @@
 const Recipe = require("../models/RecipeModel");
 
+
 const createRecipe = async (req, res) => {
 	const { name, ingredients, isBowl, toppings } = req.body;
+	
 	const userId = req.user.id;
 
 	const recipe = new Recipe({
@@ -13,17 +15,12 @@ const createRecipe = async (req, res) => {
 	});
 
 	try {
+		await recipe.calculateNutrition();
 		await recipe.save();
-		try {
-			await recipe.calculateNutrition();
-		} catch(err) {
-			console.log(err)
-		}
-		
-		return res.json(recipe);
+		return res.status(200).json(recipe);
 	}
 	catch (err) {
-		return res.status(500).json({ error: "Failed to create recipe." });
+		return res.status(500).json({ message: err.message });
 	}
 };
 

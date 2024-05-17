@@ -13,9 +13,10 @@ const recipeSchema = new mongoose.Schema({
 	name: { type: String, required: true },
 	ingredients: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "ingredient",
-		}
+			_id: { type: mongoose.Schema.Types.ObjectId, ref: "ingredient" },
+			amount: Number,
+			portionId: Number,
+		},
 	],
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 	isBowl: {
@@ -28,33 +29,44 @@ const recipeSchema = new mongoose.Schema({
 		default: {},
 	},
 });
-recipeSchema.methods.calculateNutrition = async function () {
-	let totalNutrition = {};
 
-	// Iterate over each ingredient ID in the ingredients array
-	for (const ingredientId of this.ingredients) {
-		// Find the ingredient by ID
-		const ingredient = await Ingredient.findById(ingredientId);
-		if (!ingredient) {
-			throw new Error(`Ingredient with id ${ingredientId} not found`);
+recipeSchema.methods.calculateNutrition = async function () {
+	const totalNutrition = {};
+
+	for (const ingredient of this.ingredients) {
+		const { _id, amount, portionId } = ingredient;
+
+		const foundIngredient = await Ingredient.findById(_id);
+		if (!foundIngredient) {
+			throw new Error(
+				`Ingredient with id ${ingredient.ingredientId} not found`
+			);
 		}
 
-		// Iterate over each nutrient in the ingredient
-		for (const nutrient of ingredient.foodNutrients) {
-			// Sum up the nutrient amount
+		const ingredientNutrition = foundIngredient.calculateNutrition(
+			portionId,
+			amount
+		);
+
+		for (const nutrient of ingredientNutrition) {
 			if (!totalNutrition[nutrient.name]) {
-				totalNutrition[nutrient.name] = nutrient.amount;
+				totalNutrition[nutrient.name] = {
+					_id: nutrient._id,
+					name: nutrient.name,
+					amount: nutrient.amount,
+					unitName: nutrient.unitName,
+				};
 			} else {
-				totalNutrition[nutrient.name] += nutrient.amount;
+				totalNutrition[nutrient.name].amount += nutrient.amount;
 			}
 		}
 	}
 
-	// Save the total nutrition to the recipe and return it
 	this.nutrition = totalNutrition;
 	await this.save();
 
 	return totalNutrition;
+	// return Object.values(totalNutrition);
 };
 
 module.exports = mongoose.model("recipe", recipeSchema);
