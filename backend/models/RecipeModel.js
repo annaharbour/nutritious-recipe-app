@@ -66,7 +66,6 @@ recipeSchema.methods.calculateNutrition = async function () {
 	await this.save();
 
 	return totalNutrition;
-	// return Object.values(totalNutrition);
 };
 
 module.exports = mongoose.model("recipe", recipeSchema);

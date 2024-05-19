@@ -1,9 +1,8 @@
 const Recipe = require("../models/RecipeModel");
 
-
 const createRecipe = async (req, res) => {
 	const { name, ingredients, isBowl, toppings } = req.body;
-	
+
 	const userId = req.user.id;
 
 	const recipe = new Recipe({
@@ -18,8 +17,7 @@ const createRecipe = async (req, res) => {
 		await recipe.calculateNutrition();
 		await recipe.save();
 		return res.status(200).json(recipe);
-	}
-	catch (err) {
+	} catch (err) {
 		return res.status(500).json({ message: err.message });
 	}
 };
@@ -43,10 +41,11 @@ const updateRecipeById = async (req, res) => {
 			{ name, ingredients, isBowl, toppings },
 			{ new: true }
 		);
+		await updatedRecipe.calculateNutrition();
 		await updatedRecipe.save();
-		return res.json(updatedRecipe);
+		return res.status(200).json(updatedRecipe);
 	} catch (err) {
-		return res.status(500).json({ error: "Failed to update the recipe." });
+		return res.status(500).json({ message: err.message });
 	}
 };
 
@@ -60,7 +59,7 @@ const getRecipeById = async (req, res) => {
 		}
 		return res.json(recipe);
 	} catch (err) {
-		return res.status(500).json({ error: "Failed to fetch the recipe." });
+		return res.status(500).json({ error: err.message });
 	}
 };
 
