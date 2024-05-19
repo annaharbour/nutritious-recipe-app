@@ -45,6 +45,15 @@ export const updateRecipe = async (updatedRecipe) => {
 	}
 };
 
+export const getRecipesByUserId = async (userId) => {
+	try {
+		const res = await axiosInstance.get(`/user/${userId}`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export const deleteRecipe = async (id) => {
 	try {
 		const res = await axiosInstance.delete(`/${id}`);

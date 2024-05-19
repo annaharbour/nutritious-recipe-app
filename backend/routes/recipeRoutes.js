@@ -7,6 +7,7 @@ const {
 	updateRecipeById,
 	deleteRecipeById,
 	getRecipes,
+	getRecipesByUserId,
 } = require("../controllers/recipeController");
 
 // POST /api/recipes
@@ -22,5 +23,8 @@ router
 	.get(getRecipeById)
 	.put(auth, updateRecipeById)
 	.delete(auth, deleteRecipeById);
+
+// GET /api/recipes/user/:userId
+router.route("/user/:userId").get(getRecipesByUserId);
 
 module.exports = router;

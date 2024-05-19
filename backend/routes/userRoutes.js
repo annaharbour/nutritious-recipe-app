@@ -17,4 +17,6 @@ router.route("/").get(auth, getUsers);
 // @access Private
 router.route("/:id").get(auth, getUser).delete(auth, deleteUser);
 
+
+
 module.exports = router;

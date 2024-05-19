@@ -1,4 +1,5 @@
 const Recipe = require("../models/RecipeModel");
+const User = require("../models/UserModel");
 
 const createRecipe = async (req, res) => {
 	const { name, ingredients, isBowl, toppings } = req.body;
@@ -71,10 +72,22 @@ const deleteRecipeById = async (req, res) => {
 		if (!recipe) {
 			return res.status(404).json({ error: "Recipe not found." });
 		}
-		return res.json({ message: "Recipe removed" });
+		return res.status(200).json({ message: "Recipe removed" });
 	} catch (err) {
 		return res.status(500).json({ error: "Failed to delete the recipe." });
 	}
+};
+
+const getRecipesByUserId = async (req, res) => {
+	const userId = req.params.userId;
+	try {
+		const recipes = await Recipe.find({ userId: userId });
+		return recipes
+			? res.status(200).json(recipes)
+			: res.status(404).json({ error: "No recipes found." });
+	} catch (err) {
+		return res.status(500).json({ error: "Failed to fetch recipes." });
+	} 
 };
 
 module.exports = {
@@ -83,4 +96,5 @@ module.exports = {
 	getRecipeById,
 	updateRecipeById,
 	deleteRecipeById,
+	getRecipesByUserId
 };
