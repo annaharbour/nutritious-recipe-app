@@ -2,17 +2,32 @@ import axios from "axios";
 import userUrl from "./endpoints";
 
 const axiosInstance = axios.create({
-    baseURL: `${userUrl}`,
-})
+	baseURL: `${userUrl}`,
+});
 
-export function getAllUsers(){
-    return axiosInstance.get('/');
-}
+export const getAllUsers = async () => {
+	try {
+		const res = await axiosInstance.get("/");
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};
 
-export function getUserById(id){
-    return axiosInstance.get(`/${id}`);
-}
+export const getUserById = async (id) => {
+	try {
+		const res = await axiosInstance.get(`/${id}`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};
 
-export function deleteUser(id){
-    return axiosInstance.delete(`/${id}`);
-}
+export const deleteUser = async (id) => {
+	try {
+		const res = await axiosInstance.delete(`/${id}`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};

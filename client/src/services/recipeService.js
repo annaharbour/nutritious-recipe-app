@@ -5,26 +5,51 @@ const axiosInstance = axios.create({
 	baseURL: `${recipeUrl}`,
 });
 
-export function getRecipes() {
-	return axiosInstance.get("/");
-}
+export const getRecipes = async () => {
+	try {
+		const res = await axiosInstance.get("/");
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};
 
-export function getRecipeById(id) {
-	return axiosInstance.get(`/${id}`);
-}
+export const getRecipeById = async (id) => {
+	try {
+		const res = await axiosInstance.get(`/${id}`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};
 
-export function createRecipe(recipe) {
-	return axiosInstance.post("/", {
-		recipe,
-	});
-}
+export const createRecipe = async (recipe) => {
+	try {
+		const res = await axiosInstance.post("/", {
+			recipe,
+		});
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};
 
-export function updateRecipe(recipe) {
-	return axiosInstance.put("/", {
-		recipe,
-	});
-}
+export const updateRecipe = async (updatedRecipe) => {
+	try {
+		const res = await axiosInstance.put("/", {
+			updatedRecipe,
+		});
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};
 
-export function deleteRecipe(id) {
-	return axiosInstance.delete(`/${id}`);
-}
+export const deleteRecipe = async (id) => {
+	try {
+		const res = await axiosInstance.delete(`/${id}`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};

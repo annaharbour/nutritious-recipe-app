@@ -2,26 +2,30 @@ import axios from "axios";
 import ingredientsUrl from "./endpoints";
 
 const axiosInstance = axios.create({
-    baseURL: `${ingredientsUrl}`,
-})
+	baseURL: `${ingredientsUrl}`,
+});
 
-export function getIngredients(){
-    return axiosInstance.get('/');
-}
+export const getIngredients = async () => {
+	try {
+		const res = await axiosInstance.get("/");
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};
 
-export function getIngredientCategories(){
-    return axiosInstance.get('/categories');
-}
+export const getIngredientsByCategory = async (category) => {
+	try {
+		const res = await axiosInstance.get(`/${category}`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+};
 
-export function getIngredientsByCategory(category){
-    return axiosInstance.get(`/${category}`);
-}
-
-export function getIngredientById(id){
-    return axiosInstance.get(`/${id}`);
-}
-
-export function deleteIngredient(id){
-    return axiosInstance.delete(`/${id}`);
-}
-
+export const getIngredientById = async (id) => {
+	try {
+		const res = await axiosInstance.get(`/${id}`);
+		return res;
+	} catch (error) {}
+};
