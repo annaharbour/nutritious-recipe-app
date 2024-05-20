@@ -11,6 +11,11 @@ const toppingSchema = new mongoose.Schema({
 
 const recipeSchema = new mongoose.Schema({
 	name: { type: String, required: true },
+	userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+	rating: {
+		type: mongoose.Schema.Types.ObjectId,
+	 	ref: "rating"
+	},
 	ingredients: [
 		{
 			_id: { type: mongoose.Schema.Types.ObjectId, ref: "ingredient" },
@@ -18,16 +23,15 @@ const recipeSchema = new mongoose.Schema({
 			portionId: Number,
 		},
 	],
-	userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 	isBowl: {
 		type: Boolean,
 		default: false,
 	},
 	toppings: [toppingSchema],
-	nutrition: {
+	nutrition: [{
 		type: mongoose.Schema.Types.Mixed,
-		default: {},
-	},
+		default: {},}
+	]
 });
 
 recipeSchema.methods.calculateNutrition = async function () {
@@ -62,10 +66,13 @@ recipeSchema.methods.calculateNutrition = async function () {
 		}
 	}
 
-	this.nutrition = totalNutrition;
+	const totalNutritionArray = Object.values(totalNutrition);
+
+	this.nutrition = totalNutritionArray;
 	await this.save();
 
-	return totalNutrition;
+	return totalNutritionArray;
 };
+
 
 module.exports = mongoose.model("recipe", recipeSchema);
