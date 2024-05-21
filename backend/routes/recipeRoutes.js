@@ -8,6 +8,9 @@ const {
 	deleteRecipeById,
 	getRecipes,
 	getRecipesByUserId,
+	getSavedRecipesByUserId,
+	toggleSaveRecipe,
+	rateRecipe,
 } = require("../controllers/recipeController");
 
 // POST /api/recipes
@@ -27,4 +30,12 @@ router
 // GET /api/recipes/user/:userId
 router.route("/user/:userId").get(getRecipesByUserId);
 
+// GET /api/recipes/user/:userId/favorites
+router.route("/user/:userId/saved").get(getSavedRecipesByUserId);
+
+// PUT /api/recipes/:id/save
+router.route("/save/:id").put(auth, toggleSaveRecipe);
 module.exports = router;
+
+// TODO: Rate Recipe Route
+router.route("/:id/rate").put(auth, rateRecipe);

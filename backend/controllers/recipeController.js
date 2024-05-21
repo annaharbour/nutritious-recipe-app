@@ -1,5 +1,6 @@
 const Recipe = require("../models/RecipeModel");
 const User = require("../models/UserModel");
+const Rating = require("../models/RatingModel");
 
 const createRecipe = async (req, res) => {
 	const { name, ingredients, isBowl, toppings } = req.body;
@@ -87,7 +88,130 @@ const getRecipesByUserId = async (req, res) => {
 			: res.status(404).json({ error: "No recipes found." });
 	} catch (err) {
 		return res.status(500).json({ error: "Failed to fetch recipes." });
-	} 
+	}
+};
+
+const getSavedRecipesByUserId = async (req, res) => {
+	const userId = req.params.userId;
+	try {
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ error: "User not found." });
+		}
+		const favoriteRecipes = await Recipe.find({
+			_id: { $in: user.favoriteRecipes },
+		});
+		return favoriteRecipes && favoriteRecipes.length > 0
+			? res.status(200).json(favoriteRecipes)
+			: res.status(404).json({ error: "No favorite recipes found." });
+	} catch (err) {
+		return res.status(500).json({ error: "Failed to fetch recipes." });
+	}
+};
+
+const toggleSaveRecipe = async (req, res) => {
+	const userId = req.user.id;
+	const recipeId = req.params.id;
+
+	try {
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ error: "User not found." });
+		}
+		const alreadySaved = user.favoriteRecipes.includes(recipeId);
+		if (alreadySaved) {
+			user.favoriteRecipes.pull(recipeId);
+		} else {
+			user.favoriteRecipes.push(recipeId);
+		}
+		await user.save();
+		return res.status(200).json(user.favoriteRecipes);
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	}
+};
+
+const rateRecipe = async (req, res) => {
+	const userId = req.user.id;
+	const recipeId = req.params.id;
+	const { numStars } = req.body;
+
+	if (numStars < 1 || numStars > 5) {
+		return res
+			.status(400)
+			.json({ error: "Rating must be between 1 and 5 stars." });
+	}
+
+	try {
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ error: "User not found." });
+		}
+		const recipe = await Recipe.findById(recipeId);
+		if (!recipe) {
+			return res.status(404).json({ error: "Recipe not found." });
+		}
+
+		let rating = await Rating.findOne({ _id: recipe.rating });
+		if (rating) {
+			// Remove user from previous rating
+			rating.ratings.oneStar.pull(user._id);
+			rating.ratings.twoStars.pull(user._id);
+			rating.ratings.threeStars.pull(user._id);
+			rating.ratings.fourStars.pull(user._id);
+			rating.ratings.fiveStars.pull(user._id);
+		}
+		if (!rating) {
+			// Create a new rating if not found
+			rating = new Rating({
+				meanRating: 0,
+				ratings: {
+					oneStar: [],
+					twoStars: [],
+					threeStars: [],
+					fourStars: [],
+					fiveStars: [],
+				},
+			});
+			recipe.rating = rating._id;
+		}
+
+		// Add new rating
+		switch (numStars) {
+			case 1:
+				rating.ratings.oneStar.push(user._id);
+				break;
+			case 2:
+				rating.ratings.twoStars.push(user._id);
+				break;
+			case 3:
+				rating.ratings.threeStars.push(user._id);
+				break;
+			case 4:
+				rating.ratings.fourStars.push(user._id);
+				break;
+			case 5:
+				rating.ratings.fiveStars.push(user._id);
+				break;
+			default:
+				return res
+					.status(400)
+					.json({ error: "Rating must be between 1 and 5 stars." });
+		}
+
+		// Save the updated rating
+		await rating.save();
+
+		// // Update recipe's meanRating
+		// should be done in rating model with pre save hook
+		//  recipe.meanRating = rating.calculateMeanRating();
+		
+		await recipe.save();
+
+		return res.status(200).json({ message: "Rating submitted successfully." });
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	}
 };
 
 module.exports = {
@@ -96,5 +220,8 @@ module.exports = {
 	getRecipeById,
 	updateRecipeById,
 	deleteRecipeById,
-	getRecipesByUserId
+	getRecipesByUserId,
+	getSavedRecipesByUserId,
+	toggleSaveRecipe,
+	rateRecipe,
 };

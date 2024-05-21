@@ -79,7 +79,6 @@ const deleteCommentById = async (req, res) => {
 
 const toggleLikeComment = async (req, res) => {
 	const commentId = req.params.commentId;
-	console.log(commentId);
 	try {
 		const comment = await Comment.findById(commentId);
 		if (!comment) {
