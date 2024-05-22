@@ -2,6 +2,7 @@ const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.jwtSecret;
+
 const User = require("../models/UserModel");
 
 const register = async (req, res) => {
@@ -97,8 +98,7 @@ const login = async (req, res) => {
 
 		jwt.sign(payload, jwtSecret, { expiresIn: "5 days" }, (err, token) => {
 			if (err) throw err;
-			res.json({user, token });
-
+			res.json({ user, token });
 		});
 	} catch (err) {
 		console.error(err.message);

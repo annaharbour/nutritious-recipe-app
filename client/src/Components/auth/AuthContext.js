@@ -13,6 +13,20 @@ export const AuthProvider = ({ children }) => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		const token = searchParams.get("token");
+		const userString = searchParams.get("user");
+
+		if (token && userString) {
+			localStorage.setItem("token", token);
+			setIsLoggedIn(true);
+			const user = JSON.parse(decodeURIComponent(userString));
+			localStorage.setItem("user", userString);
+			setUserInfo(user);
+		}
+	}, []);
+
+	useEffect(() => {
 		const token = localStorage.getItem("token");
 		if (token) {
 			setIsLoggedIn(true);

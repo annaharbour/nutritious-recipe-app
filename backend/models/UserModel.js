@@ -8,15 +8,19 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         unique: true,
-        required: true
     },
     phone: {
         type: String,
-        required: true,
+        unique: true,
     },
     password: {
         type: String,
-        required: true
+    },
+    oAuthProvider: {
+        type: String,
+    },
+    oAuthId: {
+        type: String,
     },
     profile: {
         type: mongoose.Schema.Types.ObjectId,

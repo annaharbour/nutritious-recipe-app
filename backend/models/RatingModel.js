@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const Recipe = require("./RecipeModel");
-const User = require("./UserModel");
 
 const ratingSchema = new mongoose.Schema({
 	meanRating: {

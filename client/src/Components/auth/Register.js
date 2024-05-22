@@ -91,6 +91,7 @@ const Register = () => {
 			<p className="my-1">
 				Already have an account? <Link to="/login">Sign In</Link>
 			</p>
+			<p>Sign up with google</p>
 		</section>
 	);
 };
