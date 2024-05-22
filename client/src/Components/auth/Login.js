@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { authURL } from "../../services/endpoints";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -15,11 +16,11 @@ const Login = () => {
 	const onChange = (e) =>
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 
-		useEffect(() => {
-			if (userInfo) {
-				navigate("/dashboard");
-			}
-		}, [userInfo, navigate]);
+	useEffect(() => {
+		if (userInfo) {
+			navigate("/dashboard");
+		}
+	}, [userInfo, navigate]);
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
@@ -32,7 +33,10 @@ const Login = () => {
 		}
 	};
 
-	return ( userInfo ? <Navigate to ='/dashboard'/> : (
+	
+	return userInfo ? (
+		<Navigate to="/dashboard" />
+	) : (
 		<section className="container">
 			<h1 className="large text-primary">Sign In</h1>
 			<p className="lead">
@@ -63,10 +67,17 @@ const Login = () => {
 				</div>
 				<input type="submit" className="btn btn-primary" value="Login" />
 			</form>
+			<p>
+				Sign in with{" "}
+				<Link to={`${process.env.serverURI}/auth/google`}>google</Link>
+			</p>
 			<p className="my-1">
 				Don't have an account? <Link to="/register">Sign Up</Link>
 			</p>
-		</section>)
+			<p className="my-1">
+				<Link to={`${authURL}/google`}>Sign In Using Google</Link>
+			</p>
+		</section>
 	);
 };
 

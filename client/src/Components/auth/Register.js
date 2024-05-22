@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { authURL } from "../../services/endpoints";
 
 const Register = () => {
 	const registerUser = useAuth().registerUser;
@@ -33,7 +34,7 @@ const Register = () => {
 			}
 		}
 	};
-
+console.log(`${authURL}/google`)
 	return (
 		<section className="container">
 			<h1 className="large text-primary">Sign Up</h1>
@@ -91,7 +92,9 @@ const Register = () => {
 			<p className="my-1">
 				Already have an account? <Link to="/login">Sign In</Link>
 			</p>
-			<p>Sign up with google</p>
+			<p className="my-1">
+				<Link to={`${authURL}/google`}>Sign Up Using Google</Link>
+			</p>
 		</section>
 	);
 };
