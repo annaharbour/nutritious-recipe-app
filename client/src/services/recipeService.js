@@ -54,6 +54,35 @@ export const getRecipesByUserId = async (userId) => {
 	}
 }
 
+export const getSavedRecipesByUserId = async (userId) => {
+	try {
+		const res = await axiosInstance.get(`/user/${userId}/saved`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export const toggleSaveRecipe = async (recipeId) => {
+	try {
+		const res = await axiosInstance.put(`/save/${recipeId}`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export const rateRecipe = async (recipeId, rating) => {
+	try {
+		const res = await axiosInstance.put(`/${recipeId}/rate`, {
+			rating,
+		});
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export const deleteRecipe = async (id) => {
 	try {
 		const res = await axiosInstance.delete(`/${id}`);
