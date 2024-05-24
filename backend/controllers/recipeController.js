@@ -4,7 +4,6 @@ const Rating = require("../models/RatingModel");
 
 const createRecipe = async (req, res) => {
 	const { name, ingredients, isBowl, toppings } = req.body;
-
 	const userId = req.user.id;
 
 	const recipe = new Recipe({
@@ -65,6 +64,18 @@ const getRecipeById = async (req, res) => {
 	}
 };
 
+const getRecipesByUserId = async (req, res) => {
+	const userId = req.params.userId;
+	try {
+		const recipes = await Recipe.find({ userId: userId });
+		return recipes
+			? res.status(200).json(recipes)
+			: res.status(404).json({ error: "No recipes found." });
+	} catch (err) {
+		return res.status(500).json({ error: "Failed to fetch recipes." });
+	}
+};
+
 const deleteRecipeById = async (req, res) => {
 	const recipeId = req.params.id;
 
@@ -79,17 +90,7 @@ const deleteRecipeById = async (req, res) => {
 	}
 };
 
-const getRecipesByUserId = async (req, res) => {
-	const userId = req.params.userId;
-	try {
-		const recipes = await Recipe.find({ userId: userId });
-		return recipes
-			? res.status(200).json(recipes)
-			: res.status(404).json({ error: "No recipes found." });
-	} catch (err) {
-		return res.status(500).json({ error: "Failed to fetch recipes." });
-	}
-};
+
 
 const getSavedRecipesByUserId = async (req, res) => {
 	const userId = req.params.userId;
@@ -199,12 +200,7 @@ const rateRecipe = async (req, res) => {
 					.json({ error: "Rating must be between 1 and 5 stars." });
 		}
 
-		// Save the updated rating
-		await rating.save();
-
-		// // Update recipe's meanRating
-		// should be done in rating model with pre save hook
-		//  recipe.meanRating = rating.calculateMeanRating();
+		await rating.save()
 		
 		await recipe.save();
 

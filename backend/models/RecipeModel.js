@@ -40,17 +40,12 @@ recipeSchema.methods.calculateNutrition = async function () {
 	for (const ingredient of this.ingredients) {
 		const { _id, amount, portionId } = ingredient;
 
-		const foundIngredient = await Ingredient.findById(_id);
+		const foundIngredient = await Ingredient.findById(_id).populate("foodNutrients.nutrient");
 		if (!foundIngredient) {
-			throw new Error(
-				`Ingredient with id ${ingredient.ingredientId} not found`
-			);
+			throw new Error(`Ingredient with id ${_id} not found`);
 		}
 
-		const ingredientNutrition = foundIngredient.calculateNutrition(
-			portionId,
-			amount
-		);
+		const ingredientNutrition = foundIngredient.calculateNutrition(portionId, amount);
 
 		for (const nutrient of ingredientNutrition) {
 			if (!totalNutrition[nutrient.name]) {
@@ -66,13 +61,10 @@ recipeSchema.methods.calculateNutrition = async function () {
 		}
 	}
 
-	const totalNutritionArray = Object.values(totalNutrition);
-
-	this.nutrition = totalNutritionArray;
+	this.nutrition = Object.values(totalNutrition);
 	await this.save();
 
-	return totalNutritionArray;
+	return this.nutrition;
 };
-
 
 module.exports = mongoose.model("recipe", recipeSchema);

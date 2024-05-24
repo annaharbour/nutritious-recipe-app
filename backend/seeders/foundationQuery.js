@@ -1,6 +1,7 @@
 require("dotenv").config();
 const db = process.env.mongoURI;
 const Ingredient = require("../models/IngredientModel");
+const Nutrient = require("../models/NutrientModel");
 const mongoose = require("mongoose");
 const axios = require("axios");
 const dotenv = require("dotenv");
@@ -8,7 +9,7 @@ dotenv.config();
 const FDC_API_KEY = process.env.FDC_API_KEY;
 
 const fdcids = [
-
+	// List of FDC IDs
 ];
 
 const getFoodData = async (ids) => {
@@ -25,24 +26,20 @@ const getFoodData = async (ids) => {
 	} catch (error) {
 		console.error("Error fetching data:", error);
 	}
-}; 
+};
 
 const formatFoodData = (foods) => {
 	return foods.map((food) => ({
 		_id: food.id,
-		category:
-			food.brandedFoodCategory,
+		category: food.brandedFoodCategory,
 		description:
 			food.description.charAt(0).toUpperCase() +
 			food.description.slice(1).toLowerCase(),
-
 		foodNutrients: food.foodNutrients.map((nutrient) => ({
-			_id: nutrient.id,
 			name: nutrient.nutrient.name,
 			amount: nutrient.amount,
 			unitName: nutrient.nutrient.unitName,
 		})),
-
 		foodPortions: [
 			{
 				amount:
@@ -56,12 +53,12 @@ const formatFoodData = (foods) => {
 						: food.householdServingFullText
 								.split(" ", 2)[1]
 								.toLowerCase()
-								.includes("tea")
+								.includes("teaspoon")
 						? "tsp"
 						: food.householdServingFullText
 								.split(" ", 2)[1]
 								.toLowerCase()
-								.includes("table")
+								.includes("tablespoon")
 						? "tbsp"
 						: food.householdServingFullText.split(" ", 3).length > 2
 						? `${food.householdServingFullText
@@ -86,9 +83,48 @@ const fetchAndFormatData = async () => {
 			try {
 				await mongoose.connect(db, {
 					useNewUrlParser: true,
+					useUnifiedTopology: true,
 				});
 
-				await Ingredient.insertMany(formattedData);
+				const nutrientMap = new Map();
+
+				// Step 1: Insert nutrients if they don't exist and build a nutrient map
+				for (const ingredient of formattedData) {
+					for (const nutrient of ingredient.foodNutrients) {
+						if (!nutrientMap.has(nutrient.name)) {
+							let nutrientDoc = await Nutrient.findOne({ name: nutrient.name });
+							if (!nutrientDoc) {
+								nutrientDoc = new Nutrient({
+									_id: new mongoose.Types.ObjectId(),
+									name: nutrient.name,
+									unit: nutrient.unitName,
+								});
+								await nutrientDoc.save();
+							}
+							nutrientMap.set(nutrient.name, nutrientDoc._id);
+						}
+					}
+				}
+
+				// Step 2: Insert ingredients with references to nutrient IDs
+				for (const ingredient of formattedData) {
+					const foodNutrients = ingredient.foodNutrients.map((nutrient) => ({
+						nutrient: nutrientMap.get(nutrient.name),
+						value: nutrient.amount,
+					}));
+
+					const ingredientDoc = new Ingredient({
+						_id: ingredient._id,
+						category: ingredient.category,
+						foodClass: ingredient.foodClass,
+						description: ingredient.description,
+						foodNutrients,
+						foodPortions: ingredient.foodPortions,
+					});
+
+					await ingredientDoc.save();
+				}
+
 				console.log("Ingredients created.");
 				console.log("Seeding complete.");
 				process.exit();
