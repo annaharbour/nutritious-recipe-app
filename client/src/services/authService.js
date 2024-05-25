@@ -27,11 +27,14 @@ export const register = async (name, email, phone, password) => {
             phone,
             password,
         });
-        localStorage.setItem('token', res.data.token);
-        setAuthToken(res.data.token);
-        return res;
+        if (res) {
+            localStorage.setItem('token', res.data.token);
+            setAuthToken(res.data.token);
+            return res;
+        }
+       
     } catch (error) {
-        console.error(error);
+        throw new Error(error.response.data.message || "Registration failed. Please try again.");
     };
 }
 

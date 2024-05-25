@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { authURL } from "../../services/endpoints";
 
-const Register = () => {
+const Register = ({ showToast }) => {
 	const registerUser = useAuth().registerUser;
 	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
@@ -22,19 +22,20 @@ const Register = () => {
 	const onSubmit = async (e) => {
 		e.preventDefault();
 		if (password !== password2) {
-      // TODO: Add a toast message to display the error message
-      alert("Passwords do not match")
+			showToast("Passwords do not match", "error");
 		} else {
 			try {
 				await registerUser(name, email, phone, password);
 				navigate("/dashboard");
-			} catch (error) {
-        // TODO: Add a toast message to display the error message
-				console.error(error);
+			} catch (err) {
+				showToast(
+					err.message,
+					"error" || "Registration failed. Please try again.",
+					"error"
+				);
 			}
 		}
 	};
-console.log(`${authURL}/google`)
 	return (
 		<section className="container">
 			<h1 className="large text-primary">Sign Up</h1>

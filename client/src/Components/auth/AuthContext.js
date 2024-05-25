@@ -38,24 +38,26 @@ export const AuthProvider = ({ children }) => {
 	const loginUser = async (email, password) => {
 		try {
 			const res = await login(email, password);
-			setIsLoggedIn(true);
-			localStorage.setItem("token", res.data.token);
 			const { password: _, ...userWithoutPassword } = res.data.user;
-			setUserInfo(userWithoutPassword);
+			localStorage.setItem("token", res.data.token);
 			localStorage.setItem("user", JSON.stringify(userWithoutPassword));
+			setUserInfo(userWithoutPassword);
+			setIsLoggedIn(true);
 		} catch (error) {
-			console.error(error);
+			throw new Error(error.response.message || "Login failed");
 		}
 	};
 
 	const registerUser = async (email, password, phone, name) => {
 		try {
 			const res = await register(email, password, phone, name);
-			setIsLoggedIn(true);
+			const { password: _, ...userWithoutPassword } = res.data.user;
 			localStorage.setItem("token", res.data.token);
-			setUserInfo(res.data.user);
+			localStorage.setItem("user", JSON.stringify(userWithoutPassword));
+			setUserInfo(userWithoutPassword);
+			setIsLoggedIn(true);
 		} catch (error) {
-			console.error(error);
+			throw new Error(error.message || "Registration failed");
 		}
 	};
 
@@ -66,7 +68,7 @@ export const AuthProvider = ({ children }) => {
 			setIsLoggedIn(false);
 			setUserInfo(null);
 		} catch (error) {
-			console.error(error);
+			throw new Error(error.response.data.message || "Logout failed");
 		}
 	}
 

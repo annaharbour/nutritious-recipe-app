@@ -3,24 +3,27 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.jwtSecret;
 
+
 const User = require("../models/UserModel");
 
 const register = async (req, res) => {
 	const { name, email, phone, password } = req.body;
-	const validateInputs = [
-		check("name", "Name is required").notEmpty(),
-		check("email", "Please include a valid email").isEmail(),
-		check("phone", "Please enter a valid phone number").matches(/^\d{9,}$/),
-		check(
-			"password",
-			"Please enter a password with 6 or more characters"
-		).isLength({ min: 6 }),
-	];
-	validateInputs.forEach((validation) => validation.run(req));
+	let errors = [];
+	if (!name) {
+		errors.push({ msg: "Name is required" });
+	}
+	if (!email) {
+		errors.push({ msg: "Please include a valid email" });
+	}
+	if (!phone) {
+		errors.push({ msg: "Please enter a valid phone number" });
+	}
+	if (!password) {
+		errors.push({ msg: "Please enter a password with 6 or more characters" });
+	}
 
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
+	if (errors.length > 0) {
+		return res.status(400).json({ message: errors.map((error) => error.msg )});
 	}
 
 	try {
@@ -28,12 +31,9 @@ const register = async (req, res) => {
 			email,
 		});
 		if (user) {
+			errors.push({ msg: "Email already in use. Please use a different email to register." });
 			return res.status(400).json({
-				errors: [
-					{
-						msg: "User already exists",
-					},
-				],
+				errors: errors.map((error) => error.msg),
 			});
 		} else {
 			user = new User({
@@ -59,22 +59,23 @@ const register = async (req, res) => {
 			});
 		}
 	} catch (err) {
-		console.error(err.message);
-		res.status(500).send("Server Error");
+		res.status(500).send(err.message);
 	}
 };
 
 const login = async (req, res) => {
 	const { email, password } = req.body;
+	let errors = [];
+	if (!email) {
+		errors.push({ msg: "Please enter the email associated with your account." });
+	}
+	if (!password) {
+		errors.push({ msg: "Please enter the password associated with your account." });
+	}
 
-	const validateInputs = [
-		check("email", "Please include a valid email").isEmail().notEmpty(),
-		check("password", "Password is required").exists(),
-	];
-	validateInputs.forEach((validation) => validation.run(req));
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
+	if (errors.length > 0) {
+		const errorMessages = errors.map((error) => error.msg);
+		return res.status(400).json({ errors: errorMessages });
 	}
 
 	try {

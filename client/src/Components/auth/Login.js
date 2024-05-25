@@ -3,10 +3,9 @@ import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { authURL } from "../../services/endpoints";
 
-const Login = () => {
+const Login = ({showToast}) => {
 	const navigate = useNavigate();
-	const loginUser = useAuth().loginUser;
-	const userInfo = useAuth().userInfo;
+	const { loginUser, userInfo } = useAuth();
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
@@ -24,12 +23,12 @@ const Login = () => {
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
+		
 		try {
 			await loginUser(email, password);
 			navigate("/dashboard");
-		} catch (error) {
-			// TODO: Add a toast message to display the error message
-			console.error(error);
+		} catch (err) {
+			showToast("Unable to log in. Please verify your email and password.", "error");
 		}
 	};
 
