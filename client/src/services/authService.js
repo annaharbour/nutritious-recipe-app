@@ -15,7 +15,7 @@ export const login = async (email, password) => {
         setAuthToken(res.data.token);
         return res;
     } catch (error) {
-        throw new Error(error.response.data.message || "Default auth service message. Login failed. Please try again.");
+        throw new Error("Please validate the email and password associated with your account.");
     };
 }
 
