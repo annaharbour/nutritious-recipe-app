@@ -46,7 +46,7 @@ const App = () => {
 	return (
 		<Router>
 			<Navbar />
-			<ToastContainer limit={1}/>
+			<ToastContainer limit={3}/>
 			<Routes>
 				<Route path="/profile" element={<PrivateRoute Component={Profile} />} />
 				<Route

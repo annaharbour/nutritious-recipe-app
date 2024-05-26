@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 			setUserInfo(userWithoutPassword);
 			setIsLoggedIn(true);
 		} catch (error) {
-			throw new Error(error.response.message || "Login failed");
+			throw new Error(error.message || "Login failed");
 		}
 	};
 

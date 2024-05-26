@@ -50,6 +50,7 @@ const Register = ({ showToast }) => {
 						name="name"
 						value={name}
 						onChange={onChange}
+						required
 					/>
 				</div>
 				<div className="form-group">
@@ -59,6 +60,7 @@ const Register = ({ showToast }) => {
 						name="email"
 						value={email}
 						onChange={onChange}
+						required
 					/>
 				</div>
 				<div className="form-group">
@@ -68,6 +70,7 @@ const Register = ({ showToast }) => {
 						name="phone"
 						value={phone}
 						onChange={onChange}
+						required
 					/>
 				</div>
 				<div className="form-group">
@@ -77,6 +80,7 @@ const Register = ({ showToast }) => {
 						name="password"
 						value={password}
 						onChange={onChange}
+						required
 					/>
 				</div>
 				<div className="form-group">
@@ -86,6 +90,7 @@ const Register = ({ showToast }) => {
 						name="password2"
 						value={password2}
 						onChange={onChange}
+						required
 					/>
 				</div>
 				<input type="submit" className="btn btn-primary" value="Register" />

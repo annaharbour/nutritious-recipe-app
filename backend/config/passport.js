@@ -14,20 +14,28 @@ passport.use(
 			try {
 				let user = await User.findOne({ oAuthProvider: "google", oAuthId: id });
 				if (user) {
-					done(null, user);
-				} else {
-					user = new User({
-						oAuthProvider: "google",
-						oAuthId: id,
-						name: displayName,
-						email: emails[0].value,
-					});
-					await user.save();
-					done(null, user);
+					return done(null, user);
 				}
+
+				user = await User.findOne({ email: emails[0].value });
+				if (user) {
+					user.oAuthProvider = "google";
+					user.oAuthId = id;
+					await user.save();
+					return done(null, user);
+				}
+
+				user = new User({
+					oAuthProvider: "google",
+					oAuthId: id,
+					name: displayName,
+					email: emails[0].value,
+				});
+				await user.save();
+				return done(null, user);
 			} catch (err) {
 				console.error(err.message);
-				done(err, false);
+				return done(err, false);
 			}
 		}
 	)
@@ -39,10 +47,9 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
 	try {
-	  const user = await User.findById(id);
-	  done(null, user);
+		const user = await User.findById(id);
+		done(null, user);
 	} catch (err) {
-	  done(err, null);
+		done(err, null);
 	}
-  });
-  
+});

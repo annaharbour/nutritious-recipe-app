@@ -28,7 +28,7 @@ const Login = ({showToast}) => {
 			await loginUser(email, password);
 			navigate("/dashboard");
 		} catch (err) {
-			showToast("Unable to log in. Please verify your email and password.", "error");
+			showToast(err.message, "error" || "Unable to log in. Please verify your email and password.", "error");
 		}
 	};
 
@@ -43,7 +43,6 @@ const Login = ({showToast}) => {
 			</p>
 			<form
 				className="form"
-				action="dashboard.html"
 				onSubmit={(e) => onSubmit(e)}>
 				<div className="form-group">
 					<input
@@ -61,7 +60,8 @@ const Login = ({showToast}) => {
 						placeholder="Password"
 						name="password"
 						value={password}
-						onChange={(e) => onChange(e)}
+						onChange={(e) => onChange(e)
+						}
 					/>
 				</div>
 				<input type="submit" className="btn btn-primary" value="Login" />

@@ -1,4 +1,3 @@
-const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.jwtSecret;
@@ -33,7 +32,7 @@ const register = async (req, res) => {
 		if (user) {
 			errors.push({ msg: "Email already in use. Please use a different email to register." });
 			return res.status(400).json({
-				errors: errors.map((error) => error.msg),
+				message: errors.map((error) => error.msg),
 			});
 		} else {
 			user = new User({
@@ -75,20 +74,20 @@ const login = async (req, res) => {
 
 	if (errors.length > 0) {
 		const errorMessages = errors.map((error) => error.msg);
-		return res.status(400).json({ errors: errorMessages });
+		return res.status(400).json({ message: errorMessages });
 	}
 
 	try {
 		let user = await User.findOne({ email });
 
 		if (!user) {
-			return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
+			return res.status(400).json({ errors: [{ msg: "Please validate the email and password associated with your account." }] });
 		}
 
 		const isMatch = await bcrypt.compare(password, user.password);
 
 		if (!isMatch) {
-			return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
+			return res.status(400).json({ errors: [{ msg: "Please validate the email and password associated with your account." }] });
 		}
 
 		const payload = {
