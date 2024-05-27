@@ -45,6 +45,15 @@ export const updateRecipe = async (updatedRecipe) => {
 	}
 };
 
+export const getRecipeByCategory = async (category) => {
+	try {
+		const res = await axiosInstance.get(`/category/${category}`);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export const getRecipesByUserId = async (userId) => {
 	try {
 		const res = await axiosInstance.get(`/user/${userId}`);
@@ -91,3 +100,5 @@ export const deleteRecipe = async (id) => {
 		console.error(error);
 	}
 };
+
+

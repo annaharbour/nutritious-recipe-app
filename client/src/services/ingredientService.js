@@ -11,6 +11,7 @@ export const getIngredients = async () => {
 		return res;
 	} catch (error) {
 		console.error(error);
+		return error
 	}
 };
 
@@ -20,6 +21,7 @@ export const getIngredientsByCategory = async (category) => {
 		return res;
 	} catch (error) {
 		console.error(error);
+		return error
 	}
 };
 
@@ -27,5 +29,20 @@ export const getIngredientById = async (id) => {
 	try {
 		const res = await axiosInstance.get(`/${id}`);
 		return res;
-	} catch (error) {}
+	} catch (error) {
+		console.error(error)
+		return error
+	}
 };
+
+export const getIngredientNutrition = async (id, portionId) => {
+	try {
+		const res = await axiosInstance.get(`/${id}/${portionId}`);
+		return res;
+	} catch (error) {
+		console.error(error)
+		return error
+	}
+}
+
+

@@ -6,7 +6,7 @@ const profileUrl = `${baseURL}/profile`;
 const commentsUrl = `${baseURL}/comments`;
 const recipesUrl = `${baseURL}/recipes`;
 const ingredientsUrl = `${baseURL}/ingredients`;
-
+const nutrientsUrl = `${baseURL}/nutrients`
 module.exports  = {
 	baseURL,
 	authURL,
@@ -15,4 +15,5 @@ module.exports  = {
 	commentsUrl,
 	recipesUrl,
 	ingredientsUrl,
+	nutrientsUrl
 };
