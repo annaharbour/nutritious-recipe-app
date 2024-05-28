@@ -21,6 +21,4 @@ router.get("/:id/:portionId", getIngredientNutrition);
 // Route to get all ingredients
 router.get("/", getAllIngredients);
 
-
-
 module.exports = router;

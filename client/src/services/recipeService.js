@@ -1,8 +1,8 @@
 import axios from "axios";
-import recipeUrl from "./endpoints";
+import { recipesUrl } from "./endpoints";
 
 const axiosInstance = axios.create({
-	baseURL: `${recipeUrl}`,
+	baseURL: recipesUrl,
 });
 
 export const getRecipes = async () => {
@@ -17,7 +17,8 @@ export const getRecipes = async () => {
 export const getRecipeById = async (id) => {
 	try {
 		const res = await axiosInstance.get(`/${id}`);
-		return res;
+		console.log(res)
+		return res.data;
 	} catch (error) {
 		console.error(error);
 	}

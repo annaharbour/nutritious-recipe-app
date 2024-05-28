@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const {
 	getUsers,
-	getUser,
+	getUserById,
 	deleteUser,
 } = require("../controllers/userController");
 
@@ -15,7 +15,7 @@ router.route("/").get(auth, getUsers);
 // Get /users/:id
 // @desc Get or delete user by id
 // @access Private
-router.route("/:id").get(auth, getUser).delete(auth, deleteUser);
+router.route("/:id").get(getUserById).delete(auth, deleteUser);
 
 
 

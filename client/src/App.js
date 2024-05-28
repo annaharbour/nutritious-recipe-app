@@ -10,6 +10,7 @@ import Landing from "./Components/layout/Landing";
 import Dashboard from "./Components/dashboard/Dashboard";
 import Profile from "./Components/profile/Profile";
 import PrivateRoute from "./Components/routing/PrivateRoute";
+import Recipe from "./Components/recipe/Recipe";
 
 const App = () => {
 	const showToastMessage = (msg, type) => {
@@ -46,7 +47,7 @@ const App = () => {
 	return (
 		<Router>
 			<Navbar />
-			<ToastContainer limit={3}/>
+			<ToastContainer limit={3} />
 			<Routes>
 				<Route path="/profile" element={<PrivateRoute Component={Profile} />} />
 				<Route
@@ -59,6 +60,9 @@ const App = () => {
 					element={<Register showToast={showToastMessage} />}
 				/>
 				<Route path="/login" element={<Login showToast={showToastMessage} />} />
+				<Route path="recipes">
+					<Route path=":id" element={<Recipe />} />
+				</Route>
 			</Routes>
 		</Router>
 	);

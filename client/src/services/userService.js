@@ -1,8 +1,8 @@
 import axios from "axios";
-import userUrl from "./endpoints";
+import {usersUrl} from "./endpoints";
 
 const axiosInstance = axios.create({
-	baseURL: `${userUrl}`,
+	baseURL: usersUrl,
 });
 
 export const getAllUsers = async () => {
