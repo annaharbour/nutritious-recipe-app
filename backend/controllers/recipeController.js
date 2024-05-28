@@ -1,27 +1,68 @@
 const Recipe = require("../models/RecipeModel");
 const User = require("../models/UserModel");
 const Rating = require("../models/RatingModel");
+const Ingredient = require("../models/IngredientModel");
 
+// const createRecipe = async (req, res) => {
+// 	const { name, ingredients, isBowl, toppings } = req.body;
+// 	const userId = req.user.id;
+
+// 	const recipe = new Recipe({
+// 		name,
+// 		ingredients,
+// 		userId,
+// 		isBowl,
+// 		toppings,
+// 	});
+
+// 	try {
+// 		await recipe.save();
+// 		return res.status(200).json(recipe);
+// 	} catch (err) {
+// 		return res.status(500).json({ message: err.message });
+// 	}
+// };
 const createRecipe = async (req, res) => {
 	const { name, ingredients, isBowl, toppings } = req.body;
 	const userId = req.user.id;
-
-	const recipe = new Recipe({
-		name,
-		ingredients,
-		userId,
-		isBowl,
-		toppings,
-	});
-
+  
 	try {
-		await recipe.calculateNutrition();
-		await recipe.save();
-		return res.status(200).json(recipe);
-	} catch (err) {
-		return res.status(500).json({ message: err.message });
+	  const populatedIngredients = await Promise.all(
+		ingredients.map(async (ingredient) => {
+		  const ingredientData = await Ingredient.findById(ingredient._id).lean();
+		  if (!ingredientData) {
+			throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+		  }
+  
+		  const foodPortion = ingredientData.foodPortions.find(
+			(portion) => portion._id === ingredient.portionId
+		  );
+  
+		  return {
+			...ingredient,
+			description: ingredientData.description,
+			category: ingredientData.category,
+			modifier: foodPortion ? foodPortion.modifier : null,
+			gramWeight: foodPortion ? foodPortion.gramWeight : null
+		  };
+		})
+	  );
+  
+	  const newRecipe = new Recipe({
+		name,
+		userId,
+		ingredients: populatedIngredients,
+		isBowl,
+		toppings
+	  });
+  
+	  await newRecipe.save();
+	  res.status(201).json(newRecipe);
+	} catch (error) {
+	  res.status(500).json({ error: error.message });
 	}
-};
+  };
+  
 
 const getRecipes = async (req, res) => {
 	try {
@@ -54,10 +95,11 @@ const getRecipeById = async (req, res) => {
 	const recipeId = req.params.id;
 
 	try {
-		const recipe = await Recipe.findById(recipeId);
+		const recipe = await Recipe.findById(recipeId)
 		if (!recipe) {
 			return res.status(404).json({ error: "Recipe not found." });
 		}
+
 		return res.json(recipe);
 	} catch (err) {
 		return res.status(500).json({ error: err.message });

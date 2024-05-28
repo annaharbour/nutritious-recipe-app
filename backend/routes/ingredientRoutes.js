@@ -7,12 +7,12 @@ const {
 	getIngredientNutrition
 } = require("../controllers/ingredientController");
 
-
-// Route to get ingredients by category
-router.get("/:category", getIngredientsByCategory);
-
 // Get ingredient by id
 router.get("/:id", getIngredientById);
+// Route to get ingredients by category
+router.get("category/:categoryName", getIngredientsByCategory);
+
+
 
 // Get ingredient nutrition by portion / amount
 router.get("/:id/:portionId", getIngredientNutrition);

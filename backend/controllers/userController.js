@@ -19,7 +19,7 @@ const getUserById = async (req, res) => {
 	const userId = req.params.id;
 	try {
 		const user = await
-		User.findById(userId);
+		User.findById(userId).select('-password -email -phone -__v -createdAt');
 		if (!user) {
 			return res.status(404).json({ msg: "User not found" });
 		}

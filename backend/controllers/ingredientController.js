@@ -12,6 +12,21 @@ const getAllIngredients = async (req, res) => {
 	}
 };
 
+const getIngredientById = async (req, res) => {
+	try {
+		const ingredientId = req.params.id;
+		const ingredient = await Ingredient.findById(ingredientId)
+		
+		if (!ingredient) {
+			return res.status(404).json({ message: "Ingredient not found" });
+		}
+
+		return res.json(ingredient);
+	} catch (err) {
+		return res.status(500).json({ message: "Server Error" });
+	}
+};
+
 const getIngredientNutrition = async (req, res) => {
 	try {
 		const ingredientId = req.params.id;
@@ -37,21 +52,7 @@ const getIngredientNutrition = async (req, res) => {
 	}
 };
 
-const getIngredientById = async (req, res) => {
-	const ingredientId = req.params.id;
-	try {
-		const ingredient = await Ingredient.findById(ingredientId).populate(
-			"foodNutrients.nutrient"
-		);
-		if (!ingredient) {
-			return res.status(404).json({ message: "Ingredient not found" });
-		}
 
-		return res.json(ingredient);
-	} catch (err) {
-		return res.status(500).json({ message: "Server Error" });
-	}
-};
 
 const getIngredientsByCategory = async (req, res) => {
 	const category = req.params.category;

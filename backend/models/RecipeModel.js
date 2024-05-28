@@ -21,6 +21,10 @@ const recipeSchema = new mongoose.Schema({
 			_id: { type: mongoose.Schema.Types.ObjectId, ref: "ingredient" },
 			amount: Number,
 			portionId: Number,
+			category: String,
+			description: String,
+			modifier: String,
+			gramWeight: Number,
 		},
 	],
 	isBowl: {
@@ -62,9 +66,13 @@ recipeSchema.methods.calculateNutrition = async function () {
 	}
 
 	this.nutrition = Object.values(totalNutrition);
-	await this.save();
 
 	return this.nutrition;
 };
+
+recipeSchema.pre("save", async function (next) {
+	await this.calculateNutrition();
+	next();
+});
 
 module.exports = mongoose.model("recipe", recipeSchema);

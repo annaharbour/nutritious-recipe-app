@@ -1,8 +1,8 @@
 import axios from "axios";
-import ingredientsUrl from "./endpoints";
+import {ingredientsUrl} from "./endpoints";
 
 const axiosInstance = axios.create({
-	baseURL: `${ingredientsUrl}`,
+	baseURL: ingredientsUrl,
 });
 
 export const getIngredients = async () => {
@@ -17,7 +17,7 @@ export const getIngredients = async () => {
 
 export const getIngredientsByCategory = async (category) => {
 	try {
-		const res = await axiosInstance.get(`/${category}`);
+		const res = await axiosInstance.get(`/category/${category}`);
 		return res;
 	} catch (error) {
 		console.error(error);
@@ -28,7 +28,7 @@ export const getIngredientsByCategory = async (category) => {
 export const getIngredientById = async (id) => {
 	try {
 		const res = await axiosInstance.get(`/${id}`);
-		return res;
+		return res.data;
 	} catch (error) {
 		console.error(error)
 		return error

@@ -17,7 +17,7 @@ export const getAllUsers = async () => {
 export const getUserById = async (id) => {
 	try {
 		const res = await axiosInstance.get(`/${id}`);
-		return res;
+		return res.data;
 	} catch (error) {
 		console.error(error);
 	}

@@ -17,7 +17,6 @@ export const getRecipes = async () => {
 export const getRecipeById = async (id) => {
 	try {
 		const res = await axiosInstance.get(`/${id}`);
-		console.log(res)
 		return res.data;
 	} catch (error) {
 		console.error(error);
