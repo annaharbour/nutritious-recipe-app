@@ -46,6 +46,12 @@ const deleteUser = async (req, res) => {
 	const userId = req.params.id;
 	try {
 		await Comment.deleteMany({ user: userId });
+		// TODO: Delete from other users' following/followers lists
+		// TODO: Delete from other users' saved recipes
+		// TODO: Delete from other users' liked recipes
+		// TODO: Delete all likes on users' recipes
+		// TODO: Delete all likes by other users on recipes
+		// TODO: Delete all comments by users on this user's recipes
 		await Recipe.deleteMany({ user: userId });
 		const user = await User.findById(userId);
 		if (!user) {
