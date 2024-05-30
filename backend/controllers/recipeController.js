@@ -3,25 +3,6 @@ const User = require("../models/UserModel");
 const Rating = require("../models/RatingModel");
 const Ingredient = require("../models/IngredientModel");
 
-// const createRecipe = async (req, res) => {
-// 	const { name, ingredients, isBowl, toppings } = req.body;
-// 	const userId = req.user.id;
-
-// 	const recipe = new Recipe({
-// 		name,
-// 		ingredients,
-// 		userId,
-// 		isBowl,
-// 		toppings,
-// 	});
-
-// 	try {
-// 		await recipe.save();
-// 		return res.status(200).json(recipe);
-// 	} catch (err) {
-// 		return res.status(500).json({ message: err.message });
-// 	}
-// };
 const createRecipe = async (req, res) => {
 	const { name, ingredients, isBowl, toppings } = req.body;
 	const userId = req.user.id;

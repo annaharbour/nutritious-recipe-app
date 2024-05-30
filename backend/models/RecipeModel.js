@@ -58,6 +58,7 @@ recipeSchema.methods.calculateNutrition = async function () {
 					name: nutrient.name,
 					amount: nutrient.amount,
 					unitName: nutrient.unitName,
+					classification: nutrient.classification ? nutrient.classification : null,
 				};
 			} else {
 				totalNutrition[nutrient.name].amount += nutrient.amount;

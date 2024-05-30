@@ -59,6 +59,7 @@ ingredientSchema.methods.calculateNutrition = function (portionId, amount) {
 				name: foodNutrient.nutrient.name,
 				amount: calculatedAmount,
 				unitName: foodNutrient.nutrient.unit,
+				classification: foodNutrient.nutrient.classification,
 			});
 		}
 	} catch (err) {

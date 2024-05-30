@@ -13,6 +13,9 @@ const nutrientSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	classification: {
+		type: String
+	}
 });
 
 const Nutrient = mongoose.model("nutrient", nutrientSchema);
