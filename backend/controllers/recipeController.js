@@ -44,43 +44,6 @@ const createRecipe = async (req, res) => {
     }
 };
 
-
-// const createRecipe = async (req, res) => {
-// 	const { name, ingredients } = req.body;
-// 	const userId = req.user.id;
-// 	try {
-// 		const populatedIngredients = await Promise.all(
-// 			ingredients.map(async (ingredient) => {
-// 				const ingredientData = await Ingredient.findById(ingredient._id).lean();
-// 				if (!ingredientData) {
-// 					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
-// 				}
-// 				const foodPortion = ingredientData.foodPortions.find(
-// 					(portion) => portion._id === ingredient.portionId
-// 				);
-
-// 				return {
-// 					...ingredient,
-// 					description: ingredientData.description,
-// 					category: ingredientData.category,
-// 					modifier: foodPortion ? foodPortion.modifier : null,
-// 					gramWeight: foodPortion ? foodPortion.gramWeight : null,
-// 				};
-// 			})
-// 		);
-// 		const newRecipe = new Recipe({
-// 			name,
-// 			userId,
-// 			ingredients: populatedIngredients,
-
-// 		});
-// 		await newRecipe.save();
-// 		res.status(201).json(newRecipe);
-// 	} catch (error) {
-// 		res.status(500).json({ error: error.message });
-// 	}
-// };
-
 const getRecipes = async (req, res) => {
 	try {
 		const recipes = await Recipe.find();
@@ -91,22 +54,47 @@ const getRecipes = async (req, res) => {
 };
 
 const updateRecipeById = async (req, res) => {
-	const recipeId = req.params.id;
-	const { name, ingredients, isBowl, toppings } = req.body;
+    const recipeId = req.params.id;
+    const { name, ingredients } = req.body;
 
-	try {
-		const updatedRecipe = await Recipe.findByIdAndUpdate(
-			recipeId,
-			{ name, ingredients },
-			{ new: true }
-		);
-		await updatedRecipe.calculateNutrition();
-		await updatedRecipe.save();
-		return res.status(200).json(updatedRecipe);
-	} catch (err) {
-		return res.status(500).json({ message: err.message });
-	}
+    try {
+        const updatedIngredients = [];
+        for (const ingredient of ingredients) {
+            const foundIngredient = await Ingredient.findById(ingredient._id).lean();
+            if (!foundIngredient) {
+                throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+            }
+
+            const foodPortion = foundIngredient.foodPortions.find(
+                (portion) => portion._id.toString() === ingredient.portionId.toString()
+            );
+
+            updatedIngredients.push({
+                _id: foundIngredient._id,
+                amount: ingredient.amount,
+                portionId: ingredient.portionId,
+                category: foundIngredient.category,
+                description: foundIngredient.description,
+                modifier: foodPortion ? foodPortion.modifier : 'g',
+                gramWeight: foodPortion ? foodPortion.gramWeight : 100,
+            });
+        }
+
+        const updatedRecipe = await Recipe.findByIdAndUpdate(
+            recipeId,
+            { name, ingredients: updatedIngredients },
+            { new: true }
+        );
+        await updatedRecipe.calculateNutrition();
+        await updatedRecipe.save();
+
+        return res.status(200).json(updatedRecipe);
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
 };
+
+
 
 const getRecipeById = async (req, res) => {
 	const recipeId = req.params.id;

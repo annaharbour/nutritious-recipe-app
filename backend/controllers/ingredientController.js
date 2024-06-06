@@ -34,7 +34,7 @@ const getIngredientNutrition = async (req, res) => {
 		if (!ingredient) {
 			return res.status(404).json({ message: "Ingredient not found" });
 		}
-		const portionId = req.params.portionId;
+		const portionId = req.params.portionId ;
 		const { amount } = req.body;
 
 		try {
