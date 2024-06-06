@@ -75,7 +75,7 @@ const updateRecipeById = async (req, res) => {
                 portionId: ingredient.portionId,
                 category: foundIngredient.category,
                 description: foundIngredient.description,
-                modifier: foodPortion ? foodPortion.modifier : 'g',
+                modifier: foodPortion ? foodPortion.modifier : '100g',
                 gramWeight: foodPortion ? foodPortion.gramWeight : 100,
             });
         }

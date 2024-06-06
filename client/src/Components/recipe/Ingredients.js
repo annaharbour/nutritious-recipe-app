@@ -24,7 +24,7 @@ function Ingredients({ recipe }) {
 				<ul>
 					{ingredients.map((ingredient) => (
 						<li key={ingredient._id}>
-							{ingredient.description}:{ingredient.amount}
+							{ingredient.description}: {ingredient.amount}{" "}
 							{ingredient.modifier}
 						</li>
 					))}
