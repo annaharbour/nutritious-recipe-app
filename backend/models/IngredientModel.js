@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Nutrient = require("./NutrientModel");
 
 const ingredientSchema = new mongoose.Schema({
 	_id: {
@@ -32,38 +33,54 @@ const ingredientSchema = new mongoose.Schema({
 	],
 });
 
-ingredientSchema.methods.calculateNutrition = function (portionId, amount) {
-	let numericPortionId;
-	if (portionId) {
-		numericPortionId = Number(portionId);
-	}
-
-	let multiplier = amount;
-	if (numericPortionId) {
-		const selectedPortion = this.foodPortions.find(
-			(portion) => portion._id === numericPortionId
-		);
-		if (!selectedPortion) {
-			throw new Error(`Portion with id ${numericPortionId} not found`);
-		}
-		multiplier = (amount * selectedPortion.gramWeight) / 100;
-	}
-
+ingredientSchema.methods.calculateNutrition = async function (portionId, amount) {
 	const totalNutrition = [];
 
-	try {
-		for (const foodNutrient of this.foodNutrients) {
-			const calculatedAmount = foodNutrient.value * multiplier;
-			totalNutrition.push({
-				_id: foodNutrient.nutrient._id,
-				name: foodNutrient.nutrient.name,
-				amount: calculatedAmount,
-				unitName: foodNutrient.nutrient.unit,
-				classification: foodNutrient.nutrient.classification,
-			});
+	if (portionId && portionId != 0) {
+		let portion = this.foodPortions.find(
+			(portion) => portion._id === Number(portionId)
+		);
+		if (!portion) {
+			throw new Error(`Portion with id ${portionId} not found`);
 		}
-	} catch (err) {
-		throw new Error(`Error calculating: ${err}`);
+		let multiplier = (amount * portion.gramWeight) / 100;
+		try {
+			for (const foodNutrient of this.foodNutrients) {
+				const calculatedAmount = foodNutrient.value * multiplier;
+				const nutrient = await Nutrient.findById(foodNutrient.nutrient._id);
+				const {_id, name, unit, classification, macro} = nutrient;
+				classification &&
+				totalNutrition.push({
+					_id: _id,
+					amount: calculatedAmount,
+					unit: unit,
+					name: name,
+					classification: classification,
+					isMacroNutrient: macro ? true : false,
+				});
+			}
+		} catch (err) {
+			throw new Error(`Error calculating: ${err}`);
+		}
+	} else {
+		try {
+			for (const foodNutrient of this.foodNutrients) {
+				const calculatedAmount = foodNutrient.value * amount;
+				const nutrient = await Nutrient.findById(foodNutrient.nutrient._id);
+				const {_id, name, unit, classification, macro} = nutrient;
+				classification &&
+				totalNutrition.push({
+					_id: _id,
+					amount: calculatedAmount,
+					unit: unit,
+					name: name,
+					classification: classification,
+					isMacroNutrient: macro ? true : false,
+				});
+			}
+		} catch (err) {
+			throw new Error(`Error calculating: ${err}`);
+		}
 	}
 
 	return totalNutrition;

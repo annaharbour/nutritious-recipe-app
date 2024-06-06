@@ -14,8 +14,10 @@ const nutrientSchema = new mongoose.Schema({
 		required: true,
 	},
 	classification: {
-		type: String
-	}
+		type: String,
+	},
+	macro: {
+		type: Boolean	}
 });
 
 const Nutrient = mongoose.model("nutrient", nutrientSchema);

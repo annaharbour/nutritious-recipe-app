@@ -17,15 +17,12 @@ function Recipe() {
 		const fetchData = async () => {
 			try {
 				setLoading(true);
-
 				const recipeData = await getRecipeById(id);
 				if (recipeData) {
 					setRecipe(recipeData);
-					console.log("Recipe:", recipeData);
 
 					const userData = await getUserById(recipeData.userId);
 					if (userData) {
-						console.log("User:", userData);
 						setUser(userData);
 					}
 				} else {
@@ -57,7 +54,6 @@ function Recipe() {
 		<div>
 			<h1>{recipe.name}</h1>
 			{user && <p>by {user.name}</p>}
-
 			<Ingredients recipe={recipe}	/>
 			<Nutrients recipe={recipe} />
 		</div>

@@ -1,30 +1,42 @@
 import React from "react";
 
 function Nutrients({ recipe }) {
-	const nutrientClassifications = [
+	const classifications = [
 		"General",
-		"Macronutrients",
 		"Protein",
+		"Lipids",
 		"Carbohydrates",
 		"Minerals",
 		"Vitamins",
 	];
+	const nutrientList = classifications.map((classification) => {
+		const nutrients = recipe.nutrition;
+		const sortedNutrients = nutrients
+			.filter((nutrient) => nutrient.classification === classification)
+			.sort((a, b) => {
+				if (a.isMacroNutrient && !b.isMacroNutrient) {
+					return -1;
+				} else if (!a.isMacroNutrient && b.isMacroNutrient) {
+					return 1;
+				} else {
+					return a.name.localeCompare(b.name);
+				}
+			});
 
-	const nutrientList = nutrientClassifications.map((classification) => {
-		const nutrients = recipe.nutrition.filter(
-			(nutrient) => nutrient.classification === classification
-		);
-		if (nutrients.length === 0) {
-			return null;
-		}
 		return (
-			<div>
-				<h3>{classification}</h3>
+			<div key={classification}>
+				<h3>
+					<u>{classification}</u>
+				</h3>
 				<ul>
-					{nutrients.map((nutrient) => (
-						<li key={nutrient._id}>
-							{nutrient.description}:{nutrient.amount}
-							{nutrient.modifier}
+					{sortedNutrients.map((nutrient) => (
+						<li
+							key={nutrient._id}
+							style={{ fontWeight: nutrient.isMacroNutrient ? "bold" : "normal" }}
+						>
+							{nutrient.name}:{" "}
+							{Math.round((nutrient.amount + Number.EPSILON) * 100) / 100}{" "}
+							{nutrient.unit}
 						</li>
 					))}
 				</ul>

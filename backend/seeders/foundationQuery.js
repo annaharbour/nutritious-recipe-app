@@ -9,15 +9,15 @@ dotenv.config();
 const FDC_API_KEY = process.env.FDC_API_KEY;
 
 const fdcids = [
-	// List of FDC IDs
+	2343062, 2343010, 2343013 , 2343014 
 ];
 
 const getFoodData = async (ids) => {
 	try {
 		const responses = await Promise.all(
-			ids.map(async (fdcId) => {
+			ids.map(async (id) => {
 				const res = await axios.get(
-					`https://api.nal.usda.gov/fdc/v1/food/${fdcId}?api_key=${FDC_API_KEY}`
+					`https://api.nal.usda.gov/fdc/v1/food/${id}?api_key=${FDC_API_KEY}`
 				);
 				return res.data;
 			})
@@ -30,8 +30,8 @@ const getFoodData = async (ids) => {
 
 const formatFoodData = (foods) => {
 	return foods.map((food) => ({
-		_id: food.id,
-		category: food.brandedFoodCategory,
+		_id: new mongoose.Types.ObjectId(),
+		category: "Nut and Seed Products",
 		description:
 			food.description.charAt(0).toUpperCase() +
 			food.description.slice(1).toLowerCase(),

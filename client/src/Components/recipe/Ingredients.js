@@ -19,7 +19,7 @@ function Ingredients({ recipe }) {
 			return null;
 		}
 		return (
-			<div>
+			<div key={category}>
 				<h3>{category}</h3>
 				<ul>
 					{ingredients.map((ingredient) => (
