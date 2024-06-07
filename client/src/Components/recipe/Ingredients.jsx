@@ -11,6 +11,7 @@ function Ingredients({ recipe }) {
 		"Liquid",
 	];
 
+	// Create a list of ingredients for each category
 	const ingredientList = ingredientCategories.map((category) => {
 		const ingredients = recipe.ingredients.filter(
 			(ingredient) => ingredient.category === category

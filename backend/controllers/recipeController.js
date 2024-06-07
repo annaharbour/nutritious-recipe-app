@@ -4,44 +4,48 @@ const Rating = require("../models/RatingModel");
 const Ingredient = require("../models/IngredientModel");
 
 const createRecipe = async (req, res) => {
-    const { name, ingredients } = req.body;
-    const userId = req.user.id;
+	const { name, ingredients } = req.body;
+	const userId = req.user.id;
 
-    try {
-        const populatedIngredients = await Promise.all(
-            ingredients.map(async (ingredient) => {
-                const ingredientData = await Ingredient.findById(ingredient._id).lean();
-                if (!ingredientData) {
-                    throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
-                }
+	try {
+		// Populate the ingredients with the necessary data
+		const populatedIngredients = await Promise.all(
+			// Promise.all will wait for all ingredient data to be fetched before continuing
+			ingredients.map(async (ingredient) => {
+				const ingredientData = await Ingredient.findById(ingredient._id).lean();
+				if (!ingredientData) {
+					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+				}
+				// Find the food portion for the ingredient
+				const foodPortion = ingredientData.foodPortions.find(
+					(portion) =>
+						portion._id.toString() === ingredient.portionId.toString()
+				);
 
-                const foodPortion = ingredientData.foodPortions.find(
-                    (portion) => portion._id.toString() === ingredient.portionId.toString()
-                );
+				// Return the ingredient with the necessary data
+				return {
+					...ingredient,
+					description: ingredientData.description,
+					category: ingredientData.category,
+					modifier: foodPortion ? foodPortion.modifier : "g",
+					gramWeight: foodPortion ? foodPortion.gramWeight : "100",
+				};
+			})
+		);
 
-                return {
-                    ...ingredient,
-                    description: ingredientData.description,
-                    category: ingredientData.category,
-                    modifier: foodPortion ? foodPortion.modifier : 'g',
-                    gramWeight: foodPortion ? foodPortion.gramWeight : '100',
-                };
-            })
-        );
+		// Create a new recipe with the populated ingredients
+		const newRecipe = new Recipe({
+			name,
+			userId,
+			ingredients: populatedIngredients,
+		});
 
-        const newRecipe = new Recipe({
-            name,
-            userId,
-            ingredients: populatedIngredients,
-        });
-
-        await newRecipe.calculateNutrition(); 
-        await newRecipe.save();
-
-        res.status(201).json(newRecipe);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+		// Nutrition will be calculated in the pre-save hook)
+		await newRecipe.save();
+		res.status(201).json(newRecipe);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
 };
 
 const getRecipes = async (req, res) => {
@@ -54,47 +58,49 @@ const getRecipes = async (req, res) => {
 };
 
 const updateRecipeById = async (req, res) => {
-    const recipeId = req.params.id;
-    const { name, ingredients } = req.body;
+	const recipeId = req.params.id;
+	const { name, ingredients } = req.body;
 
-    try {
-        const updatedIngredients = [];
-        for (const ingredient of ingredients) {
-            const foundIngredient = await Ingredient.findById(ingredient._id).lean();
-            if (!foundIngredient) {
-                throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
-            }
+	try {
+		// Instantiate an array to store the updated ingredients
+		const updatedIngredients = [];
+		// Loop through the ingredients and populate them with the necessary data
+		for (const ingredient of ingredients) {
+			const foundIngredient = await Ingredient.findById(ingredient._id).lean();
+			if (!foundIngredient) {
+				throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+			}
+			// Find the food portion for the ingredient
+			const foodPortion = foundIngredient.foodPortions.find(
+				(portion) => portion._id.toString() === ingredient.portionId.toString()
+			);
 
-            const foodPortion = foundIngredient.foodPortions.find(
-                (portion) => portion._id.toString() === ingredient.portionId.toString()
-            );
+			// Update the ingredient with the necessary updates to the data
+			updatedIngredients.push({
+				_id: foundIngredient._id,
+				amount: ingredient.amount,
+				portionId: ingredient.portionId,
+				category: foundIngredient.category,
+				description: foundIngredient.description,
+				modifier: foodPortion ? foodPortion.modifier : "100g",
+				gramWeight: foodPortion ? foodPortion.gramWeight : 100,
+			});
+		}
 
-            updatedIngredients.push({
-                _id: foundIngredient._id,
-                amount: ingredient.amount,
-                portionId: ingredient.portionId,
-                category: foundIngredient.category,
-                description: foundIngredient.description,
-                modifier: foodPortion ? foodPortion.modifier : '100g',
-                gramWeight: foodPortion ? foodPortion.gramWeight : 100,
-            });
-        }
+		// Update the recipe with the new data
+		const updatedRecipe = await Recipe.findByIdAndUpdate(
+			recipeId,
+			{ name, ingredients: updatedIngredients },
+			{ new: true }
+		);
 
-        const updatedRecipe = await Recipe.findByIdAndUpdate(
-            recipeId,
-            { name, ingredients: updatedIngredients },
-            { new: true }
-        );
-        await updatedRecipe.calculateNutrition();
-        await updatedRecipe.save();
-
-        return res.status(200).json(updatedRecipe);
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
+		// Nutrition will be calculated in the pre-save hook
+		await updatedRecipe.save();
+		return res.status(200).json(updatedRecipe);
+	} catch (err) {
+		return res.status(500).json({ message: err.message });
+	}
 };
-
-
 
 const getRecipeById = async (req, res) => {
 	const recipeId = req.params.id;
@@ -144,9 +150,11 @@ const getSavedRecipesByUserId = async (req, res) => {
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
 		}
+		// Find the recipes that the user has saved
 		const favoriteRecipes = await Recipe.find({
 			_id: { $in: user.favoriteRecipes },
 		});
+		// Return the favorite recipes if found
 		return favoriteRecipes && favoriteRecipes.length > 0
 			? res.status(200).json(favoriteRecipes)
 			: res.status(404).json({ error: "No favorite recipes found." });
@@ -164,6 +172,7 @@ const toggleSaveRecipe = async (req, res) => {
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
 		}
+		// Check if the recipe is already saved and toggle the save
 		const alreadySaved = user.favoriteRecipes.includes(recipeId);
 		if (alreadySaved) {
 			user.favoriteRecipes.pull(recipeId);
@@ -182,6 +191,7 @@ const rateRecipe = async (req, res) => {
 	const recipeId = req.params.id;
 	const { numStars } = req.body;
 
+	// Check if the rating is between 1 and 5 stars
 	if (numStars < 1 || numStars > 5) {
 		return res
 			.status(400)
@@ -246,9 +256,7 @@ const rateRecipe = async (req, res) => {
 		}
 
 		await rating.save();
-
 		await recipe.save();
-
 		return res.status(200).json({ message: "Rating submitted successfully." });
 	} catch (err) {
 		return res.status(500).json({ error: err.message });
