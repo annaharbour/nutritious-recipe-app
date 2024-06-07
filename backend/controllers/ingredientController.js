@@ -59,13 +59,18 @@ const getIngredientNutrition = async (req, res) => {
 
 const getIngredientsByCategory = async (req, res) => {
 	const category = req.params.category;
+	console.log(category)
 	try {
-		const ingredients = await Ingredient.find({ category: category }).populate(
+		const ingredients = await Ingredient.find({ category }).populate(
 			"foodNutrients.nutrient"
 		);
+		if (!ingredients) {
+			return res.status(404).json({ message: "Ingredients not found" });
+		}
 		return res.json(ingredients);
 	} catch (error) {
-		return res.status(500).json({ message: "Server Error" });
+		console.error(error);
+		return res.status(500).json({ message: "Error fetching ingredients"});
 	}
 };
 

@@ -9,8 +9,9 @@ const {
 
 // Get ingredient by id
 router.get("/:id", getIngredientById);
+
 // Route to get ingredients by category
-router.get("category/:categoryName", getIngredientsByCategory);
+router.get("/category/:category", getIngredientsByCategory);
 
 
 

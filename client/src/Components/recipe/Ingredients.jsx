@@ -6,8 +6,7 @@ function Ingredients({ recipe }) {
 		"Vegetable",
 		"Fruit",
 		"Fat",
-		"Booster",
-		"Nut and Seed Products",
+		"Nuts & Seeds",
 		"Liquid",
 	];
 

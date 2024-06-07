@@ -1,76 +1,136 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { getIngredientsByCategory } from "../../services/ingredientService";
+import { createRecipe } from "../../services/recipeService";
 
 const RecipeForm = () => {
-    const [recipeName, setRecipeName] = useState('');
-    const [foods, setFoods] = useState([]);
+  const [recipeName, setRecipeName] = useState("");
+  const [recipeIngredients, setRecipeIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
+  const ingredientCategories = [
+    "Fruit",
+    "Vegetable",
+    "Protein",
+    "Fat",
+    "Nut and Seed Products",
+    "Liquid",
+  ];
+  const [category, setCategory] = useState(ingredientCategories[0]);
 
-    const handleRecipeNameChange = (e) => {
-        setRecipeName(e.target.value);
-    };
+  useEffect(() => {
+    fetchIngredients(category);
+  }, [category]);
 
-    const handleFoodChange = (index, e) => {
-        const updatedFoods = [...foods];
-        updatedFoods[index] = e.target.value;
-        setFoods(updatedFoods);
-        calculateNutrition();
-    };
-
-    const handleAddFood = () => {
-        if (foods.length < 5) {
-            setFoods([...foods, '']);
-        }
-        calculateNutrition();
-    };
-
-    const handleRemoveFood = (index) => {
-        const updatedFoods = [...foods];
-        updatedFoods.splice(index, 1);
-        setFoods(updatedFoods);
-    };
-
-    const calculateNutrition = () => {
-        // TODO: Perform the calculation based on the added foods and display the result
-    };
-
-    const handleSaveRecipe = (e) => {
-        e.preventDefault();
-        // TODO: Save the recipe to the database
+  const fetchIngredients = async (category) => {
+    try {
+      const res = await getIngredientsByCategory(category);
+      setIngredients(res.data);
+    } catch (error) {
+      console.error("Error fetching ingredients:", error);
     }
+  };
 
-    return (
-        <div>
-            <h2>Create a Recipe</h2>
-            <form>
-                <label htmlFor="recipeName">Recipe Name:</label>
-                <input
-                    type="text"
-                    id="recipeName"
-                    value={recipeName}
-                    onChange={handleRecipeNameChange}
-                />
+  const handleRecipeNameChange = (e) => {
+    setRecipeName(e.target.value);
+  };
 
-                <h3>Foods:</h3>
-                {foods.map((food, index) => (
-                    <div key={index}>
-                        <input
-                            type="text"
-                            value={food}
-                            onChange={(e) => handleFoodChange(index, e)}
-                        />
-                        <button type="button" onClick={() => handleRemoveFood(index)}>
-                            Remove
-                        </button>
-                    </div>
-                ))}
+  const handleAddIngredient = (ingredient) => {
+    if (recipeIngredients.length < 5) {
+      setRecipeIngredients([...recipeIngredients, ingredient]);
+    } else {
+      alert("You can only add up to 5 ingredients");
+    }
+  };
 
-                <button type="button" onClick={handleAddFood}>
-                    Add Food
-                </button>
-
-               <button type="submit" onClick={handleSaveRecipe}>Calculate Nutrition</button>
-            </form>
-        </div>
+  const handleRemoveIngredient = (ingredient) => () => {
+    setRecipeIngredients(
+        recipeIngredients.filter((i) => i._id !== ingredient._id)
     );
+};
+
+  const handleGoBack = (e) => {
+    e.preventDefault();
+    setCategory(
+      ingredientCategories[
+        (ingredientCategories.indexOf(category) + 1) %
+          ingredientCategories.length
+      ]
+    );
+  };
+
+  const handleGoForward = (e) => {
+    e.preventDefault();
+    setCategory(
+      ingredientCategories[
+        (ingredientCategories.indexOf(category) -
+          1 +
+          ingredientCategories.length) %
+          ingredientCategories.length
+      ]
+    );
+  };
+
+  const handleSaveRecipe = async (e) => {
+    e.preventDefault();
+    try {
+      await createRecipe({ name: recipeName, ingredients: recipeIngredients });
+      alert("Recipe saved successfully");
+    } catch (error) {
+      console.error("Error saving recipe:", error);
+      alert("Error saving recipe");
+    }
+  };
+
+  return (
+    <div>
+      <h2>Create a Recipe</h2>
+      <div>
+        <button onClick={handleGoForward}>Previous Category</button>
+        <button onClick={handleGoBack}>Next Category</button>
+      </div>
+      <form>
+        <label htmlFor="recipeName">Recipe Name:</label>
+        <input
+          type="text"
+          id="recipeName"
+          value={recipeName}
+          onChange={handleRecipeNameChange}
+        />
+        <h3>{category}</h3>
+        <select
+          onChange={(e) =>
+            handleAddIngredient(
+              ingredients.find((ingredient) => ingredient.description === e.target.value)
+            )
+          }
+        >
+          <option value="">Add an ingredient</option>
+          {ingredients &&
+            ingredients.map((ingredient) => (
+              <option key={ingredient._id} value={ingredient.description}>
+                {ingredient.description}
+              </option>
+            ))}
+        </select>
+        <div>
+          <h4>Selected Ingredients:</h4>
+          <ul>
+            {recipeIngredients.map((ingredient, index) => (
+              <li key={index}>
+                {ingredient.description} ({ingredient.category})
+                <button onClick={handleRemoveIngredient(ingredient)}>
+                    Remove
+                </button>
+              </li>
+              
+            ))}
+          </ul>
+        </div>
+        <button type="submit" onClick={handleSaveRecipe}>
+          Save Recipe
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default RecipeForm;

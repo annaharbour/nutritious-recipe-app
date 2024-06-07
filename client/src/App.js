@@ -11,6 +11,7 @@ import Dashboard from "./Components/dashboard/Dashboard";
 import Profile from "./Components/profile/Profile";
 import PrivateRoute from "./Components/routing/PrivateRoute";
 import Recipe from "./Components/recipe/Recipe";
+import RecipeForm from "./Components/recipe-creation/RecipeForm";
 
 const App = () => {
 	const showToastMessage = (msg, type) => {
@@ -62,6 +63,7 @@ const App = () => {
 				<Route path="/login" element={<Login showToast={showToastMessage} />} />
 				<Route path="recipes">
 					<Route path=":id" element={<Recipe />} />
+					<Route path="/recipes/create" element={<RecipeForm/>} />
 				</Route>
 			</Routes>
 		</Router>
