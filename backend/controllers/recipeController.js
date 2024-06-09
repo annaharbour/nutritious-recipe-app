@@ -3,6 +3,53 @@ const User = require("../models/UserModel");
 const Rating = require("../models/RatingModel");
 const Ingredient = require("../models/IngredientModel");
 
+const calculateRecipeNutrition = async (req, res) => {
+	const { ingredients } = req.body;
+
+	// Calculate the total nutrition for the recipe
+	try {
+		// Populate the ingredients with the necessary data
+		const populatedIngredients = await Promise.all(
+			// Promise.all will wait for all ingredient data to be fetched before continuing
+			ingredients.map(async (ingredient) => {
+				const ingredientData = await Ingredient.findById(ingredient._id).lean();
+				if (!ingredientData) {
+					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+				}
+				// Find the food portion for the ingredient
+				const foodPortion = ingredientData.foodPortions.find(
+					(portion) =>
+						portion._id.toString() === ingredient.portionId.toString()
+				);
+
+				// Return the ingredient with the necessary data
+				return {
+					...ingredient,
+					description: ingredientData.description,
+					category: ingredientData.category,
+					modifier: foodPortion ? foodPortion.modifier : "g",
+					gramWeight: foodPortion ? foodPortion.gramWeight : "100",
+				};
+			})
+		);
+
+		const recipe = new Recipe({
+			ingredients: populatedIngredients,
+		});
+
+		// Calculate the total nutrition for the recipe
+		const totalNutrition = await recipe.calculateNutrition();
+		return res.json(totalNutrition);
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	}
+	// Return the recipe with the calculated nutrition without saving the recipe (for use in mocking up a recipe's nutrition before it is saved)
+	return {
+		...ingredients,
+		nutrition: totalNutrition,
+	};
+};
+
 const createRecipe = async (req, res) => {
 	const { name, ingredients } = req.body;
 	const userId = req.user.id;
@@ -265,6 +312,7 @@ const rateRecipe = async (req, res) => {
 
 module.exports = {
 	createRecipe,
+	calculateRecipeNutrition,
 	getRecipes,
 	getRecipeById,
 	updateRecipeById,

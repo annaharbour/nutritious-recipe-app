@@ -59,7 +59,6 @@ const getIngredientNutrition = async (req, res) => {
 
 const getIngredientsByCategory = async (req, res) => {
 	const category = req.params.category;
-	console.log(category)
 	try {
 		const ingredients = await Ingredient.find({ category }).populate(
 			"foodNutrients.nutrient"

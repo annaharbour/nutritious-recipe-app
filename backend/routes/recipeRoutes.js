@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const {
 	createRecipe,
+	calculateRecipeNutrition,
 	getRecipeById,
 	updateRecipeById,
 	deleteRecipeById,
@@ -17,6 +18,8 @@ const {
 // @desc Create new recipe, get all recipes
 // Private / Public
 router.route("/").post(auth, createRecipe).get(getRecipes);
+
+router.route("/nutrition").post(calculateRecipeNutrition);
 
 // PUT /api/recipes/:id
 //@desc Read, update, delete a recipe

@@ -11,7 +11,7 @@ const RecipeForm = () => {
     "Vegetable",
     "Protein",
     "Fat",
-    "Nut and Seed Products",
+    "Nuts & Seeds",
     "Liquid",
   ];
   const [category, setCategory] = useState(ingredientCategories[0]);
@@ -35,11 +35,28 @@ const RecipeForm = () => {
 
   const handleAddIngredient = (ingredient) => {
     if (recipeIngredients.length < 5) {
-      setRecipeIngredients([...recipeIngredients, ingredient]);
+      const defaultPortion = ingredient.foodPortions[0];
+      setRecipeIngredients([...recipeIngredients, { ...ingredient, amount: 1, modifier: defaultPortion.modifier }]);
     } else {
       alert("You can only add up to 5 ingredients");
     }
   };
+
+  const handleAmountChange = (ingredient, amount) => {
+    setRecipeIngredients(
+      recipeIngredients.map((i) =>
+        i._id === ingredient._id ? { ...i, amount } : i
+      )
+    );
+  };
+
+  const handleModifierChange = (ingredient, modifier) => {
+    setRecipeIngredients(
+      recipeIngredients.map((i) =>
+        i._id === ingredient._id ? { ...i, modifier } : i
+      )
+    );
+  }
 
   const handleRemoveIngredient = (ingredient) => () => {
     setRecipeIngredients(
@@ -117,6 +134,16 @@ const RecipeForm = () => {
             {recipeIngredients.map((ingredient, index) => (
               <li key={index}>
                 {ingredient.description} ({ingredient.category})
+                <input type="number" value={ingredient.amount} min="1" max="10" onChange={(e) => handleAmountChange(ingredient, e.target.value)}
+                />
+                <select>
+                 {ingredient.foodPortions.map((portion) => (
+                  <option key={portion._id} onChange={(e)=> handleModifierChange(ingredient, e.target.value)}>
+                    {portion.modifier}
+                  </option>
+                ))}
+               
+                </select>
                 <button onClick={handleRemoveIngredient(ingredient)}>
                     Remove
                 </button>
