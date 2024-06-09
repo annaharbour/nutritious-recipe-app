@@ -34,6 +34,17 @@ export const createRecipe = async (recipe) => {
 	}
 };
 
+export const calculateRecipeNutrition = async (recipe) => {
+	try {
+		const res = await axiosInstance.post("/nutrition", 
+			recipe,
+		);
+		return res;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export const updateRecipe = async (updatedRecipe) => {
 	try {
 		const res = await axiosInstance.put("/", {
