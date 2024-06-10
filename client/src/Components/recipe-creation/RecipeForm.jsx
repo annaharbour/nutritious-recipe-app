@@ -1,367 +1,214 @@
-// import React, { useState, useEffect } from "react";
-// import { getIngredientsByCategory } from "../../services/ingredientService";
-// import { createRecipe, calculateRecipeNutrition } from "../../services/recipeService";
-
-// const RecipeForm = () => {
-//   const [recipeName, setRecipeName] = useState("");
-//   const [recipeIngredients, setRecipeIngredients] = useState([]);
-//   const [ingredients, setIngredients] = useState([]);
-//   const ingredientCategories = [
-//     "Fruit",
-//     "Vegetable",
-//     "Protein",
-//     "Fat",
-//     "Nuts & Seeds",
-//     "Liquid",
-//   ];
-//   const [category, setCategory] = useState(ingredientCategories[0]);
-
-//   useEffect(() => {
-//     fetchIngredients(category);
-//   }, [category]);
-
-//   const fetchIngredients = async (category) => {
-//     try {
-//       const res = await getIngredientsByCategory(category);
-//       setIngredients(res.data);
-//     } catch (error) {
-//       console.error("Error fetching ingredients:", error);
-//     }
-//   };
-
-//   const fetchRecipeNutrition = async (recipeIngredients) => {
-//     try {
-//       if(recipeIngredients.length === 0) return;
-//       const res = await calculateRecipeNutrition({ingredients: recipeIngredients});
-//       console.log(res.data);
-//     } catch (error) {
-//       console.error("Error calculating recipe nutrition:", error);
-//     }
-//   }
-  
-//   useEffect(() => {
-//     fetchRecipeNutrition(recipeIngredients);
-//   }, [recipeIngredients]);
-
-//   const handleRecipeNameChange = (e) => {
-//     setRecipeName(e.target.value);
-//   };
-
-//   const handleAddIngredient = (ingredient) => {
-//     if (recipeIngredients.length < 5) {
-//       const defaultPortion = ingredient.foodPortions[0];
-//       setRecipeIngredients([...recipeIngredients, { ...ingredient, amount: 1, modifier: defaultPortion.modifier }]);
-//       fetchRecipeNutrition(recipeIngredients)
-//     } else {
-//       alert("You can only add up to 5 ingredients");
-//     }
-//   };
-
-//   const handleAmountChange = (ingredient, amount) => {
-//     setRecipeIngredients(
-//       recipeIngredients.map((i) =>
-//         i._id === ingredient._id ? { ...i, amount } : i
-//       )
-//     );
-//     fetchRecipeNutrition(recipeIngredients);
-//   };
-
-//   const handleModifierChange = (ingredient, modifier) => {
-//     setRecipeIngredients(
-//       recipeIngredients.map((i) =>
-//         i._id === ingredient._id ? { ...i, modifier } : i
-//       )
-//     );
-//     fetchRecipeNutrition(recipeIngredients);
-//   }
-
-//   const handleRemoveIngredient = (ingredient) => () => {
-//     setRecipeIngredients(
-//         recipeIngredients.filter((i) => i._id !== ingredient._id)
-//     );
-//     fetchRecipeNutrition(recipeIngredients);
-// };
-
-//   const handleGoBack = (e) => {
-//     e.preventDefault();
-//     setCategory(
-//       ingredientCategories[
-//         (ingredientCategories.indexOf(category) + 1) %
-//           ingredientCategories.length
-//       ]
-//     );
-//   };
-
-//   const handleGoForward = (e) => {
-//     e.preventDefault();
-//     setCategory(
-//       ingredientCategories[
-//         (ingredientCategories.indexOf(category) -
-//           1 +
-//           ingredientCategories.length) %
-//           ingredientCategories.length
-//       ]
-//     );
-//   };
-
-//   const handleSaveRecipe = async (e) => {
-//     e.preventDefault();
-//     try {
-//       await createRecipe({ name: recipeName, ingredients: recipeIngredients });
-//       alert("Recipe saved successfully");
-//     } catch (error) {
-//       console.error("Error saving recipe:", error);
-//       alert("Error saving recipe");
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h2>Create a Recipe</h2>
-//       <div>
-//         <button onClick={handleGoForward}>Previous Category</button>
-//         <button onClick={handleGoBack}>Next Category</button>
-//       </div>
-//       <form>
-//         <label htmlFor="recipeName">Recipe Name:</label>
-//         <input
-//           type="text"
-//           id="recipeName"
-//           value={recipeName}
-//           onChange={handleRecipeNameChange}
-//         />
-//         <h3>{category}</h3>
-//         <select
-//           onChange={(e) =>
-//             handleAddIngredient(
-//               ingredients.find((ingredient) => ingredient.description === e.target.value)
-//             )
-//           }
-//         >
-//           <option value="">Add an ingredient</option>
-//           {ingredients &&
-//             ingredients.map((ingredient) => (
-//               <option key={ingredient._id} value={ingredient.description}>
-//                 {ingredient.description}
-//               </option>
-//             ))}
-//         </select>
-//         <div>
-//           <h4>Selected Ingredients:</h4>
-//           <ul>
-//             {recipeIngredients.map((ingredient, index) => (
-//               <li key={index}>
-//                 {ingredient.description} ({ingredient.category})
-//                 <input type="number" value={ingredient.amount} min="1" max="10" onChange={(e) => handleAmountChange(ingredient, e.target.value)}
-//                 />
-//                 <select>
-//                  {ingredient.foodPortions.map((portion) => (
-//                   <option key={portion._id} onChange={(e)=> handleModifierChange(ingredient, e.target.value)}>
-//                     {portion.modifier}
-//                   </option>
-//                 ))}
-               
-//                 </select>
-//                 <button onClick={handleRemoveIngredient(ingredient)}>
-//                     Remove
-//                 </button>
-//               </li>
-              
-//             ))}
-//           </ul>
-//         </div>
-//         <button type="submit" onClick={handleSaveRecipe}>
-//           Save Recipe
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default RecipeForm;
-
 import React, { useState, useEffect } from "react";
 import { getIngredientsByCategory } from "../../services/ingredientService";
-import { createRecipe, calculateRecipeNutrition } from "../../services/recipeService";
+import {
+	createRecipe,
+	calculateRecipeNutrition,
+} from "../../services/recipeService";
+import Nutrition from "./Nutrition";
 
 const RecipeForm = () => {
-  const [recipeName, setRecipeName] = useState("");
-  const [recipeIngredients, setRecipeIngredients] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
-  const ingredientCategories = [
-    "Fruit",
-    "Vegetable",
-    "Protein",
-    "Fat",
-    "Nuts & Seeds",
-    "Liquid",
-  ];
-  const [category, setCategory] = useState(ingredientCategories[0]);
+	const [recipeName, setRecipeName] = useState("");
+	const [recipeIngredients, setRecipeIngredients] = useState([]);
+	const [ingredients, setIngredients] = useState([]);
+	const [selectedIngredient, setSelectedIngredient] = useState(null);
+	const [selectedPortion, setSelectedPortion] = useState("");
+	const [selectedAmount, setSelectedAmount] = useState(1);
+	const [recipeNutrition, setRecipeNutrition] = useState([]);
+	const ingredientCategories = [
+		"Fruit",
+		"Vegetable",
+		"Protein",
+		"Fat",
+		"Nuts & Seeds",
+		"Liquid",
+		"Flavor",
+	];
 
-  useEffect(() => {
-    fetchIngredients(category);
-  }, [category]);
+	const [category, setCategory] = useState(ingredientCategories[0]);
 
-  const fetchIngredients = async (category) => {
-    try {
-      const res = await getIngredientsByCategory(category);
-      setIngredients(res.data);
-    } catch (error) {
-      console.error("Error fetching ingredients:", error);
-    }
-  };
+	useEffect(() => {
+		fetchIngredients(category);
+	}, [category]);
 
-  const fetchRecipeNutrition = async (recipeIngredients) => {
-    try {
-      if (recipeIngredients.length === 0) return;
-      const res = await calculateRecipeNutrition({ ingredients: recipeIngredients });
-      console.log(res.data);
-    } catch (error) {
-      console.error("Error calculating recipe nutrition:", error);
-    }
-  };
+	const fetchIngredients = async (category) => {
+		try {
+			const res = await getIngredientsByCategory(category);
+			setIngredients(res.data);
+			console.log("Fetched ingredients:", res.data);
+		} catch (error) {
+			console.error("Error fetching ingredients:", error);
+		}
+	};
 
-  useEffect(() => {
-    fetchRecipeNutrition(recipeIngredients);
-  }, [recipeIngredients]);
+	const fetchRecipeNutrition = async (recipeIngredients) => {
+		try {
+			if (recipeIngredients.length === 0) return;
+			const res = await calculateRecipeNutrition({
+				ingredients: recipeIngredients,
+			});
+			setRecipeNutrition(res.data);
+		} catch (error) {
+			console.error("Error calculating recipe nutrition:", error);
+		}
+	};
 
-  const handleRecipeNameChange = (e) => {
-    setRecipeName(e.target.value);
-  };
+	useEffect(() => {
+		fetchRecipeNutrition(recipeIngredients);
+	}, [recipeIngredients]);
 
-  const handleAddIngredient = (ingredient) => {
-    if (recipeIngredients.length < 5) {
-      const defaultPortion = ingredient.foodPortions ? ingredient.foodPortions[0] : { modifier: "g", gramWeight: 100 };
-      setRecipeIngredients([
-        ...recipeIngredients,
-        { ...ingredient, amount: 1, portionId: defaultPortion._id, modifier: defaultPortion.modifier }
-      ]);
-    } else {
-      alert("You can only add up to 5 ingredients");
-    }
-  };
+	const handleRecipeNameChange = (e) => {
+		setRecipeName(e.target.value);
+	};
 
+	const handleAddIngredient = (e) => {
+		e.preventDefault();
+		if (!selectedIngredient) return;
 
-  const handleAmountChange = (ingredient, amount) => {
-    setRecipeIngredients(
-      recipeIngredients.map((i) =>
-        i._id === ingredient._id ? { ...i, amount: Number(amount) } : i
-      )
-    );
-  };
+		const ingredient = ingredients.find((i) => i._id === selectedIngredient);
+		if (!ingredient) return console.log("Ingredient not found");
 
-  const handleModifierChange = (ingredient, modifier) => {
-    setRecipeIngredients(
-      recipeIngredients.map((i) =>
-        i._id === ingredient._id ? { ...i, modifier } : i
-      )
-    );
-  };
+		console.log("Selected Portion:", selectedPortion);
+		const portion = ingredient.foodPortions.find(
+			(p) => p._id === Number(selectedPortion)
+		);
+		console.log("Matched Portion:", portion);
 
-  const handleRemoveIngredient = (ingredient) => () => {
-    setRecipeIngredients(
-      recipeIngredients.filter((i) => i._id !== ingredient._id)
-    );
-  };
+		if (!portion) {
+			alert("Please select a valid portion.");
+			return;
+		}
 
-  const handleGoBack = (e) => {
-    e.preventDefault();
-    setCategory(
-      ingredientCategories[
-        (ingredientCategories.indexOf(category) + 1) % ingredientCategories.length
-      ]
-    );
-  };
+		if (recipeIngredients.length < 5) {
+			setRecipeIngredients([
+				...recipeIngredients,
+				{
+					...ingredient,
+					amount: selectedAmount,
+					portionId: portion._id,
+					modifier: portion.modifier,
+				},
+			]);
+		} else {
+			alert("You can only add up to 5 ingredients");
+		}
+		setSelectedIngredient(null);
+		setSelectedPortion("");
+		setSelectedAmount(1);
+	};
 
-  const handleGoForward = (e) => {
-    e.preventDefault();
-    setCategory(
-      ingredientCategories[
-        (ingredientCategories.indexOf(category) - 1 + ingredientCategories.length) %
-        ingredientCategories.length
-      ]
-    );
-  };
+	const handleRemoveIngredient = (ingredient) => () => {
+		setRecipeIngredients(
+			recipeIngredients.filter((i) => i._id !== ingredient._id)
+		);
+	};
 
-  const handleSaveRecipe = async (e) => {
-    e.preventDefault();
-    try {
-      await createRecipe({ name: recipeName, ingredients: recipeIngredients });
-      alert("Recipe saved successfully");
-    } catch (error) {
-      console.error("Error saving recipe:", error);
-      alert("Error saving recipe");
-    }
-  };
+	const handleGoBack = (e) => {
+		e.preventDefault();
+		setCategory(
+			ingredientCategories[
+				(ingredientCategories.indexOf(category) -
+					1 +
+					ingredientCategories.length) %
+					ingredientCategories.length
+			]
+		);
+	};
 
-  return (
-    <div>
-      <h2>Create a Recipe</h2>
-      <div>
-        <button onClick={handleGoForward}>Previous Category</button>
-        <button onClick={handleGoBack}>Next Category</button>
-      </div>
-      <form>
-        <label htmlFor="recipeName">Recipe Name:</label>
-        <input
-          type="text"
-          id="recipeName"
-          value={recipeName}
-          onChange={handleRecipeNameChange}
-        />
-        <h3>{category}</h3>
-        <select
-          onChange={(e) =>
-            handleAddIngredient(
-              ingredients.find((ingredient) => ingredient.description === e.target.value)
-            )
-          }
-        >
-          <option value="">Add an ingredient</option>
-          {ingredients &&
-            ingredients.map((ingredient) => (
-              <option key={ingredient._id} value={ingredient.description}>
-                {ingredient.description}
-              </option>
-            ))}
-        </select>
-        <div>
-          <h4>Selected Ingredients:</h4>
-          <ul>
-            {recipeIngredients.map((ingredient, index) => (
-              <li key={index}>
-                {ingredient.description} ({ingredient.category})
-                <input
-                  type="number"
-                  value={ingredient.amount}
-                  min="1"
-                  max="10"
-                  onChange={(e) => handleAmountChange(ingredient, e.target.value)}
-                />
-                <select
-                  value={ingredient.modifier}
-                  onChange={(e) => handleModifierChange(ingredient, e.target.value)}
-                >
-                  {ingredient.foodPortions &&
-                    ingredient.foodPortions.map((portion) => (
-                      <option key={portion._id} value={portion.modifier}>
-                        {portion.modifier}
-                      </option>
-                    ))}
-                </select>
-                <button onClick={handleRemoveIngredient(ingredient)}>
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <button type="submit" onClick={handleSaveRecipe}>
-          Save Recipe
-        </button>
-      </form>
-    </div>
-  );
+	const handleGoForward = (e) => {
+		e.preventDefault();
+		setCategory(
+			ingredientCategories[
+				(ingredientCategories.indexOf(category) + 1) %
+					ingredientCategories.length
+			]
+		);
+	};
+
+	const handleSaveRecipe = async (e) => {
+		e.preventDefault();
+		try {
+			await createRecipe({ name: recipeName, ingredients: recipeIngredients });
+			alert("Recipe saved successfully");
+		} catch (error) {
+			console.error("Error saving recipe:", error);
+			alert("Error saving recipe");
+		}
+	};
+
+	return (
+		<div>
+			<h2>Create a Recipe</h2>
+			<div>
+				<button onClick={handleGoBack}>Previous Category</button>
+				<button onClick={handleGoForward}>Next Category</button>
+			</div>
+			<form onSubmit={handleSaveRecipe}>
+				<label htmlFor="recipeName">Recipe Name:</label>
+				<input
+					type="text"
+					id="recipeName"
+					value={recipeName}
+					onChange={handleRecipeNameChange}
+				/>
+				<h3>{category}</h3>
+				<select
+					value={selectedIngredient || ""}
+					onChange={(e) => setSelectedIngredient(e.target.value)}>
+					<option value="">Select an ingredient</option>
+					{ingredients &&
+						ingredients.map((ingredient) => (
+							<option key={ingredient._id} value={ingredient._id}>
+								{ingredient.description}
+							</option>
+						))}
+				</select>
+				{selectedIngredient && (
+					<div>
+						<label htmlFor="portion">Portion:</label>
+						<input
+							type="number"
+							value={selectedAmount}
+							min="1"
+							onChange={(e) => setSelectedAmount(e.target.value)}
+						/>
+						<select
+							value={selectedPortion || ""}
+							onChange={(e) => setSelectedPortion(e.target.value)}>
+							<option value="">Select a portion</option>
+							{ingredients
+								.find((i) => i._id === selectedIngredient)
+								?.foodPortions.map((portion) => (
+									<option key={portion._id} value={portion._id}>
+										{portion.modifier}
+									</option>
+								))}
+						</select>
+					</div>
+				)}
+				<button onClick={handleAddIngredient}>Add +</button>
+				<div>
+					<h4>Selected Ingredients:</h4>
+					<ul>
+						{recipeIngredients.map((ingredient, index) => (
+							<li key={index}>
+								{ingredient.description} ({ingredient.category})
+                 <br></br>
+                 {ingredient.amount} {ingredient.modifier}
+								<button onClick={handleRemoveIngredient(ingredient)}>
+									Remove
+								</button>
+							</li>
+						))}
+					</ul>
+				</div>
+				<button type="submit">Save Recipe</button>
+				<Nutrition
+					ingredients={recipeIngredients}
+					recipeNutrition={recipeNutrition}
+				/>
+			</form>
+		</div>
+	);
 };
 
 export default RecipeForm;
