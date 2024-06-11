@@ -124,16 +124,17 @@ const RecipeForm = () => {
 		);
 	};
 
-	const handleSaveRecipe = async (e) => {
-		e.preventDefault();
-		try {
-			await createRecipe({ name: recipeName, ingredients: recipeIngredients });
-			alert("Recipe saved successfully");
-		} catch (error) {
-			console.error("Error saving recipe:", error);
-			alert("Error saving recipe");
-		}
-	};
+  const handleSaveRecipe = async (e) => {
+    e.preventDefault();
+    try {
+        await createRecipe(recipeName, recipeIngredients);
+        alert("Recipe saved successfully");
+    } catch (error) {
+        console.error("Error saving recipe:", error);
+        alert("Error saving recipe");
+    }
+};
+
 
 	return (
 		<div>
