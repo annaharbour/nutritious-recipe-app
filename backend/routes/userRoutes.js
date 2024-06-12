@@ -5,6 +5,7 @@ const {
 	getUsers,
 	getUserById,
 	deleteUser,
+	
 } = require("../controllers/userController");
 
 //Get /users
@@ -16,7 +17,5 @@ router.route("/").get(auth, getUsers);
 // @desc Get or delete user by id
 // @access Private
 router.route("/:id").get(getUserById).delete(auth, deleteUser);
-
-
 
 module.exports = router;

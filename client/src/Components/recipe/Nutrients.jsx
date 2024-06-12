@@ -37,7 +37,7 @@ function Nutrients({ recipe }) {
 							style={{ fontWeight: nutrient.isMacroNutrient ? "bold" : "normal" }}
 						>
 							{nutrient.name}:{" "}
-							{Math.round((nutrient.amount + Number.EPSILON) * 10) / 100}{" "}
+							{Math.round((nutrient.amount + Number.EPSILON) * 10) / 10}{" "}
 							{nutrient.unit}
 						</li>
 					))}

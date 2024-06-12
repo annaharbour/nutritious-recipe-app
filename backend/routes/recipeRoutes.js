@@ -42,3 +42,4 @@ module.exports = router;
 
 // TODO: Rate Recipe Route
 router.route("/:id/rate").put(auth, rateRecipe);
+
