@@ -3,6 +3,10 @@ import {usersUrl} from "./endpoints";
 
 const axiosInstance = axios.create({
 	baseURL: usersUrl,
+	headers: {
+		"Content-Type": "application/json",
+		"x-auth-token": localStorage.getItem("token"),
+	},
 });
 
 export const getAllUsers = async () => {
@@ -22,6 +26,15 @@ export const getUserById = async (id) => {
 		console.error(error);
 	}
 };
+
+export const getUserFavorites = async (id) => {
+	try {
+		const res = await axiosInstance.get(`/favorites`);
+		return res.data;
+	} catch (error) {
+		console.error(error);
+	}
+}
 
 export const deleteUser = async (id) => {
 	try {

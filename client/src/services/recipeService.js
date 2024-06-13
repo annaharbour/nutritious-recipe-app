@@ -93,9 +93,9 @@ export const getSavedRecipesByUserId = async (userId) => {
 	}
 }
 
-export const toggleSaveRecipe = async (recipeId) => {
+export const toggleSaveRecipe = async (id) => {
 	try {
-		const res = await axiosInstance.put(`/save/${recipeId}`);
+		const res = await axiosInstance.put(`/save/${id}`);
 		return res;
 	} catch (error) {
 		console.error(error);

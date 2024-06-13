@@ -5,6 +5,7 @@ import NotFound from "../layout/NotFound";
 import { useParams } from "react-router";
 import Ingredients from "./Ingredients";
 import Nutrients from "./Nutrients";
+import SaveRecipe from "./SaveRecipe";
 
 function Recipe() {
 	const [loading, setLoading] = useState(false);
@@ -56,6 +57,7 @@ function Recipe() {
 			{user && <p>by {user.name}</p>}
 			<Ingredients recipe={recipe}	/>
 			<Nutrients recipe={recipe} />
+			<SaveRecipe	recipe={recipe} />
 		</div>
 	);
 }
