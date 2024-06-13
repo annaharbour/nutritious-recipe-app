@@ -4,7 +4,8 @@ import {
 	createRecipe,
 	calculateRecipeNutrition,
 } from "../../services/recipeService";
-import Nutrition from "./Nutrition";
+import Nutrients from "../recipe/Nutrients";
+import RecipeIngredients from "./RecipeIngredients";
 
 const RecipeForm = () => {
 	const [recipeName, setRecipeName] = useState("");
@@ -27,19 +28,20 @@ const RecipeForm = () => {
 	const [category, setCategory] = useState(ingredientCategories[0]);
 
 	useEffect(() => {
+		// Fetch the ingredients for the selected category
+		const fetchIngredients = async (category) => {
+			try {
+				const res = await getIngredientsByCategory(category);
+				setIngredients(res.data);
+			} catch (error) {
+				console.error("Error fetching ingredients:", error);
+			}
+		};
+
 		fetchIngredients(category);
 	}, [category]);
 
-	const fetchIngredients = async (category) => {
-		try {
-			const res = await getIngredientsByCategory(category);
-			setIngredients(res.data);
-			console.log("Fetched ingredients:", res.data);
-		} catch (error) {
-			console.error("Error fetching ingredients:", error);
-		}
-	};
-
+	// Fetch the nutrition information for the recipe
 	const fetchRecipeNutrition = async (recipeIngredients) => {
 		try {
 			if (recipeIngredients.length === 0) return;
@@ -64,20 +66,14 @@ const RecipeForm = () => {
 		e.preventDefault();
 		if (!selectedIngredient) return;
 
+		// Find the selected ingredient and portion
 		const ingredient = ingredients.find((i) => i._id === selectedIngredient);
-		if (!ingredient) return console.log("Ingredient not found");
 
-		console.log("Selected Portion:", selectedPortion);
 		const portion = ingredient.foodPortions.find(
 			(p) => p._id === Number(selectedPortion)
 		);
-		console.log("Matched Portion:", portion);
 
-		if (!portion) {
-			alert("Please select a valid portion.");
-			return;
-		}
-
+		// Add the ingredient to the recipe
 		if (recipeIngredients.length < 5) {
 			setRecipeIngredients([
 				...recipeIngredients,
@@ -91,6 +87,7 @@ const RecipeForm = () => {
 		} else {
 			alert("You can only add up to 5 ingredients");
 		}
+		// Reset the form
 		setSelectedIngredient(null);
 		setSelectedPortion("");
 		setSelectedAmount(1);
@@ -124,17 +121,16 @@ const RecipeForm = () => {
 		);
 	};
 
-  const handleSaveRecipe = async (e) => {
-    e.preventDefault();
-    try {
-        await createRecipe(recipeName, recipeIngredients);
-        alert("Recipe saved successfully");
-    } catch (error) {
-        console.error("Error saving recipe:", error);
-        alert("Error saving recipe");
-    }
-};
-
+	const handleSaveRecipe = async (e) => {
+		e.preventDefault();
+		try {
+			await createRecipe(recipeName, recipeIngredients);
+			alert("Recipe saved successfully");
+		} catch (error) {
+			console.error("Error saving recipe:", error);
+			alert("Error saving recipe");
+		}
+	};
 
 	return (
 		<div>
@@ -186,27 +182,18 @@ const RecipeForm = () => {
 						</select>
 					</div>
 				)}
+
 				<button onClick={handleAddIngredient}>Add +</button>
-				<div>
-					<h4>Selected Ingredients:</h4>
-					<ul>
-						{recipeIngredients.map((ingredient, index) => (
-							<li key={index}>
-								{ingredient.description} ({ingredient.category})
-                 <br></br>
-                 {ingredient.amount} {ingredient.modifier}
-								<button onClick={handleRemoveIngredient(ingredient)}>
-									Remove
-								</button>
-							</li>
-						))}
-					</ul>
-				</div>
-				<button type="submit">Save Recipe</button>
-				<Nutrition
-					ingredients={recipeIngredients}
-					recipeNutrition={recipeNutrition}
-				/>
+				{recipeIngredients.length > 0 && (
+					<>
+						<RecipeIngredients
+							recipeIngredients={recipeIngredients}
+							handleRemoveIngredient={handleRemoveIngredient}
+						/>
+						<button type="submit">Post Recipe</button>
+						<Nutrients recipe={recipeNutrition} />
+					</>
+				)}
 			</form>
 		</div>
 	);

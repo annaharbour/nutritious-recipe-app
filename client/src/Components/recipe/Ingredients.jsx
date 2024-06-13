@@ -1,6 +1,6 @@
 import React from "react";
 
-function Ingredients({ recipe }) {
+function Ingredients({ ingredients }) {
 	const ingredientCategories = [
 		"Protein",
 		"Vegetable",
@@ -12,17 +12,17 @@ function Ingredients({ recipe }) {
 
 	// Create a list of ingredients for each category
 	const ingredientList = ingredientCategories.map((category) => {
-		const ingredients = recipe.ingredients.filter(
+		const categoryIngredients = ingredients.filter(
 			(ingredient) => ingredient.category === category
 		);
-		if (ingredients.length === 0) {
+		if (categoryIngredients.length === 0) {
 			return null;
 		}
 		return (
 			<div key={category}>
 				<h3>{category}</h3>
 				<ul>
-					{ingredients.map((ingredient) => (
+					{categoryIngredients.map((ingredient) => (
 						<li key={ingredient._id}>
 							{ingredient.description}: {ingredient.amount}{" "}
 							{ingredient.modifier}

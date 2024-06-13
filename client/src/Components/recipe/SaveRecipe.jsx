@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toggleSaveRecipe } from "../../services/recipeService";
 import { getUserFavorites } from "../../services/userService";
-
 function SaveRecipe({ recipe }) {
 	const [loading, setLoading] = useState(false);
 	const [isSaved, setIsSaved] = useState(false);
@@ -11,20 +10,20 @@ function SaveRecipe({ recipe }) {
 			try {
 				setLoading(true);
 				const res = await getUserFavorites();
-				setIsSaved(res.includes(recipe._id));
+				setIsSaved(res.includes(recipe));
 				setLoading(false);
 			} catch (err) {
 				setLoading(false);
 			}
 		};
 		fetchSavedRecipes();
-	}, [recipe._id]);
+	}, [recipe]);
 
 	const toggleSave = async () => {
 		try {
 			setLoading(true);
-			const res = await toggleSaveRecipe(recipe._id);
-			setIsSaved(res.data.includes(recipe._id));
+			const res = await toggleSaveRecipe(recipe);
+			setIsSaved(res.data.includes(recipe));
 			setLoading(false);
 			alert(isSaved ? "Recipe unsaved successfully!" : "Recipe saved successfully!");
 		} catch (err) {

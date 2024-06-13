@@ -55,9 +55,9 @@ function Recipe() {
 		<div>
 			<h1>{recipe.name}</h1>
 			{user && <p>by {user.name}</p>}
-			<Ingredients recipe={recipe}	/>
-			<Nutrients recipe={recipe} />
-			<SaveRecipe	recipe={recipe} />
+			<Ingredients ingredients={recipe.ingredients}	/>
+			<Nutrients recipe={recipe.nutrition} />
+			<SaveRecipe	recipe={recipe._id} />
 		</div>
 	);
 }
