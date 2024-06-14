@@ -51,43 +51,51 @@ const calculateRecipeNutrition = async (req, res) => {
 };
 
 const createRecipe = async (req, res) => {
-    const { name, ingredients } = req.body;
-    const userId = req.user.id;
+	const { name, ingredients } = req.body;
+	const userId = req.user.id;
 
-    try {
-        const populatedIngredients = await Promise.all(
-            ingredients.map(async (ingredient) => {
-                const ingredientData = await Ingredient.findById(ingredient._id).lean();
-                if (!ingredientData) {
-                    throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
-                }
-                const foodPortion = ingredientData.foodPortions.find(
-                    (portion) =>
-                        portion._id.toString() === ingredient.portionId.toString()
-                );
+	try {
+		const populatedIngredients = await Promise.all(
+			ingredients.map(async (ingredient) => {
+				const ingredientData = await Ingredient.findById(ingredient._id).lean();
+				if (!ingredientData) {
+					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+				}
+				const foodPortion = ingredientData.foodPortions.find(
+					(portion) =>
+						portion._id.toString() === ingredient.portionId.toString()
+				);
 
-                return {
-                    ...ingredient,
-                    description: ingredientData.description,
-                    category: ingredientData.category,
-                    modifier: foodPortion ? foodPortion.modifier : "g",
-                    gramWeight: foodPortion ? foodPortion.gramWeight : 100, // Assuming default 100g if not found
-                };
-            })
-        );
+				return {
+					...ingredient,
+					description: ingredientData.description,
+					category: ingredientData.category,
+					modifier: foodPortion ? foodPortion.modifier : "g",
+					gramWeight: foodPortion ? foodPortion.gramWeight : 100, // Assuming default 100g if not found
+				};
+			})
+		);
 
-        const newRecipe = new Recipe({
-            name: name,
-            ingredients: populatedIngredients,
-            userId: userId,
-        });
+		const newRecipe = new Recipe({
+			name: name,
+			ingredients: populatedIngredients,
+			userId: userId,
+		});
 
-        await newRecipe.save();
-        res.status(201).json(newRecipe);
-    } catch (error) {
-        console.error("Error creating recipe:", error);
-        res.status(500).json({ error: "Error creating recipe" });
-    }
+		try {
+			const user = await User.findById(userId);
+			user.recipes.push(newRecipe._id);
+			await user.save();
+		} catch (err) {
+			console.error("Error saving recipe to user:", err);
+			return res.status(500).json({ error: "Error saving recipe to user." });
+		}
+		await newRecipe.save();
+		res.status(201).json(newRecipe);
+	} catch (error) {
+		console.error("Error creating recipe:", error);
+		res.status(500).json({ error: "Error creating recipe" });
+	}
 };
 
 const getRecipes = async (req, res) => {

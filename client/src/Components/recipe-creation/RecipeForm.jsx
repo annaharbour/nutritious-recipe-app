@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { getIngredientsByCategory } from "../../services/ingredientService";
 import {
 	createRecipe,
@@ -8,6 +9,7 @@ import Nutrients from "../recipe/Nutrients";
 import RecipeIngredients from "./RecipeIngredients";
 
 const RecipeForm = () => {
+	const navigate = useNavigate()
 	const [recipeName, setRecipeName] = useState("");
 	const [recipeIngredients, setRecipeIngredients] = useState([]);
 	const [ingredients, setIngredients] = useState([]);
@@ -19,7 +21,6 @@ const RecipeForm = () => {
 		"Fruit",
 		"Vegetable",
 		"Protein",
-		"Fat",
 		"Nuts & Seeds",
 		"Liquid",
 		"Flavor",
@@ -125,7 +126,7 @@ const RecipeForm = () => {
 		e.preventDefault();
 		try {
 			await createRecipe(recipeName, recipeIngredients);
-			alert("Recipe saved successfully");
+			navigate('/dashboard')
 		} catch (error) {
 			console.error("Error saving recipe:", error);
 			alert("Error saving recipe");

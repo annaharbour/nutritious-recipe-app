@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { getUserFavorites } from "../../services/userService";
 import { getRecipesByUserId, getSavedRecipesByUserId } from "../../services/recipeService";
 const Dashboard = () => {
 	const [loading, setLoading] = useState(false);
@@ -42,10 +41,10 @@ const Dashboard = () => {
 			</h1>
 			<h3>Your recipes</h3>
 			{loading && <p>Loading...</p>}
-			{userRecipes && userRecipes.map((recipe) => <li key={recipe._id}>{recipe.name}</li>)}
+			{userRecipes && userRecipes.map((recipe) => <Link key={recipe._id}to={`/recipes/${recipe._id}`}><li>{recipe.name}</li></Link>)}
 			<h3>Your favorites</h3>
 			{loading && <p>Loading...</p>}
-			{favoriteRecipes && favoriteRecipes.map((recipe) => <li key={recipe._id}>{recipe.name}</li>)} 
+			{favoriteRecipes && favoriteRecipes.map((recipe) => <Link key={recipe._id}to={`/recipes/${recipe._id}`}><li>{recipe.name}</li></Link>)} 
 		</section>
 	);
 };

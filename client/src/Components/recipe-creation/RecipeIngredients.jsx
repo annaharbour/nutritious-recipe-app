@@ -1,14 +1,17 @@
 import React from "react";
 
 function RecipeIngredients({ handleRemoveIngredient, recipeIngredients }) {
+	const ingredients = recipeIngredients.sort((a, b) => 
+		a.category.toString().localeCompare(b.category.toString())
+	);
+
 	return (
 		<div>
 			<h4>Selected Ingredients:</h4>
 			<ul>
-				{recipeIngredients.map((ingredient, index) => (
+				{ingredients.map((ingredient, index) => (
 					<li key={index}>
-						{ingredient.description} ({ingredient.category})<br></br>
-						{ingredient.amount} {ingredient.modifier}
+						{ingredient.amount} {ingredient.modifier} of {ingredient.description.toLowerCase()}			
 						<button onClick={handleRemoveIngredient(ingredient)}>Remove</button>
 					</li>
 				))}
