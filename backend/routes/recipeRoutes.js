@@ -12,6 +12,7 @@ const {
 	getSavedRecipesByUserId,
 	toggleSaveRecipe,
 	rateRecipe,
+	getUserRating
 } = require("../controllers/recipeController");
 
 // POST /api/recipes
@@ -41,5 +42,5 @@ router.route("/save/:id").put(auth, toggleSaveRecipe);
 module.exports = router;
 
 // TODO: Rate Recipe Route
-router.route("/:id/rate").put(auth, rateRecipe);
+router.route("/:id/rate").put(auth, rateRecipe).get(auth, getUserRating);
 
