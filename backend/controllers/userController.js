@@ -30,6 +30,20 @@ const getUserById = async (req, res) => {
 	}
 };
 
+const getUserFavorites = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found." });
+        }
+        return res.status(200).json(user.favoriteRecipes);
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+};
+
 const getUser = async (req, res) => {
 	try {
 		const user = await User.findById(req.user.id);
@@ -66,4 +80,4 @@ const deleteUser = async (req, res) => {
 	}
 };
 
-module.exports = { getUsers, getUserById, deleteUser };
+module.exports = { getUsers, getUserFavorites, getUserById, deleteUser };

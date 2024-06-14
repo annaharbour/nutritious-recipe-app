@@ -1,8 +1,13 @@
 import axios from "axios";
 import { recipesUrl } from "./endpoints";
 
+
 const axiosInstance = axios.create({
 	baseURL: recipesUrl,
+	headers: {
+		"Content-Type": "application/json",
+		"x-auth-token": localStorage.getItem("token"),
+	},
 });
 
 export const getRecipes = async () => {
@@ -23,16 +28,32 @@ export const getRecipeById = async (id) => {
 	}
 };
 
-export const createRecipe = async (recipe) => {
+export const createRecipe = async (name, ingredients) => {
+	const user = JSON.parse(localStorage.getItem("user"));
+    try {
+        const res = await axiosInstance.post("/", {
+            name: name, 
+            ingredients: ingredients,
+			user: user._id,
+        });
+        return res;
+    } catch (error) {
+        console.error(error);
+        throw error; 
+    }
+};
+
+
+export const calculateRecipeNutrition = async (recipe) => {
 	try {
-		const res = await axiosInstance.post("/", {
+		const res = await axiosInstance.post("/nutrition", 
 			recipe,
-		});
+		);
 		return res;
 	} catch (error) {
 		console.error(error);
 	}
-};
+}
 
 export const updateRecipe = async (updatedRecipe) => {
 	try {
@@ -72,9 +93,9 @@ export const getSavedRecipesByUserId = async (userId) => {
 	}
 }
 
-export const toggleSaveRecipe = async (recipeId) => {
+export const toggleSaveRecipe = async (id) => {
 	try {
-		const res = await axiosInstance.put(`/save/${recipeId}`);
+		const res = await axiosInstance.put(`/save/${id}`);
 		return res;
 	} catch (error) {
 		console.error(error);

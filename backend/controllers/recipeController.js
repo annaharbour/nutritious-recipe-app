@@ -3,10 +3,13 @@ const User = require("../models/UserModel");
 const Rating = require("../models/RatingModel");
 const Ingredient = require("../models/IngredientModel");
 
-const createRecipe = async (req, res) => {
-	const { name, ingredients } = req.body;
-	const userId = req.user.id;
+const calculateRecipeNutrition = async (req, res) => {
+	const { ingredients } = req.body;
+	if (!ingredients) {
+		return res.status(400).json({ error: "Ingredients are required" });
+	}
 
+	// Calculate the total nutrition for the recipe
 	try {
 		// Populate the ingredients with the necessary data
 		const populatedIngredients = await Promise.all(
@@ -33,18 +36,65 @@ const createRecipe = async (req, res) => {
 			})
 		);
 
-		// Create a new recipe with the populated ingredients
-		const newRecipe = new Recipe({
-			name,
-			userId,
+		// Construct a recipe with the populated ingredients
+		const recipe = new Recipe({
 			ingredients: populatedIngredients,
 		});
 
-		// Nutrition will be calculated in the pre-save hook)
+		// Calculate the total nutrition for the recipe without saving
+		const totalNutrition = await recipe.calculateNutrition();
+
+		return res.json(totalNutrition);
+	} catch (err) {
+		return res.status(500).json({ error: err.message });
+	}
+};
+
+const createRecipe = async (req, res) => {
+	const { name, ingredients } = req.body;
+	const userId = req.user.id;
+
+	try {
+		const populatedIngredients = await Promise.all(
+			ingredients.map(async (ingredient) => {
+				const ingredientData = await Ingredient.findById(ingredient._id).lean();
+				if (!ingredientData) {
+					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+				}
+				const foodPortion = ingredientData.foodPortions.find(
+					(portion) =>
+						portion._id.toString() === ingredient.portionId.toString()
+				);
+
+				return {
+					...ingredient,
+					description: ingredientData.description,
+					category: ingredientData.category,
+					modifier: foodPortion ? foodPortion.modifier : "g",
+					gramWeight: foodPortion ? foodPortion.gramWeight : 100, // Assuming default 100g if not found
+				};
+			})
+		);
+
+		const newRecipe = new Recipe({
+			name: name,
+			ingredients: populatedIngredients,
+			userId: userId,
+		});
+
+		try {
+			const user = await User.findById(userId);
+			user.recipes.push(newRecipe._id);
+			await user.save();
+		} catch (err) {
+			console.error("Error saving recipe to user:", err);
+			return res.status(500).json({ error: "Error saving recipe to user." });
+		}
 		await newRecipe.save();
 		res.status(201).json(newRecipe);
 	} catch (error) {
-		res.status(500).json({ error: error.message });
+		console.error("Error creating recipe:", error);
+		res.status(500).json({ error: "Error creating recipe" });
 	}
 };
 
@@ -265,6 +315,7 @@ const rateRecipe = async (req, res) => {
 
 module.exports = {
 	createRecipe,
+	calculateRecipeNutrition,
 	getRecipes,
 	getRecipeById,
 	updateRecipeById,

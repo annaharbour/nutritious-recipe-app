@@ -11,9 +11,9 @@ function Nutrients({ recipe }) {
 	];
 
 	const nutrientList = classifications.map((classification) => {
-		const nutrients = recipe.nutrition;
+		// const nutrients = recipe.nutrition;
 		// Filter nutrients by classification and sort them
-		const sortedNutrients = nutrients
+		const sortedNutrients = recipe
 			.filter((nutrient) => nutrient.classification === classification)
 			.sort((a, b) => {
 				if (a.isMacroNutrient && !b.isMacroNutrient) {
@@ -37,7 +37,7 @@ function Nutrients({ recipe }) {
 							style={{ fontWeight: nutrient.isMacroNutrient ? "bold" : "normal" }}
 						>
 							{nutrient.name}:{" "}
-							{Math.round((nutrient.amount + Number.EPSILON) * 10) / 100}{" "}
+							{Math.round((nutrient.amount + Number.EPSILON) * 10) / 10}{" "}
 							{nutrient.unit}
 						</li>
 					))}
