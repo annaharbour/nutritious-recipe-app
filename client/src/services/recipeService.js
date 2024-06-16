@@ -102,12 +102,21 @@ export const toggleSaveRecipe = async (id) => {
 	}
 }
 
-export const rateRecipe = async (recipeId, rating) => {
+export const getUserRating = async (recipeId) => {
+	try {
+		const res = await axiosInstance.get(`/${recipeId}/rate`);
+		return res.data;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export const rateRecipe = async (recipeId, numStars) => {
 	try {
 		const res = await axiosInstance.put(`/${recipeId}/rate`, {
-			rating,
+			numStars,
 		});
-		return res;
+		return res.data;
 	} catch (error) {
 		console.error(error);
 	}
