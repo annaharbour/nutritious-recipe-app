@@ -102,17 +102,6 @@ export const toggleSaveRecipe = async (id) => {
 	}
 }
 
-export const rateRecipe = async (recipeId, rating) => {
-	try {
-		const res = await axiosInstance.put(`/${recipeId}/rate`, {
-			rating,
-		});
-		return res;
-	} catch (error) {
-		console.error(error);
-	}
-}
-
 export const deleteRecipe = async (id) => {
 	try {
 		const res = await axiosInstance.delete(`/${id}`);

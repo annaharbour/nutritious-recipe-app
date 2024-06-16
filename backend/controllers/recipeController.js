@@ -1,6 +1,5 @@
 const Recipe = require("../models/RecipeModel");
 const User = require("../models/UserModel");
-const Rating = require("../models/RatingModel");
 const Ingredient = require("../models/IngredientModel");
 
 const calculateRecipeNutrition = async (req, res) => {
@@ -90,6 +89,7 @@ const createRecipe = async (req, res) => {
 			console.error("Error saving recipe to user:", err);
 			return res.status(500).json({ error: "Error saving recipe to user." });
 		}
+		await newRecipe.calculateNutrition();
 		await newRecipe.save();
 		res.status(201).json(newRecipe);
 	} catch (error) {
@@ -144,7 +144,7 @@ const updateRecipeById = async (req, res) => {
 			{ new: true }
 		);
 
-		// Nutrition will be calculated in the pre-save hook
+		await updatedRecipe.calculateNutrition();
 		await updatedRecipe.save();
 		return res.status(200).json(updatedRecipe);
 	} catch (err) {
@@ -236,82 +236,6 @@ const toggleSaveRecipe = async (req, res) => {
 	}
 };
 
-const rateRecipe = async (req, res) => {
-	const userId = req.user.id;
-	const recipeId = req.params.id;
-	const { numStars } = req.body;
-
-	// Check if the rating is between 1 and 5 stars
-	if (numStars < 1 || numStars > 5) {
-		return res
-			.status(400)
-			.json({ error: "Rating must be between 1 and 5 stars." });
-	}
-
-	try {
-		const user = await User.findById(userId);
-		if (!user) {
-			return res.status(404).json({ error: "User not found." });
-		}
-		const recipe = await Recipe.findById(recipeId);
-		if (!recipe) {
-			return res.status(404).json({ error: "Recipe not found." });
-		}
-
-		let rating = await Rating.findOne({ _id: recipe.rating });
-		if (rating) {
-			// Remove user from previous rating
-			rating.ratings.oneStar.pull(user._id);
-			rating.ratings.twoStars.pull(user._id);
-			rating.ratings.threeStars.pull(user._id);
-			rating.ratings.fourStars.pull(user._id);
-			rating.ratings.fiveStars.pull(user._id);
-		}
-		if (!rating) {
-			// Create a new rating if not found
-			rating = new Rating({
-				meanRating: 0,
-				ratings: {
-					oneStar: [],
-					twoStars: [],
-					threeStars: [],
-					fourStars: [],
-					fiveStars: [],
-				},
-			});
-			recipe.rating = rating._id;
-		}
-
-		// Add new rating
-		switch (numStars) {
-			case 1:
-				rating.ratings.oneStar.push(user._id);
-				break;
-			case 2:
-				rating.ratings.twoStars.push(user._id);
-				break;
-			case 3:
-				rating.ratings.threeStars.push(user._id);
-				break;
-			case 4:
-				rating.ratings.fourStars.push(user._id);
-				break;
-			case 5:
-				rating.ratings.fiveStars.push(user._id);
-				break;
-			default:
-				return res
-					.status(400)
-					.json({ error: "Rating must be between 1 and 5 stars." });
-		}
-
-		await rating.save();
-		await recipe.save();
-		return res.status(200).json({ message: "Rating submitted successfully." });
-	} catch (err) {
-		return res.status(500).json({ error: err.message });
-	}
-};
 
 module.exports = {
 	createRecipe,
@@ -323,5 +247,4 @@ module.exports = {
 	getRecipesByUserId,
 	getSavedRecipesByUserId,
 	toggleSaveRecipe,
-	rateRecipe,
 };

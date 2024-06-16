@@ -1,55 +1,43 @@
 const mongoose = require("mongoose");
 
 const ratingSchema = new mongoose.Schema({
-	meanRating: {
-		type: Number,
+	recipe: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Recipe",
 		required: true,
 	},
-	ratings: {
-		oneStar: [
-			{ type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
-		],
-		twoStars: [
-			{ type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
-		],
-		threeStars: [
-			{ type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
-		],
-		fourStars: [
-			{ type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
-		],
-		fiveStars: [
-			{ type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
-		],
-    },
+	meanRating: {
+		type: Number,
+		default: null,
+	},
+	userRatings: [
+		{
+			user: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "User",
+				required: true,
+			},
+			stars: {
+				type: Number,
+				required: true,
+				min: 1,
+				max: 5,
+			},
+			createdAt: {
+				type: Date,
+				default: Date.now,
+			},
+		},
+	],
 });
 
 ratingSchema.pre("save", async function (next) {
-    const rating = this;
-
-    if (rating.isModified("ratings")) {
-        rating.meanRating = rating.calculateMeanRating();
-    }
-
-    next();
+	const totalRatings = this.userRatings.length;
+	const totalPoints = this.userRatings.reduce((acc, rating) => acc + rating.stars, 0);
+	this.meanRating = totalPoints / totalRatings;
+	next()
 });
 
-ratingSchema.methods.calculateMeanRating = function () {
-    const rating = this;
+const Rating = mongoose.model("Rating", ratingSchema);
 
-    const totalRatings = rating.ratings.oneStar.length +
-        rating.ratings.twoStars.length +
-        rating.ratings.threeStars.length +
-        rating.ratings.fourStars.length +
-        rating.ratings.fiveStars.length;
-
-    const totalPoints = rating.ratings.oneStar.length +
-        rating.ratings.twoStars.length * 2 +
-        rating.ratings.threeStars.length * 3 +
-        rating.ratings.fourStars.length * 4 +
-        rating.ratings.fiveStars.length * 5;
-
-    return Math.round(totalPoints / totalRatings);
-};
-
-module.exports = mongoose.model("rating", ratingSchema);
+module.exports = Rating;

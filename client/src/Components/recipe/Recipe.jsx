@@ -6,6 +6,7 @@ import { useParams } from "react-router";
 import Ingredients from "./Ingredients";
 import Nutrients from "./Nutrients";
 import SaveRecipe from "./SaveRecipe";
+import Rating from "./Rating";
 
 function Recipe() {
 	const [loading, setLoading] = useState(false);
@@ -50,10 +51,12 @@ function Recipe() {
 	if (!recipe || !user) {
 		return <NotFound message="Recipe not found." />;
 	}
+	console.log(recipe)
 
 	return (
 		<div>
 			<h1>{recipe.name}</h1>
+			<Rating recipe={recipe}/>
 			{user && <p>by {user.name}</p>}
 			<Ingredients ingredients={recipe.ingredients}	/>
 			<Nutrients recipe={recipe.nutrition} />
