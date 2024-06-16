@@ -1,26 +1,10 @@
 const mongoose = require("mongoose");
 const Ingredient = require("./IngredientModel");
-const User = require("./UserModel");
+const { create } = require("./NutrientModel");
 
 const recipeSchema = new mongoose.Schema({
 	name: { type: String, required: true },
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
-	ratings: [
-		{
-			user: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: "user",
-				},
-			rating: {
-					type: Number,
-					default: null,
-				},
-		}
-	],
-	meanRating: {
-		type: Number,
-		default: null
-	},
 	ingredients: [
 		{
 			_id: { type: mongoose.Schema.Types.ObjectId, ref: "ingredient" },
@@ -38,13 +22,8 @@ const recipeSchema = new mongoose.Schema({
 			default: {},
 		},
 	],
+	createDate: { type: Date, default: Date.now },
 });
-
-recipeSchema.methods.calculateMeanRating = function () {
-	const totalRatings = this.ratings.length;
-	const totalPoints = this.ratings.reduce((acc, rating) => acc + rating.rating, 0);
-	return Math.round(totalPoints / totalRatings);
-}
 
 recipeSchema.methods.calculateNutrition = async function () {
 	const totalNutrition = [];

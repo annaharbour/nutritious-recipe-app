@@ -236,54 +236,6 @@ const toggleSaveRecipe = async (req, res) => {
 	}
 };
 
-const getUserRating = (ratings, userId) => {
-	return ratings.find(rating => rating.user && rating.user.toString() === userId);
-}
-
-const rateRecipe = async (req, res) => {
-    const userId = req.user.id;
-    const recipeId = req.params.id;
-    const { numStars } = req.body;
-
-    // Check if the rating is between 1 and 5 stars
-    if (numStars < 1 || numStars > 5) {
-        return res.status(400).json({ error: "Rating must be between 1 and 5 stars." });
-    }
-
-    try {
-		// Find user
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ error: "User not found." });
-        }
-
-		// Find recipe
-        const recipe = await Recipe.findById(recipeId);
-        if (!recipe) {
-            return res.status(404).json({ error: "Recipe not found." });
-        }
-
-        // Remove previous rating from user if it exists
-        recipe.ratings = recipe.ratings.filter(rating => {
-            return rating.user && rating.user.toString() !== userId;
-        });
-
-        // Add new rating
-        recipe.ratings.push({ user: userId, rating: numStars });
-
-        // Calculate the mean rating
-        const totalRatings = recipe.ratings.length;
-        const totalPoints = recipe.ratings.reduce((sum, r) => sum + r.rating, 0);
-        recipe.meanRating = totalRatings ? (totalPoints / totalRatings).toFixed(2) : null;
-
-        await recipe.save();
-        return res.status(200).json(recipe);
-    } catch (err) {
-        return res.status(500).json({ error: err.message });
-    }
-};
-
-
 
 module.exports = {
 	createRecipe,
@@ -295,6 +247,4 @@ module.exports = {
 	getRecipesByUserId,
 	getSavedRecipesByUserId,
 	toggleSaveRecipe,
-	rateRecipe,
-	getUserRating,
 };
