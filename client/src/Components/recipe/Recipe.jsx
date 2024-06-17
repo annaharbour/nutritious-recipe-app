@@ -51,7 +51,6 @@ function Recipe() {
 	if (!recipe || !user) {
 		return <NotFound message="Recipe not found." />;
 	}
-	console.log(recipe)
 
 	return (
 		<div>

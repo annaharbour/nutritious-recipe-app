@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ingredientsUrl} from "./endpoints";
+import { ingredientsUrl } from "./endpoints";
 
 const axiosInstance = axios.create({
 	baseURL: ingredientsUrl,
@@ -11,7 +11,7 @@ export const getIngredients = async () => {
 		return res;
 	} catch (error) {
 		console.error(error);
-		return error
+		return error;
 	}
 };
 
@@ -21,7 +21,7 @@ export const getIngredientsByCategory = async (category) => {
 		return res;
 	} catch (error) {
 		console.error(error);
-		return error
+		return error;
 	}
 };
 
@@ -30,19 +30,17 @@ export const getIngredientById = async (id) => {
 		const res = await axiosInstance.get(`/${id}`);
 		return res.data;
 	} catch (error) {
-		console.error(error)
-		return error
+		console.error(error);
+		return error;
 	}
 };
 
-export const getIngredientNutrition = async (id, portionId) => {
+export const getIngredientNutrition = async (id, portionId, amount) => {
 	try {
-		const res = await axiosInstance.get(`/${id}/${portionId}`);
-		return res;
+		const res = await axiosInstance.post(`/${id}/${portionId}`, {amount});
+		return res.data;
 	} catch (error) {
-		console.error(error)
-		return error
+		console.error(error);
+		return error;
 	}
-}
-
-
+};

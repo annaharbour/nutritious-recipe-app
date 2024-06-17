@@ -1,7 +1,6 @@
 import axios from "axios";
 import { recipesUrl } from "./endpoints";
 
-
 const axiosInstance = axios.create({
 	baseURL: recipesUrl,
 	headers: {
@@ -30,30 +29,27 @@ export const getRecipeById = async (id) => {
 
 export const createRecipe = async (name, ingredients) => {
 	const user = JSON.parse(localStorage.getItem("user"));
-    try {
-        const res = await axiosInstance.post("/", {
-            name: name, 
-            ingredients: ingredients,
+	try {
+		const res = await axiosInstance.post("/", {
+			name: name,
+			ingredients: ingredients,
 			user: user._id,
-        });
-        return res;
-    } catch (error) {
-        console.error(error);
-        throw error; 
-    }
+		});
+		return res;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
 };
-
 
 export const calculateRecipeNutrition = async (recipe) => {
 	try {
-		const res = await axiosInstance.post("/nutrition", 
-			recipe,
-		);
+		const res = await axiosInstance.post("/nutrition", recipe);
 		return res;
 	} catch (error) {
 		console.error(error);
 	}
-}
+};
 
 export const updateRecipe = async (updatedRecipe) => {
 	try {
@@ -73,7 +69,7 @@ export const getRecipeByCategory = async (category) => {
 	} catch (error) {
 		console.error(error);
 	}
-}
+};
 
 export const getRecipesByUserId = async (userId) => {
 	try {
@@ -82,7 +78,7 @@ export const getRecipesByUserId = async (userId) => {
 	} catch (error) {
 		console.error(error);
 	}
-}
+};
 
 export const getSavedRecipesByUserId = async (userId) => {
 	try {
@@ -91,7 +87,7 @@ export const getSavedRecipesByUserId = async (userId) => {
 	} catch (error) {
 		console.error(error);
 	}
-}
+};
 
 export const toggleSaveRecipe = async (id) => {
 	try {
@@ -100,7 +96,7 @@ export const toggleSaveRecipe = async (id) => {
 	} catch (error) {
 		console.error(error);
 	}
-}
+};
 
 export const deleteRecipe = async (id) => {
 	try {
@@ -110,5 +106,3 @@ export const deleteRecipe = async (id) => {
 		console.error(error);
 	}
 };
-
-

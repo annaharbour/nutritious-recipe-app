@@ -14,7 +14,6 @@ function Profile() {
 	useEffect(() => {
 		const fetchProfileInfo = async () => {
 			try {
-				await getProfileById(userInfo._id);
 				const response = await getProfileById(userInfo._id);
 				setProfileInfo(response.data);
 				setUserBio(response.data.bio);

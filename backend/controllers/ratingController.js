@@ -79,5 +79,32 @@ const getUserRating = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 }
+const getUserRatings = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const ratings = await Rating.find({ 'userRatings.user': userId });
+        if (!ratings) {
+            return res.status(404).json({ userRatings: null });
+        }
 
-module.exports = { rateRecipe, getMeanRating, getUserRating };
+        const recipeIds = ratings.map(r => r.recipe);
+        const recipes = await Recipe.find({ _id: { $in: recipeIds } }, { name: 1, _id: 1 });
+
+        const userRatings = ratings.map(rating => {
+            const recipe = recipes.find(r => r._id.toString() === rating.recipe.toString());
+            const userRating = rating.userRatings.find(ur => ur.user.toString() === userId);
+            return {
+                recipeId: recipe._id,
+                recipeName: recipe.name,
+                stars: userRating.stars,
+                createdAt: userRating.createdAt
+
+            };
+        });
+
+        return res.status(200).json({ userRatings });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+module.exports = { rateRecipe, getMeanRating, getUserRating, getUserRatings };

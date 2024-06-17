@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
 export const getProfileById = async (userId) => {
 	try {
 		const res = await axiosInstance.get(`/${userId}`);
-		return res;
+		return res.data;
 	} catch (error) {
 		console.error(error);
 	}

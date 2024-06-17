@@ -12,6 +12,7 @@ import Profile from "./Components/profile/Profile";
 import PrivateRoute from "./Components/routing/PrivateRoute";
 import Recipe from "./Components/recipe/Recipe";
 import RecipeForm from "./Components/recipe-creation/RecipeForm";
+import ProfileView from "./Components/profile/ProfileView";
 
 const App = () => {
 	const showToastMessage = (msg, type) => {
@@ -50,7 +51,11 @@ const App = () => {
 			<Navbar />
 			<ToastContainer limit={3} />
 			<Routes>
-				<Route path="/profile" element={<PrivateRoute Component={Profile} />} />
+				<Route path="profiles">
+					
+					<Route path="/profiles" element={<PrivateRoute Component={Profile} />} />
+					<Route path=":id" element={<ProfileView />} />
+				</Route>
 				<Route
 					path="/dashboard"
 					element={<PrivateRoute Component={Dashboard} />}
@@ -63,7 +68,7 @@ const App = () => {
 				<Route path="/login" element={<Login showToast={showToastMessage} />} />
 				<Route path="recipes">
 					<Route path=":id" element={<Recipe />} />
-					<Route path="/recipes/create" element={<RecipeForm/>} />
+					<Route path="/recipes/create" element={<RecipeForm />} />
 				</Route>
 			</Routes>
 		</Router>

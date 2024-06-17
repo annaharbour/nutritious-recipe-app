@@ -27,6 +27,15 @@ export const getUserRating = async (recipeId, userId) => {
 	}
 };
 
+export const getUserRatings = async (userId) => {
+	try {
+		const res = await axiosInstance.get(`/${userId}/ratings`);
+		return res.data;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export const rateRecipe = async (recipeId, stars) => {
 	try {
 		const res = await axiosInstance.put(`/${recipeId}/rating`, {

@@ -28,6 +28,8 @@ const RecipeForm = () => {
 
 	const [category, setCategory] = useState(ingredientCategories[0]);
 
+
+
 	useEffect(() => {
 		// Fetch the ingredients for the selected category
 		const fetchIngredients = async (category) => {
@@ -73,6 +75,8 @@ const RecipeForm = () => {
 		const portion = ingredient.foodPortions.find(
 			(p) => p._id === Number(selectedPortion)
 		);
+		// TODO: Add toast
+		if(!portion) return alert('Please select a portion')
 
 		// Add the ingredient to the recipe
 		if (recipeIngredients.length < 5) {
@@ -125,10 +129,14 @@ const RecipeForm = () => {
 	const handleSaveRecipe = async (e) => {
 		e.preventDefault();
 		try {
+			// TODO: Add toast
+			if (recipeIngredients.length === 0) return alert('Please add ingredients')
+			if (!recipeName) return alert('Please enter a recipe name')
 			await createRecipe(recipeName, recipeIngredients);
 			navigate('/dashboard')
 		} catch (error) {
 			console.error("Error saving recipe:", error);
+			// TODO: Add toast
 			alert("Error saving recipe");
 		}
 	};
@@ -191,6 +199,7 @@ const RecipeForm = () => {
 							recipeIngredients={recipeIngredients}
 							handleRemoveIngredient={handleRemoveIngredient}
 						/>
+						<br></br>
 						<button type="submit">Post Recipe</button>
 						<Nutrients recipe={recipeNutrition} />
 					</>

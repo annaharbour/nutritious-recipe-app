@@ -14,9 +14,8 @@ router.get("/:id", getIngredientById);
 router.get("/category/:category", getIngredientsByCategory);
 
 
-
 // Get ingredient nutrition by portion / amount
-router.get("/:id/:portionId", getIngredientNutrition);
+router.post("/:id/:portionId", getIngredientNutrition);
 
 
 // Route to get all ingredients

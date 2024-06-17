@@ -12,7 +12,7 @@ const {
 	getSavedRecipesByUserId,
 	toggleSaveRecipe
 } = require("../controllers/recipeController");
-const { rateRecipe, getUserRating, getMeanRating } = require("../controllers/ratingController");
+const { rateRecipe, getUserRating, getMeanRating, getUserRatings } = require("../controllers/ratingController");
 
 // POST /api/recipes
 // @desc Create new recipe, get all recipes
@@ -47,6 +47,9 @@ router.route("/:id/rating").put(auth, rateRecipe).get(auth, getMeanRating);
 
 
 router.route('/:userId/:id/rating').get(auth, getUserRating);
+
+router.route('/:userId/ratings').get(auth, getUserRatings);
+
 
 
 
