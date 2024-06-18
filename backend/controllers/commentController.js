@@ -18,11 +18,14 @@ const createComment = async (req, res) => {
 		return res.status(400).json({ errors: errors.array() });
 	}
 
+
 	try {
 		const user = await User.findById(userId).select("-password");
+		const userName = user.name;
 		const newComment = new Comment({
 			text,
-			user,
+			user: user,
+			userName,
 			recipe,
 		});
 		const comment = await newComment.save();
@@ -125,7 +128,7 @@ const respondToComment = async (req, res) => {
         }
 		const newResponse = {
 			text,
-			name: user.name,
+			userName: user.name,
 			user: user,
 			comment: commentId,
 		};

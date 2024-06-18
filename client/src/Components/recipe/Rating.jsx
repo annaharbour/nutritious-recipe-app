@@ -28,7 +28,9 @@ function RatingComponent({ recipe }) {
 		const fetchMeanRating = async () => {
 			try {
 				const res = await getMeanRating(recipe._id);
-				setMeanRating(res.meanRating);
+				if (res) {
+					setMeanRating(res.meanRating);
+				}
 			} catch (error) {
 				console.error("Error fetching mean rating:", error);
 			}
@@ -42,7 +44,7 @@ function RatingComponent({ recipe }) {
 		setLoading(true);
 		try {
 			const res = await rateRecipe(recipe._id, stars);
-			setStars(res.userRating);
+			res && res !== null && setStars(res.userRating);
 			// TODO: Add toast notification
 		} catch (error) {
 			console.error("Error rating recipe:", error);
@@ -68,7 +70,7 @@ function RatingComponent({ recipe }) {
 					</button>
 				))}
 			</div>
-			<p>Avg rating: {meanRating}</p>
+			<p>Avg rating: {meanRating !== null ? meanRating : "No ratings yet"}</p>
 			<p>Your rating: {stars}</p>
 		</div>
 	);

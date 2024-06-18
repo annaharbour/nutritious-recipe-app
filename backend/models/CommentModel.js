@@ -12,6 +12,9 @@ const CommentModel = new mongoose.Schema({
         ref: 'users',
         required: true,
     },
+    userName: {
+        type: String,
+    },
     text: {
         type: String,
         required: true

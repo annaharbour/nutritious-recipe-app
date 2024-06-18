@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router";
 import { getRecipeById } from "../../services/recipeService";
 import { getUserById } from "../../services/userService";
 import NotFound from "../layout/NotFound";
-import { useParams } from "react-router";
 import Ingredients from "./Ingredients";
 import Nutrients from "./Nutrients";
 import SaveRecipe from "./SaveRecipe";
@@ -55,11 +56,14 @@ function Recipe() {
 	return (
 		<div>
 			<h1>{recipe.name}</h1>
-			<Rating recipe={recipe}/>
+			<Rating recipe={recipe} />
 			{user && <p>by {user.name}</p>}
-			<Ingredients ingredients={recipe.ingredients}	/>
+			<Link to={`/recipes/${recipe._id}/comments`}>{recipe.name}</Link>
+			<Ingredients ingredients={recipe.ingredients} />
+
+			
 			<Nutrients recipe={recipe.nutrition} />
-			<SaveRecipe	recipe={recipe._id} />
+			<SaveRecipe recipe={recipe._id} />
 		</div>
 	);
 }
