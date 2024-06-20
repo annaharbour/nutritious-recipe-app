@@ -15,10 +15,6 @@ const Comment = ({ comment, deleteComment, likeComment }) => {
     );
     const date = new Date(comment.date).toLocaleDateString();
 
-    const handleToggleResponses = () => {
-        setSeeResponses(!seeResponses);
-    };
-
     const handleLike = async () => {
         try {
             const updatedLikes = await toggleLikeComment(comment._id);
@@ -38,6 +34,10 @@ const Comment = ({ comment, deleteComment, likeComment }) => {
     };
 
 
+    const handleToggleResponses = () => {
+        setSeeResponses(!seeResponses);
+    };
+
 
     const handleReply = () => {
         setSeeReplyBox(!seeReplyBox);
@@ -56,10 +56,8 @@ const Comment = ({ comment, deleteComment, likeComment }) => {
 
     const handleDeleteResponse = async (response) => {
         try {
-            await deleteResponse(response._id);
-            setResponses((prevResponses) =>
-                prevResponses.filter((r) => r._id !== response._id)
-            );
+            const res = await deleteResponse(response._id);
+            setResponses(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
         } catch (err) {
             console.log(err);
         }

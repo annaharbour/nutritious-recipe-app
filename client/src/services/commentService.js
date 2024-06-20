@@ -72,8 +72,6 @@ export const toggleLikeComment = async (commentId) => {
 export const respondToComment = async (commentId, text) => {
 	try {
 		const res = await axiosInstance.post(`/comment/${commentId}`, { text });
-		console.log(res.data);
-
 		return res.data;
 	} catch (error) {
 		console.error(error);
@@ -92,7 +90,7 @@ export const getResponse = async (responseId) => {
 export const deleteResponse = async (responseId) => {
 	try {
 		const res = await axiosInstance.delete(`/response/${responseId}`);
-		return res;
+		return res.data;
 	} catch (error) {
 		console.error(error);
 	}
