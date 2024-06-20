@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
-import { respondToComment } from '../../services/commentService';
 
-function ResponseForm({commentId}) {
+function ResponseForm({commentId, addResponse}) {
     const [text, setText] = useState('');
 
     const handleSubmit = async (e) => {
@@ -10,9 +9,8 @@ function ResponseForm({commentId}) {
             alert('Please enter a comment before submitting.')
             return;
         }
-        await respondToComment(commentId, text);
-        // Reset the comment input
-        setText(''); // Clear the input field
+        addResponse(commentId, text);  
+        setText(''); 
     };
 
     return (

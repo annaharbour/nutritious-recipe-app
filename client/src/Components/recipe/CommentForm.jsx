@@ -10,7 +10,6 @@ const CommentForm = () => {
             alert('Please enter a comment before submitting.')
             return;
         }
-        console.log(id, text);
         // Add your logic to handle the comment submission here
         const res = await createComment(id, text);
         console.log(res);
@@ -19,8 +18,7 @@ const CommentForm = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <textarea
-                
+            <textarea                
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Write your comment..."
             ></textarea>

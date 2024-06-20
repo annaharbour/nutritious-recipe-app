@@ -25,10 +25,10 @@ router.route("/:recipeId").get(getCommentsByRecipeId).post(auth, createComment);
 // @access   Private
 router
 	.route("/comment/:commentId")
+	.delete(auth, deleteCommentById)
 	.get(getCommentById)
 	.put(auth, toggleLikeComment)
 	.post(auth, respondToComment)
-	.delete(auth, deleteCommentById);
 
 // @route    DELETE api/comments/:id/:responseId
 // @desc	 Delete a response

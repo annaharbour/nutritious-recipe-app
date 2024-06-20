@@ -1,30 +1,18 @@
 const { check, validationResult } = require("express-validator");
 const Comment = require("../models/CommentModel");
 const User = require("../models/UserModel");
+const Recipe = require("../models/RecipeModel");
 
 const createComment = async (req, res) => {
 	const recipe = req.params.recipeId;
 	const userId = req.user.id;
 	const { text } = req.body;
-
-	const validateInputs = [
-		check("recipe", "Recipe ID is required").notEmpty(),
-		check("user", "User ID is required").notEmpty(),
-		check("text", "Text is required").notEmpty(),
-	];
-	validateInputs.forEach((validation) => validation.run(req));
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
-	}
-
-
 	try {
 		const user = await User.findById(userId).select("-password");
 		const userName = user.name;
 		const newComment = new Comment({
 			text,
-			user: user,
+			user: user._id,
 			userName,
 			recipe,
 		});
@@ -40,8 +28,13 @@ const getCommentsByRecipeId = async (req, res) => {
 	const recipeId = req.params.recipeId;
 
 	try {
+		const recipe = await Recipe.findById(recipeId);
+		if (!recipe) {
+			return res.status(404).json({ msg: "Recipe not found" });
+		}
+
 		const comments = await Comment.find({ recipe: recipeId }).sort({
-			date: -1,
+			date: 1,
 		});
 
 		return res.json(comments);
@@ -51,8 +44,8 @@ const getCommentsByRecipeId = async (req, res) => {
 };
 
 const getCommentById = async (req, res) => {
-	const commentId = req.params.commentId;
 	try {
+		const commentId = req.params.commentId;
 		const comment = await Comment.findById(commentId);
 		if (!comment) {
 			return res.status(404).json({ msg: "Comment not found" });
@@ -73,8 +66,8 @@ const deleteCommentById = async (req, res) => {
 		if (comment.user.toString() !== req.user.id) {
 			return res.status(401).json({ msg: "User not authorized" });
 		}
-		await Comment.deleteOne(comment);
-		return res.json({ msg: "Comment removed" });
+		await Comment.findByIdAndDelete(commentId);
+		return res.json({ msg: "Comment deleted" });
 	} catch (err) {
 		return res.status(500).send("Server Error");
 	}
@@ -95,11 +88,11 @@ const toggleLikeComment = async (req, res) => {
 		if (alreadyLikedIndex !== -1) {
 			comment.likes.splice(alreadyLikedIndex, 1);
 			await comment.save();
-			return res.json(comment.likes);
+			return res.json(comment);
 		} else {
 			comment.likes.unshift({ user: req.user.id });
 			await comment.save();
-			return res.json(comment.likes);
+			return res.json(comment);
 		}
 	} catch (err) {
 		return res.status(500).send("Server Error");
@@ -107,69 +100,59 @@ const toggleLikeComment = async (req, res) => {
 };
 
 const respondToComment = async (req, res) => {
-    const commentId = req.params.commentId;
-
+	const commentId = req.params.commentId;
 	const { text } = req.body;
-	
-    const validateInputs = [
-		check("text", "Text is required").notEmpty()	];
-	validateInputs.forEach((validation) => validation.run(req));
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(400).json({ errors: errors.array() });
-	}
-
 
 	try {
 		const user = await User.findById(req.user.id).select("-password");
+		const userName = user.name
 		const comment = await Comment.findById(commentId);
-        if (!comment) {
-            return res.status(404).json({ msg: "Comment not found" });
-        }
+		if (!comment) {
+			return res.status(404).json({ msg: "Comment not found" });
+		}
 		const newResponse = {
 			text,
-			userName: user.name,
-			user: user,
+			userName: userName,
+			user: user._id,
 			comment: commentId,
+			date: new Date(),
 		};
 
-        console.log(newResponse);
 		comment.responses.unshift(newResponse);
 
 		await comment.save();
 
 		return res.json(comment.responses);
 	} catch (err) {
-        console.error(err.message);
+		console.error(err.message);
 		return res.status(500).send("Server Error");
 	}
 };
 
 const getResponse = async (req, res) => {
-    const responseId = req.params.responseId;
-    try {
-        const comment = await Comment.findOne({ "responses._id": responseId });
-        if (!comment) {
-            return res.status(404).json({ msg: "Comment not found" });
-        }
-        const response = comment.responses.find(
-            (response) => response.id === responseId
-        );
-        if (!response) {
-            return res.status(404).json({ msg: "Response not found" });
-        }
-        return res.json(response);
-    } catch (err) {
-        console.error(err.message);
-        return res.status(500).send("Server Error");
-    }
-}
+	const responseId = req.params.responseId;
+	try {
+		const comment = await Comment.findOne({ "responses._id": responseId });
+		if (!comment) {
+			return res.status(404).json({ msg: "Comment not found" });
+		}
+		const response = comment.responses.find(
+			(response) => response.id === responseId
+		);
+		if (!response) {
+			return res.status(404).json({ msg: "Response not found" });
+		}
+		return res.json(response);
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send("Server Error");
+	}
+};
 
 const deleteResponse = async (req, res) => {
 	const responseId = req.params.responseId;
-    console.log(responseId)
 	try {
-		const comment = await Comment.findOne({ "responses._id": responseId});
+		const comment = await Comment.findOne({ "responses._id": responseId });
 		if (!comment) {
 			return res.status(404).json({ msg: "Comment not found" });
 		}
@@ -182,13 +165,13 @@ const deleteResponse = async (req, res) => {
 		if (response.user.toString() !== req.user.id) {
 			return res.status(401).json({ msg: "User not authorized" });
 		}
-		 comment.responses = comment.responses.filter(({ id }) => id !== responseId);
+		comment.responses = comment.responses.filter(({ id }) => id !== responseId);
 
-		 await comment.save();
+		await comment.save();
 
-		 return res.json(comment.responses);
+		return res.json(comment.responses);
 	} catch (err) {
-        console.error(err.message);
+		console.error(err.message);
 		return res.status(500).send("Server Error");
 	}
 };
@@ -200,6 +183,6 @@ module.exports = {
 	deleteCommentById,
 	toggleLikeComment,
 	respondToComment,
-    getResponse,
+	getResponse,
 	deleteResponse,
 };
