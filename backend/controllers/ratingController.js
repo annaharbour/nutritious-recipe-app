@@ -3,8 +3,8 @@ const User = require("../models/UserModel");
 const Rating = require("../models/RatingModel");
 
 const rateRecipe = async (req, res) => {
-	const userId = req.user._id;
-	const recipeId = req.params.id;
+	const userId = req.user.id;
+	const recipeId = req.params.recipeId;
 	const { stars } = req.body;
 
 	// Check if the rating is between 1 and 5 stars
