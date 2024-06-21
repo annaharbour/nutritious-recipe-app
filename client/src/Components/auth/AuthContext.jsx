@@ -48,16 +48,16 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
-	const registerUser = async (email, password, phone, name) => {
+	const registerUser = async (name, email, phone, password) => {
 		try {
-			const res = await register(email, password, phone, name);
+			const res = await register(name, email, phone, password);
 			const { password: _, ...userWithoutPassword } = res.data.user;
 			localStorage.setItem("token", res.data.token);
 			localStorage.setItem("user", JSON.stringify(userWithoutPassword));
 			setUserInfo(userWithoutPassword);
 			setIsLoggedIn(true);
 		} catch (error) {
-			throw new Error(error.message || "Registration failed");
+			throw new Error(error.response?.data?.message || "Registration failed");
 		}
 	};
 
