@@ -8,33 +8,13 @@ const register = async (req, res) => {
 	const { name, email, phone, password } = req.body;
 	let errors = [];
 
-	if (!name) {
-		errors.push("Name is required");
-	}
-	if (!email) {
-		errors.push("Please include a valid email");
-	}
-	if (!phone) {
-		errors.push("Please enter a valid phone number");
-	}
-	if (!password) {
-		errors.push("Please enter a password with 6 or more characters");
-	}
-
-	if (errors.length > 0) {
-		return res.status(400).json({ message: errors });
-	}
-
 	try {
 		let user = await User.findOne({ email });
 		if (user) {
-			return res
-				.status(400)
-				.json({
-					message: [
-						"Email already in use. Please use a different email to register.",
-					],
-				});
+			errors.push(
+				"Email already in use. Please use a different email to register."
+			);
+			return res.status(400).json({ message: errors });
 		}
 
 		user = new User({
@@ -97,7 +77,7 @@ const login = async (req, res) => {
 			});
 		}
 
-		const isMatch = await bcrypt.compare(password, user.password);
+		const isMatch = bcrypt.compare(password, user.password);
 
 		if (!isMatch) {
 			return res.status(400).json({

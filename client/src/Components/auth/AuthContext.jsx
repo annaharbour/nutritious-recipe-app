@@ -48,6 +48,19 @@ export const AuthProvider = ({ children }) => {
 		}
 	};
 
+	// const registerUser = async (name, email, phone, password) => {
+	// 	try {
+	// 		const res = await register(name, email, phone, password);
+	// 		const { password: _, ...userWithoutPassword } = res.data.user;
+	// 		localStorage.setItem("token", res.data.token);
+	// 		localStorage.setItem("user", JSON.stringify(userWithoutPassword));
+	// 		setUserInfo(userWithoutPassword);
+	// 		setIsLoggedIn(true);
+	// 	} catch (error) {
+	// 		throw new Error(error.data || "Registration failed");
+	// 	}
+	// };
+
 	const registerUser = async (name, email, phone, password) => {
 		try {
 			const res = await register(name, email, phone, password);
@@ -57,8 +70,15 @@ export const AuthProvider = ({ children }) => {
 			setUserInfo(userWithoutPassword);
 			setIsLoggedIn(true);
 		} catch (error) {
-			throw new Error(error.response?.data?.message || "Registration failed");
-		}
+			 if (error.response && error.response.data && Array.isArray(error.response.data.message)) {
+            // error.response.data.message.forEach(msg => throw new Error(msg));
+			error.response.data.message.forEach(msg => console.log(msg));
+			 
+        } else {
+            throw new Error(error.message || "Registration failed", "error");
+        }
+        throw new Error(error.message || "Registration failed");
+    }
 	};
 
 	function logoutUser() {
