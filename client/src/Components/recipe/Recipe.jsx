@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { getRecipeById } from "../../services/recipeService";
 import { getUserById } from "../../services/userService";
+import { useAuth } from "../auth/AuthContext";
 import NotFound from "../layout/NotFound";
 import Ingredients from "./Ingredients";
 import Nutrients from "./Nutrients";
@@ -10,6 +11,7 @@ import SaveRecipe from "./SaveRecipe";
 import Rating from "./Rating";
 
 function Recipe() {
+	const userInfo = useAuth().userInfo;
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const { id } = useParams();
@@ -53,17 +55,21 @@ function Recipe() {
 		return <NotFound message="Recipe not found." />;
 	}
 
-	return (
+	return loading ? (
+		<p>Loading...</p>
+	) : (
 		<div>
 			<h1>{recipe.name}</h1>
-			<Rating recipe={recipe} />
+			{userInfo && <Rating recipe={recipe} />}
 			{user && <p>by {user.name}</p>}
-			<Link to={`/recipes/${recipe._id}/comments`}>{recipe.name}</Link>
+			<Link to={`/recipes/${recipe._id}/comments`}>View Comments</Link>
 			<Ingredients ingredients={recipe.ingredients} />
-
-			
 			<Nutrients recipe={recipe.nutrition} />
-			<SaveRecipe recipe={recipe._id} />
+			{userInfo ? (
+				<Link to="/login">Save Recipe</Link>
+			) : (
+				<SaveRecipe recipe={recipe._id} />
+			)}
 		</div>
 	);
 }

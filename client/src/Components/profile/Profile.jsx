@@ -17,7 +17,6 @@ function Profile() {
 				const response = await getProfileById(userInfo._id);
 				setProfileInfo(response.data);
 				setUserBio(response.data.bio);
-				console.log(response.data.bio);
 			} catch (error) {
 				console.error("Error fetching profile:", error);
 			}

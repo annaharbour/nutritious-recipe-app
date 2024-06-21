@@ -204,10 +204,7 @@ const getSavedRecipesByUserId = async (req, res) => {
 		const favoriteRecipes = await Recipe.find({
 			_id: { $in: user.favoriteRecipes },
 		});
-		// Return the favorite recipes if found
-		return favoriteRecipes && favoriteRecipes.length > 0
-			? res.status(200).json(favoriteRecipes)
-			: res.status(404).json({ error: "No favorite recipes found." });
+		return res.status(200).json(favoriteRecipes);
 	} catch (err) {
 		return res.status(500).json({ error: "Failed to fetch recipes." });
 	}

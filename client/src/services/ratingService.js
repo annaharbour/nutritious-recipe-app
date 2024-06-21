@@ -9,21 +9,13 @@ const axiosInstance = axios.create({
 	},
 });
 
-export const getMeanRating = async (recipeId) => {
+export const getRating = async (recipeId) => {
 	try {
 		const res = await axiosInstance.get(`/${recipeId}/rating`);
 		return res.data;
 	} catch (error) {
 		console.error(error);
-	}
-};
-
-export const getUserRating = async (recipeId, userId) => {
-	try {
-		const res = await axiosInstance.get(`/${userId}/${recipeId}/rating`);
-		return res.data;
-	} catch (error) {
-		console.error(error);
+		throw error;
 	}
 };
 
@@ -34,7 +26,7 @@ export const getUserRatings = async (userId) => {
 	} catch (error) {
 		console.error(error);
 	}
-}
+};
 
 export const rateRecipe = async (recipeId, stars) => {
 	try {

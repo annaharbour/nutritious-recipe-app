@@ -5,7 +5,10 @@ const getAllIngredients = async (req, res) => {
 		const ingredients = await Ingredient.find().populate(
 			"foodNutrients.nutrient"
 		);
-		return res.json(ingredients);
+		const sortedIngredients = ingredients.sort((a, b) =>
+			a.description.localeCompare(b.description)
+		);
+		return res.json(sortedIngredients);
 	} catch (error) {
 		return res.status(500).json({ message: "Server Error" });
 	}
@@ -59,7 +62,10 @@ const getIngredientsByCategory = async (req, res) => {
 		if (!ingredients) {
 			return res.status(404).json({ message: "Ingredients not found" });
 		}
-		return res.json(ingredients);
+		const sortedIngredients = ingredients.sort((a, b) =>
+			a.description.localeCompare(b.description)
+		);
+		return res.json(sortedIngredients);
 	} catch (error) {
 		console.error(error);
 		return res.status(500).json({ message: "Error fetching ingredients"});

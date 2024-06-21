@@ -10,9 +10,13 @@ const {
 	getRecipes,
 	getRecipesByUserId,
 	getSavedRecipesByUserId,
-	toggleSaveRecipe
+	toggleSaveRecipe,
 } = require("../controllers/recipeController");
-const { rateRecipe, getUserRating, getMeanRating, getUserRatings } = require("../controllers/ratingController");
+const {
+	rateRecipe,
+	getRating,
+	getUserRatings,
+} = require("../controllers/ratingController");
 
 // POST /api/recipes
 // @desc Create new recipe, get all recipes
@@ -40,16 +44,15 @@ router.route("/user/:userId/saved").get(getSavedRecipesByUserId);
 router.route("/save/:id").put(auth, toggleSaveRecipe);
 module.exports = router;
 
+// PUT /recipes/:recipeId/rating
+// @desc Rate a recipe
+// @access Private
+// GET /recipes/:recipeId/rating
+// @desc Get recipe rating
+// @access Private
+router.route("/:recipeId/rating").put(auth, rateRecipe).get(auth, getRating);
 
-
-// TODO: Rate Recipe Route
-router.route("/:id/rating").put(auth, rateRecipe).get(auth, getMeanRating);
-
-
-router.route('/:userId/:id/rating').get(auth, getUserRating);
-
-router.route('/:userId/ratings').get(auth, getUserRatings);
-
-
-
-
+// Get /users/:id/rating
+// @desc Get user rating
+// @access Private
+router.route("/:userId/ratings").get(auth, getUserRatings);

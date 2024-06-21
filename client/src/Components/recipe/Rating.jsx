@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
-import {
-	getUserRating,
-	getMeanRating,
-	rateRecipe,
-} from "../../services/ratingService";
+import { getRating, rateRecipe } from "../../services/ratingService";
 
 function RatingComponent({ recipe }) {
 	const userInfo = useAuth().userInfo;
@@ -14,37 +10,26 @@ function RatingComponent({ recipe }) {
 	const [meanRating, setMeanRating] = useState(null);
 
 	useEffect(() => {
-		const fetchUserRating = async () => {
+		const fetchRating = async () => {
 			try {
-				const res = await getUserRating(recipe._id, userId);
-				if (res) {
-					setStars(res.userRating);
-				}
+				const res = await getRating(recipe._id);
+				res.meanRating && setMeanRating(res.meanRating);
+                res.userRating && setStars(res.userRating);
 			} catch (error) {
 				console.error("Error fetching user rating:", error);
 			}
 		};
 
-		const fetchMeanRating = async () => {
-			try {
-				const res = await getMeanRating(recipe._id);
-				if (res) {
-					setMeanRating(res.meanRating);
-				}
-			} catch (error) {
-				console.error("Error fetching mean rating:", error);
-			}
-		};
-
-		fetchUserRating();
-		fetchMeanRating();
-	}, [recipe._id, userId]);
+		fetchRating();
+	}, [recipe, userId]);
 
 	const handleRateRecipe = async (stars) => {
 		setLoading(true);
 		try {
 			const res = await rateRecipe(recipe._id, stars);
-			res && res !== null && setStars(res.userRating);
+			if (res.userRating && res.userRating !== null) {
+				setStars(res.userRating);
+			}
 			// TODO: Add toast notification
 		} catch (error) {
 			console.error("Error rating recipe:", error);
@@ -71,7 +56,7 @@ function RatingComponent({ recipe }) {
 				))}
 			</div>
 			<p>Avg rating: {meanRating !== null ? meanRating : "No ratings yet"}</p>
-			<p>Your rating: {stars}</p>
+			<p>Your rating: {stars !== null ? stars : "Rate this recipe"}</p>
 		</div>
 	);
 }
