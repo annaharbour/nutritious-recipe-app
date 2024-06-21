@@ -1,6 +1,8 @@
 const Recipe = require("../models/RecipeModel");
 const User = require("../models/UserModel");
 const Ingredient = require("../models/IngredientModel");
+const Rating = require("../models/RatingModel");
+const Comment = require("../models/CommentModel");
 
 const calculateRecipeNutrition = async (req, res) => {
 	const { ingredients } = req.body;
@@ -180,18 +182,29 @@ const getRecipesByUserId = async (req, res) => {
 };
 
 const deleteRecipeById = async (req, res) => {
-	const recipeId = req.params.id;
+    const recipeId = req.params.id;
 
-	try {
-		const recipe = await Recipe.findByIdAndRemove(recipeId);
-		if (!recipe) {
-			return res.status(404).json({ error: "Recipe not found." });
-		}
-		return res.status(200).json({ message: "Recipe removed" });
-	} catch (err) {
-		return res.status(500).json({ error: "Failed to delete the recipe." });
-	}
+    try {
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
+            return res.status(404).json({ error: "Recipe not found." });
+        }
+
+        await Promise.all([
+            Rating.deleteMany({ recipe: recipeId }),
+            Comment.deleteMany({ recipe: recipeId }),
+            User.updateMany({}, { $pull: { favoriteRecipes: recipeId } }),
+        ]);
+
+        await recipe.deleteOne();
+
+        return res.status(200).json({ message: "Recipe removed" });
+    } catch (err) {
+        console.error(err); // Log the error for debugging purposes
+        return res.status(500).json({ error: "Failed to delete the recipe." });
+    }
 };
+
 
 const getSavedRecipesByUserId = async (req, res) => {
 	const userId = req.params.userId;
@@ -233,7 +246,6 @@ const toggleSaveRecipe = async (req, res) => {
 	}
 };
 
-
 module.exports = {
 	createRecipe,
 	calculateRecipeNutrition,
@@ -244,5 +256,4 @@ module.exports = {
 	getRecipesByUserId,
 	getSavedRecipesByUserId,
 	toggleSaveRecipe,
-	
 };

@@ -33,11 +33,12 @@ const ratingSchema = new mongoose.Schema({
 
 ratingSchema.pre("save", async function (next) {
 	const totalRatings = this.userRatings.length;
-	const totalPoints = this.userRatings.reduce((acc, rating) => acc + rating.stars, 0);
+	const totalPoints = this.userRatings.reduce(
+		(acc, rating) => acc + rating.stars,
+		0
+	);
 	this.meanRating = totalPoints / totalRatings;
-	next()
+	next();
 });
 
-const Rating = mongoose.model("Rating", ratingSchema);
-
-module.exports = Rating;
+module.exports = mongoose.model("Rating", ratingSchema);

@@ -29,7 +29,6 @@ const rateRecipe = async (req, res) => {
 		let rating = await Rating.findOne({ recipe: recipeId });
 		if (rating) {
 			// Update existing rating
-			console.log(rating);
 			const userRating =
 				rating && rating.userRatings.find((r) => r.user.toString() === userId);
 			if (userRating) {
@@ -84,7 +83,6 @@ const getRating = async (req, res) => {
 
 const getUserRatings = async (req, res) => {
 	const userId = req.user._id;
-	console.log(userId);
 	try {
 		const ratings = await Rating.find({ "userRatings.user": userId });
 		if (!ratings) {
