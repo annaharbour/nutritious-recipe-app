@@ -57,7 +57,10 @@ const App = () => {
 						path="/profiles"
 						element={<PrivateRoute Component={Profile} />}
 					/>
-					<Route path=":id" element={<ProfileView />} />
+					<Route
+						path=":id"
+						element={<PrivateRoute Component={ProfileView} />}
+					/>
 				</Route>
 				<Route
 					path="/dashboard"
@@ -70,9 +73,15 @@ const App = () => {
 				/>
 				<Route path="/login" element={<Login showToast={showToastMessage} />} />
 				<Route path="recipes">
-					<Route path="/recipes/create" element={<RecipeForm />} />
+					<Route
+						path="/recipes/create"
+						element={<PrivateRoute Component={RecipeForm} />}
+					/>
 					<Route path=":id" element={<Recipe />} />
-					<Route path=":id/comments" element={<Comments />} />
+					<Route
+						path=":id/comments"
+						element={<PrivateRoute Component={Comments} />}
+					/>
 				</Route>
 			</Routes>
 		</Router>

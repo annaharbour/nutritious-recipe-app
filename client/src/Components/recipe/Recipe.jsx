@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import { getRecipeById } from "../../services/recipeService";
 import { getUserById } from "../../services/userService";
 import { useAuth } from "../auth/AuthContext";
+import ProfileView from "../profile/ProfileView";
 import NotFound from "../layout/NotFound";
 import Ingredients from "./Ingredients";
 import Nutrients from "./Nutrients";
@@ -61,7 +62,7 @@ function Recipe() {
 		<div>
 			<h1>{recipe.name}</h1>
 			{userInfo && <Rating recipe={recipe} />}
-			{user && <p>by {user.name}</p>}
+			{user && <p><Link to={`/profile/${id}`}>{user.name}</Link></p>}
 			<Link to={`/recipes/${recipe._id}/comments`}>View Comments</Link>
 			<Ingredients ingredients={recipe.ingredients} />
 			<Nutrients recipe={recipe.nutrition} />
