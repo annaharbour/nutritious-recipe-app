@@ -27,6 +27,31 @@ export const getUserById = async (id) => {
 	}
 };
 
+export const updateUser = async (name, email, phone, password, newPassword) => {
+	try {
+		const res = await axiosInstance.put("/user", {
+			name,
+			email,
+			phone,
+			password,
+			newPassword
+		});
+		return res;
+	} catch (error) {
+		  throw new Error(error.response.data.message || "Update failed. Please try again.");
+	}
+};
+
+export const getUser = async (id
+) => {
+	try {
+		const res = await axiosInstance.get(`/user`);
+		return res.data;
+	} catch (error) {
+		console.error(error);
+	}
+};
+
 export const getUserFavorites = async (id) => {
 	try {
 		const res = await axiosInstance.get(`/favorites`);

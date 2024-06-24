@@ -1,77 +1,194 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../auth/AuthContext";
-import {
-	getProfileById,
-	createProfile,
-	updateProfile,
-} from "../../services/profileService";
-function Profile() {
-	const userInfo = useAuth().userInfo;
+import { getUser, updateUser } from "../../services/userService";
+
+function Profile({ showToast }) {
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [userInfo, setUserInfo] = useState({});
 	const [isEditing, setIsEditing] = useState(false);
-	const [profileInfo, setProfileInfo] = useState(null);
-	const [userBio, setUserBio] = useState("");
+	const [changePw, setChangePw] = useState(false);
+	const [formData, setFormData] = useState({
+		name: "",
+		email: "",
+		phone: "",
+		password: "",
+		newPassword: "",
+		newPassword2: "",
+	});
+	const { name, email, phone, password, newPassword, newPassword2 } = formData;
 
 	useEffect(() => {
 		const fetchProfileInfo = async () => {
 			try {
-				const response = await getProfileById(userInfo._id);
-				setProfileInfo(response.data);
-				setUserBio(response.data.bio);
+				setLoading(true);
+				let response = await getUser();
+				setUserInfo(response);
+				const { name, email, phone } = response;
+				setFormData({
+					name,
+					email,
+					phone,
+					password: "",
+					newPassword: "",
+					newPassword2: "",
+				});
+				setLoading(false);
 			} catch (error) {
-				console.error("Error fetching profile:", error);
+				setError("Failed to fetch data. Please try again later.");
+				setLoading(false);
 			}
 		};
+
 		fetchProfileInfo();
-	}, [userInfo]);
+	}, []);
 
-	const handleChange = async (e) => {
-		setUserBio(e.target.value);
-	};
+	const onChange = (e) =>
+		setFormData({ ...formData, [e.target.name]: e.target.value });
 
-	const handleSubmit = async (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
-		console.log(userBio);
+		if (changePw) {
+			if (newPassword !== newPassword2) {
+				showToast("Passwords do not match", "error");
+				return;
+			}
+		}
 		try {
-			if (!profileInfo) {
-				const createdProfile = await createProfile(userInfo._id, userBio);
-				setProfileInfo(createdProfile.data);
+			const res = await updateUser(
+				name,
+				email,
+				phone,
+				password,
+				changePw ? newPassword : null
+			);
+
+			if (res) {
+				showToast("Profile updated successfully", "success");
 				setIsEditing(false);
 			} else {
-				const updatedProfile = await updateProfile(userInfo._id, userBio);
-				setProfileInfo(updatedProfile.data);
-				setIsEditing(false);
+				showToast("Update failed. Please try again.", "error");
 			}
 		} catch (error) {
-			console.error("Error updating profile:", error);
+			console.log(error);
+			showToast(
+				error.message || "Update failed. Please try again.",
+				"error",
+				"error"
+			);
 		}
 	};
 
 	return (
-		<>
-			<h1>{userInfo.name}</h1>
-			<div>
-				{isEditing ? (
-					<form className="profile-form" onSubmit={handleSubmit}>
-						<label htmlFor="bio">bio</label>
-						<input
-							type="text"
-							id="bio"
-							value={userBio}
-							onChange={handleChange}></input>
-						<button type="submit">
-							<i className="fa-solid fa-check"></i>
-						</button>
-					</form>
-				) : (
-					<>
-						<p>{profileInfo && profileInfo.bio}</p>
-						<button onClick={() => setIsEditing(true)}>
-							<i className="fa-solid fa-pencil"></i>
-						</button>
-					</>
-				)}
-			</div>
-		</>
+		<div>
+			{isEditing ? (
+				<div>
+					{loading ? (
+						<div>Loading...</div>
+					) : (
+						<div>
+							<h1>{userInfo.name}</h1>
+							<section className="container">
+								<h1 className="large text-primary">Change Account Details</h1>
+								<p className="lead">
+									<i className="fas fa-user" /> Update Your Information
+								</p>
+								<form className="form" onSubmit={onSubmit}>
+									<div className="form-group">
+										<input
+											type="text"
+											placeholder="Name"
+											name="name"
+											value={name}
+											onChange={onChange}
+											required
+										/>
+									</div>
+									<div className="form-group">
+										<input
+											type="email"
+											placeholder="Email Address"
+											name="email"
+											value={email}
+											onChange={onChange}
+											required
+										/>
+									</div>
+									<div className="form-group">
+										<input
+											type="text"
+											placeholder="Phone Number"
+											name="phone"
+											value={phone}
+											onChange={onChange}
+											required
+										/>
+									</div>
+									<div className="form-group">
+										<input
+											required
+											type="password"
+											placeholder="Password"
+											name="password"
+											value={password}
+											onChange={onChange}
+										/>
+										<i onClick={() => setChangePw(!changePw)}>
+											{!changePw ? (
+												<i className="fa-solid fa-lock"></i>
+											) : (
+												<i className="fa-solid fa-lock-open"></i>
+											)}{" "}
+											Update password?{" "}
+										</i>
+										{changePw && (
+											<>
+												<h4>
+													<i className="fa-solid fa-key"></i>Change your
+													password
+												</h4>
+												<div className="form-group">
+													<input
+														type="password"
+														placeholder="New Password"
+														name="newPassword"
+														value={newPassword}
+														onChange={onChange}
+														required
+													/>
+												</div>
+												<div className="form-group">
+													<input
+														type="password"
+														placeholder="Confirm Password"
+														name="newPassword2"
+														value={newPassword2}
+														onChange={onChange}
+														required
+													/>
+												</div>
+											</>
+										)}
+									</div>
+									<input
+										type="submit"
+										className="btn btn-primary"
+										value="Update"
+									/>
+								</form>
+							</section>
+						</div>
+					)}
+					{error && <div>{error}</div>}
+				</div>
+			) : (
+				<>
+					<h2>Edit Account Details</h2>
+					<button onClick={() => setIsEditing(true)}>
+						<i className="fa-solid fa-pencil"></i>
+					</button>
+				</>
+			)}
+		</div>
 	);
 }
 

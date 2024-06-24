@@ -25,7 +25,6 @@ connectDB();
 
 app.use("/auth", require("./routes/authRoutes"));
 app.use("/users", require("./routes/userRoutes"));
-app.use("/profile", require("./routes/profileRoutes"));
 app.use("/comments", require("./routes/commentRoutes"));
 app.use("/recipes", require("./routes/recipeRoutes"));
 app.use("/ingredients", require("./routes/ingredientRoutes"));

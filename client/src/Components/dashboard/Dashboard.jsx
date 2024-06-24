@@ -44,6 +44,8 @@ const Dashboard = () => {
 				</Link>
 				Hello, {name}
 			</h1>
+			<h3>Your Profile</h3>
+			<Link to="/profiles">View your profile</Link>
 			<h3>Search Recipes</h3>
 			<Search/>
 			<h3>Your recipes</h3>
