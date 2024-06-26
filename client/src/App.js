@@ -58,7 +58,7 @@ const App = () => {
 					<Route
 						path="/profiles"
 						element={
-							<PrivateRoute showToast={showToastMessage} Component={Profile} />
+							<PrivateRoute Component={Profile} />
 						}
 					/>
 					<Route

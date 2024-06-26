@@ -63,14 +63,14 @@ function Recipe() {
 			{userInfo && <Rating recipe={recipe} />}
 			{user && (
 				<p>
-					<Link to={`/profiles/${id}`}>{user.name}</Link>
+					<Link to={`/profiles/${user._id}`}>{user.name}</Link>
 				</p>
 			)}
 			<Link to={`/recipes/${recipe._id}/comments`}>View Comments</Link>
 			<Ingredients ingredients={recipe.ingredients} />
 			<Nutrients recipe={recipe.nutrition} />
 			{userInfo ? (
-				<Link to="/login">Save Recipe</Link>
+				!loading && <Link to="/login">Save Recipe</Link>
 			) : (
 				<SaveRecipe recipe={recipe._id} />
 			)}

@@ -17,7 +17,6 @@ function ProfileView() {
 		const fetchData = async () => {
 			setLoading(true);
 			setError(null);
-
 			try {
 				const [userRes, recipesRes, ratingsRes] = await Promise.all([
 					getUserById(id),

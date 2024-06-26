@@ -8,8 +8,9 @@ import {
 import Nutrients from "../recipe/Nutrients";
 import RecipeIngredients from "./RecipeIngredients";
 
-const RecipeForm = () => {
+const RecipeForm = ({showToast}) => {
 	const navigate = useNavigate()
+	const [loading, setLoading] = useState(false);
 	const [recipeName, setRecipeName] = useState("");
 	const [recipeIngredients, setRecipeIngredients] = useState([]);
 	const [ingredients, setIngredients] = useState([]);
@@ -29,11 +30,15 @@ const RecipeForm = () => {
 	const [category, setCategory] = useState(ingredientCategories[0]);
 
 	useEffect(() => {
+		
+		
 		// Fetch the ingredients for the selected category
 		const fetchIngredients = async (category) => {
 			try {
+				setLoading(true);
 				const res = await getIngredientsByCategory(category);
 				setIngredients(res.data);
+				setLoading(false);
 			} catch (error) {
 				console.error("Error fetching ingredients:", error);
 			}
@@ -45,11 +50,13 @@ const RecipeForm = () => {
 	// Fetch the nutrition information for the recipe
 	const fetchRecipeNutrition = async (recipeIngredients) => {
 		try {
+			setLoading(true);
 			if (recipeIngredients.length === 0) return;
 			const res = await calculateRecipeNutrition({
 				ingredients: recipeIngredients,
 			});
 			setRecipeNutrition(res.data);
+			setLoading(false);
 		} catch (error) {
 			console.error("Error calculating recipe nutrition:", error);
 		}
@@ -60,7 +67,9 @@ const RecipeForm = () => {
 	}, [recipeIngredients]);
 
 	const handleRecipeNameChange = (e) => {
+		setLoading(true);
 		setRecipeName(e.target.value);
+		setLoading(false);
 	};
 
 	const handleAddIngredient = (e) => {
@@ -78,6 +87,7 @@ const RecipeForm = () => {
 
 		// Add the ingredient to the recipe
 		if (recipeIngredients.length < 5) {
+			setLoading(true);
 			setRecipeIngredients([
 				...recipeIngredients,
 				{
@@ -87,6 +97,7 @@ const RecipeForm = () => {
 					modifier: portion.modifier,
 				},
 			]);
+			setLoading(false);
 		} else {
 			alert("You can only add up to 5 ingredients");
 		}
@@ -97,9 +108,11 @@ const RecipeForm = () => {
 	};
 
 	const handleRemoveIngredient = (ingredient) => () => {
+		setLoading(true);
 		setRecipeIngredients(
 			recipeIngredients.filter((i) => i._id !== ingredient._id)
 		);
+		setLoading(false);
 	};
 
 	const handleGoBack = (e) => {
@@ -134,8 +147,7 @@ const RecipeForm = () => {
 			navigate('/dashboard')
 		} catch (error) {
 			console.error("Error saving recipe:", error);
-			// TODO: Add toast
-			alert("Error saving recipe");
+			showToast("Error saving recipe");
 		}
 	};
 
@@ -198,7 +210,7 @@ const RecipeForm = () => {
 							handleRemoveIngredient={handleRemoveIngredient}
 						/>
 						<br></br>
-						<button type="submit">Post Recipe</button>
+						<button disabled={loading} type="submit">Post Recipe</button>
 						<Nutrients recipe={recipeNutrition} />
 					</>
 				)}

@@ -14,7 +14,7 @@ function RatingComponent({ recipe }) {
 			try {
 				const res = await getRating(recipe._id);
 				res.meanRating && setMeanRating(res.meanRating);
-                res.userRating && setStars(res.userRating);
+				res.userRating && setStars(res.userRating);
 			} catch (error) {
 				console.error("Error fetching user rating:", error);
 			}

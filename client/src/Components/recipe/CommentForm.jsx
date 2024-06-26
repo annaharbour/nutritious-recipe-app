@@ -1,30 +1,31 @@
-import React, { useState } from 'react';
-import {useParams} from 'react-router-dom';
-import {createComment} from '../../services/commentService';
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { createComment } from "../../services/commentService";
 
-const CommentForm = () => {
-    const [text, setText] = useState('');
-    const {id} = useParams();
-    const handleSubmit = async (e) => {
-        if(!text){
-            alert('Please enter a comment before submitting.')
-            return;
+const CommentForm = ({showToast}) => {
+	const [text, setText] = useState("");
+	const { id } = useParams();
+	const handleSubmit = async (e) => {
+		try {
+			if (!text) {
+				alert("Please enter a comment before submitting.");
+				return;
+			}
+			await createComment(id, text);
+			setText("");
+		} catch (error) {
+            showToast("error", error)
         }
-        // Add your logic to handle the comment submission here
-        const res = await createComment(id, text);
-        console.log(res);
-        setText(''); // Clear the input field
-    };
+	};
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <textarea                
-                onChange={(e) => setText(e.target.value)}
-                placeholder="Write your comment..."
-            ></textarea>
-            <button type="submit">Submit</button>
-        </form>
-    );
+	return (
+		<form onSubmit={handleSubmit}>
+			<textarea
+				onChange={(e) => setText(e.target.value)}
+				placeholder="Write your comment..."></textarea>
+			<button type="submit">Submit</button>
+		</form>
+	);
 };
 
 export default CommentForm;
