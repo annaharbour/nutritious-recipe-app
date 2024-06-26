@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getUser, updateUser } from "../../services/userService";
+import { getUser, updateUser, deleteUser } from "../../services/userService";
 
 function Profile({ showToast }) {
 	const [loading, setLoading] = useState(false);
@@ -41,6 +41,17 @@ function Profile({ showToast }) {
 
 		fetchProfileInfo();
 	}, []);
+
+	const deleteAccount = async () => {
+		if (window.confirm("Are you sure you want to delete your account?")) {
+			try {
+				const res = await deleteUser(userInfo._id);
+				console.log(res.data);
+			} catch (error) {
+				console.error(error);
+			}
+		}
+	};
 
 	const onChange = (e) =>
 		setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -179,6 +190,8 @@ function Profile({ showToast }) {
 						</div>
 					)}
 					{error && <div>{error}</div>}
+					<button onClick={() => setIsEditing(false)}>Cancel</button>
+					<button onClick={deleteAccount}>Delete Account</button>
 				</div>
 			) : (
 				<>

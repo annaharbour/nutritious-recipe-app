@@ -121,6 +121,16 @@ const deleteUser = async (req, res) => {
 			Recipe.deleteMany({ userId: userId }),
 		]);
 
+		await Comment.updateMany(
+			{ "likes.userId": userId },
+			{ $pull: { likes: { user: userId } } }
+		);
+
+		await Comment.updateMany(
+			{ "responses.user": userId },
+			{ $pull: { responses: { user: userId } } }
+		);
+
 		await user.deleteOne();
 		return res.status(200).json({ msg: "User deleted" });
 	} catch (err) {

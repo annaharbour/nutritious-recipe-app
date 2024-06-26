@@ -9,7 +9,6 @@ const Navbar = () => {
 	const logout = async () => {
 		try {
 			await logoutUser()
-			console.log("You have been logged out")
 		} catch(err){			
 			console.log('Error logging out:', err)
 	}

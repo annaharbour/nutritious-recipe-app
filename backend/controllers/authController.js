@@ -146,14 +146,12 @@ const sendPasswordResetEmail = async (req, res) => {
 
 		transporter.sendMail(mailOptions, async (err, response) => {
 			if (err) {
-				console.error("Error sending email:", err);
 				return res.status(500).json({ msg: "Error sending email" });
 			}
 
 			user.resetPasswordToken = resetToken;
 			user.resetPasswordExpires = Date.now() + 3600000;
 			await user.save();
-			console.log("User after saving resetToken:", user);
 
 			res.status(200).json({ msg: "Password reset email sent" });
 		});
@@ -165,8 +163,6 @@ const sendPasswordResetEmail = async (req, res) => {
 const resetPassword = async (req, res) => {
 	const { resetToken } = req.params;
 	const { password } = req.body;
-	console.log("Token received:", resetToken);
-	console.log("Password received:", password);
 
 	try {
 		const decoded = jwt.verify(resetToken, process.env.jwtSecret);
@@ -175,7 +171,6 @@ const resetPassword = async (req, res) => {
 		const user = await User.findOne({
 			_id: decoded.user.id,
 		});
-		console.log("User found before resetToken check:", user);
 
 		if (
 			!user ||
@@ -191,12 +186,9 @@ const resetPassword = async (req, res) => {
 		user.password = await bcrypt.hash(password, salt);
 		user.resetPasswordToken = undefined;
 		user.resetPasswordExpires = undefined;
-		console.log("User before saving:", user);
 		await user.save();
-		console.log("User after saving:", user);
 		res.status(200).json({ msg: "Password has been reset" });
 	} catch (error) {
-		console.error("Error during password reset:", error);
 		res.status(500).json({ msg: "Server Error", error: error.message });
 	}
 };

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {usersUrl} from "./endpoints";
+import { usersUrl } from "./endpoints";
 
 const axiosInstance = axios.create({
 	baseURL: usersUrl,
@@ -34,38 +34,47 @@ export const updateUser = async (name, email, phone, password, newPassword) => {
 			email,
 			phone,
 			password,
-			newPassword
+			newPassword,
 		});
 		return res;
 	} catch (error) {
-		  throw new Error(error.response.data.message || "Update failed. Please try again.");
+		throw new Error(
+			error.response.data.message || "Update failed. Please try again."
+		);
 	}
 };
 
-export const getUser = async (id
-) => {
+export const getUser = async () => {
 	try {
 		const res = await axiosInstance.get(`/user`);
 		return res.data;
 	} catch (error) {
 		console.error(error);
+		throw new Error(error.response.data.message || "No user found");
 	}
 };
 
-export const getUserFavorites = async (id) => {
+export const getUserFavorites = async () => {
 	try {
 		const res = await axiosInstance.get(`/favorites`);
 		return res.data;
 	} catch (error) {
 		console.error(error);
+		throw new Error(error.response.data.message || "No favorites found");
 	}
-}
+};
 
 export const deleteUser = async (id) => {
 	try {
 		const res = await axiosInstance.delete(`/${id}`);
+		localStorage.removeItem("token");
+		localStorage.removeItem("user");
 		return res;
 	} catch (error) {
 		console.error(error);
+		throw new Error(
+			error.response.data.message ||
+				"Failed to delete account. Please try again."
+		);
 	}
 };

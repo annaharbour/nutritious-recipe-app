@@ -63,7 +63,7 @@ const App = () => {
 					/>
 					<Route
 						path=":id"
-						element={<PrivateRoute Component={ProfileView} />}
+						element={<ProfileView />}
 					/>
 				</Route>
 				<Route
