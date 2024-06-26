@@ -14,6 +14,8 @@ import Recipe from "./Components/recipe/Recipe";
 import RecipeForm from "./Components/recipe-creation/RecipeForm";
 import ProfileView from "./Components/profile/ProfileView";
 import Comments from "./Components/recipe/Comments";
+import Reset from "./Components/auth/Reset";
+import Forgotten from "./Components/auth/Forgotten";
 
 const App = () => {
 	const showToastMessage = (msg, type) => {
@@ -55,7 +57,9 @@ const App = () => {
 				<Route path="profiles">
 					<Route
 						path="/profiles"
-						element={<PrivateRoute showToast={showToastMessage} Component={Profile} />}
+						element={
+							<PrivateRoute showToast={showToastMessage} Component={Profile} />
+						}
 					/>
 					<Route
 						path=":id"
@@ -72,6 +76,14 @@ const App = () => {
 					element={<Register showToast={showToastMessage} />}
 				/>
 				<Route path="/login" element={<Login showToast={showToastMessage} />} />
+				<Route
+					path="/reset/:token"
+					element={<Reset showToast={showToastMessage} />}
+				/>
+				<Route
+					path="/forgotten"
+					element={<Forgotten showToast={showToastMessage} />}
+				/>
 				<Route path="recipes">
 					<Route
 						path="/recipes/create"

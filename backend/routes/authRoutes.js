@@ -2,10 +2,12 @@ const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const { register, login } = require("../controllers/authController");
+const { register, login, sendPasswordResetEmail, resetPassword } = require("../controllers/authController");
 
 router.post("/register", register);
 router.post("/login", login);
+router.post("/lostpassword", sendPasswordResetEmail);
+router.post("/reset", resetPassword);
 
 router.get(
 	"/google",
@@ -24,5 +26,11 @@ router.get(
 		res.redirect(redirectUrl);
 	}
 );
+
+router.get('/reset/:resetToken', (req, res) => {
+	res.redirect(`${process.env.clientURI}/reset/${req.params.resetToken}`);
+});
+
+router.post('/reset/:resetToken', resetPassword);
 
 module.exports = router;

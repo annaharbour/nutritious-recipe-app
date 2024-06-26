@@ -3,7 +3,7 @@ import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { authURL } from "../../services/endpoints";
 
-const Login = ({showToast}) => {
+const Login = ({ showToast }) => {
 	const navigate = useNavigate();
 	const { loginUser, userInfo } = useAuth();
 	const [formData, setFormData] = useState({
@@ -23,16 +23,19 @@ const Login = ({showToast}) => {
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
-		
+
 		try {
 			await loginUser(email, password);
 			navigate("/dashboard");
 		} catch (err) {
-			showToast(err.message, "error" || "Unable to log in. Please verify your email and password.", "error");
+			showToast(
+				err.message,
+				"error" || "Unable to log in. Please verify your email and password.",
+				"error"
+			);
 		}
 	};
 
-	
 	return userInfo ? (
 		<Navigate to="/dashboard" />
 	) : (
@@ -41,9 +44,7 @@ const Login = ({showToast}) => {
 			<p className="lead">
 				<i className="fas fa-user"></i> Sign into Your Account
 			</p>
-			<form
-				className="form"
-				onSubmit={(e) => onSubmit(e)}>
+			<form className="form" onSubmit={(e) => onSubmit(e)}>
 				<div className="form-group">
 					<input
 						type="email"
@@ -60,21 +61,19 @@ const Login = ({showToast}) => {
 						placeholder="Password"
 						name="password"
 						value={password}
-						onChange={(e) => onChange(e)
-						}
+						onChange={(e) => onChange(e)}
 					/>
 				</div>
 				<input type="submit" className="btn btn-primary" value="Login" />
 			</form>
-			<p>
-				Sign in with{" "}
-				<Link to={`${process.env.serverURI}/auth/google`}>google</Link>
-			</p>
 			<p className="my-1">
 				Don't have an account? <Link to="/register">Sign Up</Link>
 			</p>
 			<p className="my-1">
 				<Link to={`${authURL}/google`}>Sign In Using Google</Link>
+			</p>
+			<p className="my-1">
+				<Link to="/forgotten">Forgot Password?</Link>{" "}
 			</p>
 		</section>
 	);

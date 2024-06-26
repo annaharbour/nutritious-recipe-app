@@ -33,11 +33,9 @@ export const register = async (name, email, phone, password) => {
 		setAuthToken(res.data.token);
 		return res;
 	} catch (error) {
-        console.log(error.response.data.message);
 		throw new Error(error.response.data.message || "Registration failed. Please try again.");
 	}
 };
-
 
 export function setAuthToken(token) {
 	if (token) {
@@ -46,3 +44,27 @@ export function setAuthToken(token) {
 		delete axios.defaults.headers.common["x-auth-token"];
 	}
 }
+
+export const sendPasswordResetEmail = async (email) => {
+	try {
+		const res = await axiosInstance.post("/lostpassword", {
+			email,
+		});
+		return res;
+	} catch (error) {
+		throw new Error("Failed to send password reset email. Please try again.");
+	}
+};
+
+export const resetPassword = async (resetToken, password) => {
+	try {
+		const res = await axiosInstance.post(`/reset/${resetToken}`, {
+			password,
+		});
+		localStorage.removeItem("resetToken");
+		localStorage.removeItem("user");
+		return res;
+	} catch (error) {
+		throw new Error("Failed to reset password. Please try again.");
+	}
+};
