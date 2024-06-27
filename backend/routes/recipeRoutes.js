@@ -42,7 +42,6 @@ router.route("/user/:userId/saved").get(getSavedRecipesByUserId);
 
 // PUT /api/recipes/:id/save
 router.route("/save/:id").put(auth, toggleSaveRecipe);
-module.exports = router;
 
 // PUT /recipes/:recipeId/rating
 // @desc Rate a recipe
@@ -56,3 +55,4 @@ router.route("/:recipeId/rating").put(auth, rateRecipe).get(auth, getRating);
 // @desc Get user rating
 // @access Private
 router.route("/:userId/ratings").get(auth, getUserRatings);
+module.exports = router;

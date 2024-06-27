@@ -23,6 +23,7 @@ app.use(passport.session());
 
 connectDB();
 
+app.use('/search', require('./routes/searchRoutes'));
 app.use("/auth", require("./routes/authRoutes"));
 app.use("/users", require("./routes/userRoutes"));
 app.use("/comments", require("./routes/commentRoutes"));
