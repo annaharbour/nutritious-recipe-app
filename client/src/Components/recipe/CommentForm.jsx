@@ -1,29 +1,35 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { createComment } from "../../services/commentService";
 
-const CommentForm = ({showToast}) => {
+const CommentForm = ({ showToast, loading, handleAddComment }) => {
 	const [text, setText] = useState("");
 	const { id } = useParams();
+
 	const handleSubmit = async (e) => {
+		e.preventDefault();
 		try {
 			if (!text) {
-				alert("Please enter a comment before submitting.");
+				showToast("Please enter a comment before submitting.");
 				return;
 			}
-			await createComment(id, text);
+			await handleAddComment(id, text);
 			setText("");
 		} catch (error) {
-            showToast("error", error)
-        }
+			console.error(error);
+		}
 	};
 
 	return (
 		<form onSubmit={handleSubmit}>
 			<textarea
 				onChange={(e) => setText(e.target.value)}
-				placeholder="Write your comment..."></textarea>
-			<button type="submit">Submit</button>
+				value={text}
+				placeholder="Write your comment..."
+				disabled={loading}
+			/>
+			<button disabled={loading} type="submit">
+				{loading ? "Submitting..." : "Submit"}
+			</button>
 		</form>
 	);
 };

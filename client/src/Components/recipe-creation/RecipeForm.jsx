@@ -8,8 +8,8 @@ import {
 import Nutrients from "../recipe/Nutrients";
 import RecipeIngredients from "./RecipeIngredients";
 
-const RecipeForm = ({showToast}) => {
-	const navigate = useNavigate()
+const RecipeForm = ({ showToast }) => {
+	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 	const [recipeName, setRecipeName] = useState("");
 	const [recipeIngredients, setRecipeIngredients] = useState([]);
@@ -30,8 +30,6 @@ const RecipeForm = ({showToast}) => {
 	const [category, setCategory] = useState(ingredientCategories[0]);
 
 	useEffect(() => {
-		
-		
 		// Fetch the ingredients for the selected category
 		const fetchIngredients = async (category) => {
 			try {
@@ -75,7 +73,7 @@ const RecipeForm = ({showToast}) => {
 	const handleAddIngredient = (e) => {
 		e.preventDefault();
 		if (!selectedIngredient) return;
-
+		
 		// Find the selected ingredient and portion
 		const ingredient = ingredients.find((i) => i._id === selectedIngredient);
 
@@ -83,7 +81,7 @@ const RecipeForm = ({showToast}) => {
 			(p) => p._id === Number(selectedPortion)
 		);
 		// TODO: Add toast
-		if(!portion) return alert('Please select a portion')
+		if (!portion) return alert("Please select a portion");
 
 		// Add the ingredient to the recipe
 		if (recipeIngredients.length < 5) {
@@ -99,7 +97,7 @@ const RecipeForm = ({showToast}) => {
 			]);
 			setLoading(false);
 		} else {
-			alert("You can only add up to 5 ingredients");
+			showToast("You can only add up to 5 ingredients");
 		}
 		// Reset the form
 		setSelectedIngredient(null);
@@ -108,11 +106,15 @@ const RecipeForm = ({showToast}) => {
 	};
 
 	const handleRemoveIngredient = (ingredient) => () => {
-		setLoading(true);
-		setRecipeIngredients(
-			recipeIngredients.filter((i) => i._id !== ingredient._id)
-		);
-		setLoading(false);
+		try {
+			setLoading(true);
+			setRecipeIngredients(
+				recipeIngredients.filter((i) => i._id !== ingredient._id)
+			);
+			setLoading(false);
+		} catch (error) {
+			showToast("Error removing ingredient, please try again", "error");
+		}
 	};
 
 	const handleGoBack = (e) => {
@@ -141,17 +143,18 @@ const RecipeForm = ({showToast}) => {
 		e.preventDefault();
 		try {
 			// TODO: Add toast
-			if (recipeIngredients.length === 0) return alert('Please add ingredients')
-			if (!recipeName) return alert('Please enter a recipe name')
+			if (recipeIngredients.length === 0)
+				return alert("Please add ingredients");
+			if (!recipeName) return alert("Please enter a recipe name");
 			await createRecipe(recipeName, recipeIngredients);
-			navigate('/dashboard')
+			navigate("/dashboard");
 		} catch (error) {
 			console.error("Error saving recipe:", error);
 			showToast("Error saving recipe");
 		}
 	};
 
-	return ( 
+	return (
 		<div>
 			<h2>Create a Recipe</h2>
 			<div>
@@ -210,7 +213,9 @@ const RecipeForm = ({showToast}) => {
 							handleRemoveIngredient={handleRemoveIngredient}
 						/>
 						<br></br>
-						<button disabled={loading} type="submit">Post Recipe</button>
+						<button disabled={loading} type="submit">
+							Post Recipe
+						</button>
 						<Nutrients recipe={recipeNutrition} />
 					</>
 				)}

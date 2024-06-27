@@ -182,29 +182,28 @@ const getRecipesByUserId = async (req, res) => {
 };
 
 const deleteRecipeById = async (req, res) => {
-    const recipeId = req.params.id;
+	const recipeId = req.params.id;
 
-    try {
-        const recipe = await Recipe.findById(recipeId);
-        if (!recipe) {
-            return res.status(404).json({ error: "Recipe not found." });
-        }
+	try {
+		const recipe = await Recipe.findById(recipeId);
+		if (!recipe) {
+			return res.status(404).json({ error: "Recipe not found." });
+		}
 
-        await Promise.all([
-            Rating.deleteMany({ recipe: recipeId }),
-            Comment.deleteMany({ recipe: recipeId }),
-            User.updateMany({}, { $pull: { favoriteRecipes: recipeId } }),
-        ]);
+		await Promise.all([
+			Rating.deleteMany({ recipe: recipeId }),
+			Comment.deleteMany({ recipe: recipeId }),
+			User.updateMany({}, { $pull: { favoriteRecipes: recipeId } }),
+		]);
 
-        await recipe.deleteOne();
+		await recipe.deleteOne();
 
-        return res.status(200).json({ message: "Recipe removed" });
-    } catch (err) {
-        console.error(err); // Log the error for debugging purposes
-        return res.status(500).json({ error: "Failed to delete the recipe." });
-    }
+		return res.status(200).json({ message: "Recipe removed" });
+	} catch (err) {
+		console.error(err); // Log the error for debugging purposes
+		return res.status(500).json({ error: "Failed to delete the recipe." });
+	}
 };
-
 
 const getSavedRecipesByUserId = async (req, res) => {
 	const userId = req.params.userId;
@@ -213,10 +212,11 @@ const getSavedRecipesByUserId = async (req, res) => {
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
 		}
-		// Find the recipes that the user has saved
 		const favoriteRecipes = await Recipe.find({
 			_id: { $in: user.favoriteRecipes },
 		});
+
+		// Find the recipes that the user has saved
 		return res.status(200).json(favoriteRecipes);
 	} catch (err) {
 		return res.status(500).json({ error: "Failed to fetch recipes." });
@@ -226,7 +226,6 @@ const getSavedRecipesByUserId = async (req, res) => {
 const toggleSaveRecipe = async (req, res) => {
 	const userId = req.user.id;
 	const recipeId = req.params.id;
-
 	try {
 		const user = await User.findById(userId);
 		if (!user) {

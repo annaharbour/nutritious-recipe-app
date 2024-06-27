@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Response({ response, deleteResponse }) {
+function Response({ response, deleteResponse, showToast }) {
 	const responseDate = new Date(response.date).toLocaleDateString();
 
 	const handleDeleteResponse = async () => {
 		try {
 			await deleteResponse(response);
 		} catch (err) {
-			console.log(err);
+			showToast(err.message, "error");
 		}
 	};
 	return (

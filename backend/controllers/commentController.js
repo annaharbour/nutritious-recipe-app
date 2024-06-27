@@ -16,8 +16,9 @@ const createComment = async (req, res) => {
 			userName,
 			recipe,
 		});
-		const comment = await newComment.save();
-		return res.json(comment);
+		await newComment.save();
+		const comments = await Comment.find({ recipe }).sort({ date: 1 });
+		return res.status(200).json(comments);
 	} catch (err) {
 		console.error(err.message);
 		return res.status(500).send("Server error");
@@ -37,7 +38,7 @@ const getCommentsByRecipeId = async (req, res) => {
 			date: 1,
 		});
 
-		return res.json(comments);
+		return res.status(200).json(comments);
 	} catch (err) {
 		return res.status(500).send("Server Error");
 	}
@@ -50,7 +51,7 @@ const getCommentById = async (req, res) => {
 		if (!comment) {
 			return res.status(404).json({ msg: "Comment not found" });
 		}
-		return res.json(comment);
+		return res.status(200).json(comment);
 	} catch (err) {
 		return res.status(500).send("Server Error");
 	}
@@ -67,7 +68,11 @@ const deleteCommentById = async (req, res) => {
 			return res.status(401).json({ msg: "User not authorized" });
 		}
 		await Comment.findByIdAndDelete(commentId);
-		return res.json({ msg: "Comment deleted" });
+
+		const comments = await Comment.find({ recipe: comment.recipe }).sort({
+			date: 1,
+		});
+		return res.status(200).json(comments);
 	} catch (err) {
 		return res.status(500).send("Server Error");
 	}
@@ -88,11 +93,11 @@ const toggleLikeComment = async (req, res) => {
 		if (alreadyLikedIndex !== -1) {
 			comment.likes.splice(alreadyLikedIndex, 1);
 			await comment.save();
-			return res.json(comment);
+			return res.status(200).json(comment);
 		} else {
 			comment.likes.unshift({ user: req.user.id });
 			await comment.save();
-			return res.json(comment);
+			return res.status(200).json(comment);
 		}
 	} catch (err) {
 		return res.status(500).send("Server Error");
@@ -105,7 +110,7 @@ const respondToComment = async (req, res) => {
 
 	try {
 		const user = await User.findById(req.user.id).select("-password");
-		const userName = user.name
+		const userName = user.name;
 		const comment = await Comment.findById(commentId);
 		if (!comment) {
 			return res.status(404).json({ msg: "Comment not found" });
@@ -122,7 +127,7 @@ const respondToComment = async (req, res) => {
 
 		await comment.save();
 
-		return res.json(comment.responses);
+		return res.status(200).json(comment.responses);
 	} catch (err) {
 		console.error(err.message);
 		return res.status(500).send("Server Error");
@@ -142,7 +147,7 @@ const getResponse = async (req, res) => {
 		if (!response) {
 			return res.status(404).json({ msg: "Response not found" });
 		}
-		return res.json(response);
+		return res.status(200).json(response);
 	} catch (err) {
 		console.error(err.message);
 		return res.status(500).send("Server Error");
@@ -169,7 +174,7 @@ const deleteResponse = async (req, res) => {
 
 		await comment.save();
 
-		return res.json(comment.responses);
+		return res.status(200).json(comment.responses);
 	} catch (err) {
 		console.error(err.message);
 		return res.status(500).send("Server Error");

@@ -4,14 +4,16 @@ import NotFound from "../layout/NotFound";
 import {
 	getCommentsByRecipeId,
 	deleteCommentById,
+	createComment
 } from "../../services/commentService";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
 
-const Comments = ({showToast}) => {
+const Comments = ({ showToast }) => {
 	const { id } = useParams();
 	const [comments, setComments] = useState([]);
 	const [error, setError] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		const fetchComments = async () => {
@@ -27,12 +29,23 @@ const Comments = ({showToast}) => {
 
 	const handleDeleteComment = async (comment) => {
 		try {
-			await deleteCommentById(comment._id);
-			setComments((prevComments) =>
-				prevComments.filter((c) => c._id !== comment._id)
-			);
+			const res = await deleteCommentById(comment._id);
+			setComments(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
+			showToast("Comment deleted successfully", "success");
 		} catch (err) {
-			console.log(err.message);
+			showToast("Failed to delete comment. Please try again", "error");
+		}
+	};
+
+	const handleAddComment = async (id, text) => {
+		try {
+			setLoading(true);
+			const res = await createComment(id, text);
+			setComments(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
+			showToast("Comment added successfully", "success");
+			setLoading(false);
+		} catch {
+			setLoading(false);
 		}
 	};
 
@@ -54,7 +67,11 @@ const Comments = ({showToast}) => {
 					<p>This recipe has no comments</p>
 				)}
 			</ul>
-			<CommentForm />
+			<CommentForm
+				loading={loading}
+				handleAddComment={handleAddComment}
+				showToast={showToast}
+			/>
 		</div>
 	);
 };

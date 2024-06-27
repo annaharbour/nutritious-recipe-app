@@ -89,10 +89,10 @@ const App = () => {
 						path="/recipes/create"
 						element={<PrivateRoute Component={RecipeForm} />}
 					/>
-					<Route path=":id" element={<Recipe />} />
+					<Route path=":id" element={<Recipe showToast={showToastMessage} />} />
 					<Route
 						path=":id/comments"
-						element={<PrivateRoute Component={Comments} />}
+						element={<Comments showToast={showToastMessage} />}
 					/>
 				</Route>
 			</Routes>

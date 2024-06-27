@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { getRating, rateRecipe } from "../../services/ratingService";
 
-function RatingComponent({ recipe }) {
+function RatingComponent({ recipe, showToast }) {
 	const userInfo = useAuth().userInfo;
 	const userId = userInfo._id;
 	const [loading, setLoading] = useState(false);
@@ -30,10 +30,10 @@ function RatingComponent({ recipe }) {
 			if (res.userRating && res.userRating !== null) {
 				setStars(res.userRating);
 			}
-			// TODO: Add toast notification
+			showToast("Rating submitted", "success");
 		} catch (error) {
 			console.error("Error rating recipe:", error);
-			// TODO: Add toast notification
+			showToast("Error rating recipe", "error");
 		}
 		setLoading(false);
 	};

@@ -24,7 +24,7 @@ export const getCommentsByRecipeId = async (recipeId) => {
 export const createComment = async (recipeId, text) => {
 	try {
 		const res = await axiosInstance.post(`/${recipeId}`, { text });
-		return res;
+		return res.data;
 	} catch (error) {
 		if (error.response && error.response.status === 404) {
 			throw new Error("Error creating comment");

@@ -9,7 +9,7 @@ import {
 } from "../../services/commentService";
 import { useAuth } from "../auth/AuthContext";
 
-const Comment = ({ comment, deleteComment }) => {
+const Comment = ({ comment, deleteComment, showToast }) => {
 	const userInfo = useAuth().userInfo;
 	const [seeResponses, setSeeResponses] = useState(false);
 	const [seeReplyBox, setSeeReplyBox] = useState(false);
@@ -29,7 +29,7 @@ const Comment = ({ comment, deleteComment }) => {
 			setLikes(updatedLikes.length);
 			setUserHasLiked(!userHasLiked);
 		} catch (err) {
-			console.log(err);
+			showToast("Error liking comment", "error");
 		}
 	};
 
@@ -37,7 +37,7 @@ const Comment = ({ comment, deleteComment }) => {
 		try {
 			await deleteComment(comment);
 		} catch (err) {
-			console.log(err);
+			showToast("Error deleting comment", "error");
 		}
 	};
 
@@ -64,8 +64,9 @@ const Comment = ({ comment, deleteComment }) => {
 		try {
 			const res = await deleteResponse(response._id);
 			setResponses(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
+			showToast("Response deleted successfully", "success")
 		} catch (err) {
-			console.log(err);
+			showToast(err.message, "error");
 		}
 	};
 
@@ -78,13 +79,18 @@ const Comment = ({ comment, deleteComment }) => {
 				<button onClick={handleDeleteComment}>X</button>
 			</p>
 			<p>
-				by <Link to={`/profiles/${comment.user}`}>{comment.userName}</Link> on {date}
+				by <Link to={`/profiles/${comment.user}`}>{comment.userName}</Link> on{" "}
+				{date}
 			</p>
 			{likes > 0 && <p>{likes} Likes</p>}
 			<button onClick={handleLike}>{userHasLiked ? "Unlike" : "Like"}</button>
 			<button onClick={handleReply}>Reply</button>
 			{seeReplyBox && (
-				<ResponseForm addResponse={handleAddResponse} commentId={comment._id} />
+				<ResponseForm
+					showToast={showToast}
+					addResponse={handleAddResponse}
+					commentId={comment._id}
+				/>
 			)}
 			{responses.length > 0 && (
 				<button onClick={handleToggleResponses}>
@@ -95,6 +101,7 @@ const Comment = ({ comment, deleteComment }) => {
 				<ul>
 					{responses.map((response, index) => (
 						<Response
+							showToast={showToast}
 							key={index}
 							response={response}
 							deleteResponse={handleDeleteResponse}
