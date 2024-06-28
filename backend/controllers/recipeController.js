@@ -106,8 +106,13 @@ const getRecipes = async (req, res) => {
 		const ratings = await Rating.find();
 		// Loop through the recipes and calculate the average rating for each recipe then return recipes by descending rating
 		recipes.forEach((recipe) => {
-			const recipeRatings = ratings.filter((rating) => rating.recipe.toString() === recipe._id.toString());
-			const totalRating = recipeRatings.reduce((acc, rating) => acc + rating.value, 0);
+			const recipeRatings = ratings.filter(
+				(rating) => rating.recipe.toString() === recipe._id.toString()
+			);
+			const totalRating = recipeRatings.reduce(
+				(acc, rating) => acc + rating.value,
+				0
+			);
 			const averageRating = totalRating / recipeRatings.length;
 			recipe.averageRating = averageRating;
 		});
@@ -256,6 +261,96 @@ const toggleSaveRecipe = async (req, res) => {
 	}
 };
 
+const searchRecipes = async (req, res) => {
+	const { recipeName, userName, nutrients, includeIngredientIds, excludeIngredientIds, sortCriteria } = req.body;
+
+	try {
+		const query = {};
+
+		// Search by recipe name
+		if (recipeName) {
+			query.name = { $regex: recipeName, $options: "i" };
+		}
+
+		// Search by user name
+		if (userName) {
+			const users = await User.find({
+				name: { $regex: userName, $options: "i" },
+			});
+
+			if (users.length === 0) {
+				return res.status(404).json({ error: "No users found" });
+			}
+
+			const userIds = users.map((user) => user._id);
+			query.userId = { $in: userIds };
+		}
+
+		// Search by nutrients
+		if (nutrients?.length) {
+			const matchConditions = nutrients.map((nutrient) => {
+				const comparisonOperator = nutrient.lessThan ? "$lte" : "$gte";
+				return {
+					nutrition: {
+						$elemMatch: {
+							_id: nutrient._id,
+							amount: { [comparisonOperator]: nutrient.amount },
+						},
+					},
+				};
+			});
+			query.$and = matchConditions;
+		}
+
+		// Search by ingredients
+		if (includeIngredientIds?.length) {
+			query.ingredients = {
+				$all: includeIngredientIds.map((id) => ({ $elemMatch: { _id: id } })),
+			};
+		}
+
+		if (excludeIngredientIds?.length) {
+			query.ingredients = {
+				...query.ingredients,
+				$not: {
+					$elemMatch: { _id: { $in: excludeIngredientIds } },
+				},
+			};
+		}
+
+		// Find recipes based on the combined query
+		let recipes = await Recipe.find(query);
+
+		// Sort the recipes based on the provided sort criteria
+		if (sortCriteria?.length) {
+			recipes.sort((a, b) => {
+				for (let criterion of sortCriteria) {
+					const { nutrientId, order } = criterion;
+					const nutrientA = a.nutrition.find((n) => n._id.equals(nutrientId));
+					const nutrientB = b.nutrition.find((n) => n._id.equals(nutrientId));
+
+					if (nutrientA && nutrientB) {
+						if (nutrientA.amount < nutrientB.amount) {
+							return order === "asc" ? -1 : 1;
+						} else if (nutrientA.amount > nutrientB.amount) {
+							return order === "asc" ? 1 : -1;
+						}
+					}
+				}
+				return 0; // If all criteria are equal, maintain original order
+			});
+		}
+
+		if (recipes.length === 0) {
+			return res.status(404).json({ error: "No recipes found" });
+		}
+
+		res.json(recipes);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+};
+
 module.exports = {
 	createRecipe,
 	calculateRecipeNutrition,
@@ -266,4 +361,5 @@ module.exports = {
 	getRecipesByUserId,
 	getSavedRecipesByUserId,
 	toggleSaveRecipe,
+	searchRecipes,
 };

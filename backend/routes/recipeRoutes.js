@@ -11,6 +11,7 @@ const {
 	getRecipesByUserId,
 	getSavedRecipesByUserId,
 	toggleSaveRecipe,
+	searchRecipes,
 } = require("../controllers/recipeController");
 const {
 	rateRecipe,
@@ -22,6 +23,12 @@ const {
 // @desc Create new recipe, get all recipes
 // Private / Public
 router.route("/").post(auth, createRecipe).get(getRecipes);
+
+// Get /search
+// @desc Get recipes with query parameters
+// recipe name, user name, nutrients parameters (greater/less than), include or exclude ingredients, sort asc / desc
+// @access Public
+router.route("/search").get(searchRecipes);
 
 router.route("/nutrition").post(calculateRecipeNutrition);
 
@@ -55,4 +62,6 @@ router.route("/:recipeId/rating").put(auth, rateRecipe).get(auth, getRating);
 // @desc Get user rating
 // @access Private
 router.route("/:userId/ratings").get(auth, getUserRatings);
+
+
 module.exports = router;
