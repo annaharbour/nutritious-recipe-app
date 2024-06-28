@@ -2,13 +2,14 @@ const Ingredient = require("../models/IngredientModel");
 
 const getAllIngredients = async (req, res) => {
 	try {
-		const ingredients = await Ingredient.find().populate(
-			"foodNutrients.nutrient"
-		);
+		// const ingredients = await Ingredient.find().populate(
+		// 	"foodNutrients.nutrient"
+		// );
+		const ingredients = await Ingredient.find()
 		const sortedIngredients = ingredients.sort((a, b) =>
 			a.description.localeCompare(b.description)
 		);
-		return res.json(sortedIngredients);
+		return res.status(200).json(sortedIngredients);
 	} catch (error) {
 		return res.status(500).json({ message: "Server Error" });
 	}

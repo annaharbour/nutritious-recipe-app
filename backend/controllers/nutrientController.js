@@ -1,14 +1,7 @@
 const Nutrient = require("../models/NutrientModel");
 const Ingredient = require("../models/IngredientModel");
 
-const getAllNutrients = async (req, res) => {
-    try {
-        const nutrients = await Nutrient.find();
-        return res.json(nutrients);
-    } catch (error) {
-        return res.status(500).json({ message: "Server Error" });
-    }
-}
+
 
 const getNutrientById = async (req, res) => {
     const nutrientId = req.params.id;
@@ -31,6 +24,15 @@ const getIngredientsByNutrient = async (req, res) => {
             "foodNutrients.nutrient"
         ).sort({ "foodNutrients.value": -1 });
         return res.json(ingredients);
+    } catch (error) {
+        return res.status(500).json({ message: "Server Error" });
+    }
+}
+
+const getAllNutrients = async (req, res) => {
+    try {
+        const nutrients = await Nutrient.find();
+        return res.json(nutrients);
     } catch (error) {
         return res.status(500).json({ message: "Server Error" });
     }

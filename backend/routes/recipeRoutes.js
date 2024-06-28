@@ -18,6 +18,7 @@ const {
 	getRating,
 	getUserRatings,
 } = require("../controllers/ratingController");
+const { getUserFavorites } = require("../controllers/userController");
 
 // POST /api/recipes
 // @desc Create new recipe, get all recipes
@@ -35,17 +36,22 @@ router.route("/nutrition").post(calculateRecipeNutrition);
 // PUT /api/recipes/:id
 //@desc Read, update, delete a recipe
 //Private
+
+
 router
 	.route("/:id")
 	.get(getRecipeById)
 	.put(auth, updateRecipeById)
 	.delete(auth, deleteRecipeById);
 
+
+
 // GET /api/recipes/user/:userId
 router.route("/user/:userId").get(getRecipesByUserId);
 
+
 // GET /api/recipes/user/:userId/favorites
-router.route("/user/:userId/saved").get(getSavedRecipesByUserId);
+router.route("/user/:userId/saved").get(getUserFavorites);
 
 // PUT /api/recipes/:id/save
 router.route("/save/:id").put(auth, toggleSaveRecipe);

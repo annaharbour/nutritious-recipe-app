@@ -45,14 +45,15 @@ const getUser = async (req, res) => {
 };
 
 const getUserFavorites = async (req, res) => {
-	const userId = req.user.id;
+	const userId = req.params.userId;
 
 	try {
 		const user = await User.findById(userId);
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
 		}
-		return res.status(200).json(user.favoriteRecipes);
+		return user.favoriteRecipes ? user.favoriteRecipes : []
+		// return user.favoriteRecipes && user.favoriteRecipes.length > 0 ? res.status(200).json(user.favoriteRecipes) : res.status(200).json([]);
 	} catch (err) {
 		return res.status(500).json({ error: err.message });
 	}

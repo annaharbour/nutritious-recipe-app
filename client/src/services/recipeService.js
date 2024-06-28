@@ -81,6 +81,7 @@ export const getRecipesByUserId = async (userId) => {
 
 export const getSavedRecipesByUserId = async (userId) => {
 	try {
+		console.log(userId)
 		const res = await axiosInstance.get(`/user/${userId}/saved`);
 		return res;
 	} catch (error) {
@@ -101,6 +102,15 @@ export const deleteRecipe = async (id) => {
 	try {
 		const res = await axiosInstance.delete(`/${id}`);
 		return res;
+	} catch (error) {
+		throw new Error(error);
+	}
+};
+
+export const searchRecipes = async (query) => {
+	try {
+		const res = await axiosInstance.get("/search", query);
+		return res.data;
 	} catch (error) {
 		throw new Error(error);
 	}

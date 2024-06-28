@@ -116,9 +116,6 @@ const getRecipes = async (req, res) => {
 			const averageRating = totalRating / recipeRatings.length;
 			recipe.averageRating = averageRating;
 		});
-		recipes.sort((a, b) => b.averageRating - a.averageRating);
-		// Return the top 10 recipes by rating
-		recipes.splice(10);
 		return res.json(recipes);
 	} catch (err) {
 		return res.status(500).json({ error: "Failed to fetch recipes." });
@@ -233,7 +230,7 @@ const getSavedRecipesByUserId = async (req, res) => {
 		});
 
 		// Find the recipes that the user has saved
-		return res.status(200).json(favoriteRecipes);
+		return favoriteRecipes ? res.status(200).json(favoriteRecipes) : [];
 	} catch (err) {
 		return res.status(500).json({ error: "Failed to fetch recipes." });
 	}
@@ -260,9 +257,15 @@ const toggleSaveRecipe = async (req, res) => {
 		return res.status(500).json({ error: err.message });
 	}
 };
-
 const searchRecipes = async (req, res) => {
-	const { recipeName, userName, nutrients, includeIngredientIds, excludeIngredientIds, sortCriteria } = req.body;
+	const {
+		recipeName,
+		userName,
+		nutrients,
+		includeIngredientIds,
+		excludeIngredientIds,
+		sortCriteria,
+	} = req.body;
 
 	try {
 		const query = {};
@@ -288,17 +291,14 @@ const searchRecipes = async (req, res) => {
 
 		// Search by nutrients
 		if (nutrients?.length) {
-			const matchConditions = nutrients.map((nutrient) => {
-				const comparisonOperator = nutrient.lessThan ? "$lte" : "$gte";
-				return {
-					nutrition: {
-						$elemMatch: {
-							_id: nutrient._id,
-							amount: { [comparisonOperator]: nutrient.amount },
-						},
+			const matchConditions = nutrients.map((nutrient) => ({
+				nutrition: {
+					$elemMatch: {
+						_id: nutrient._id,
+						amount: nutrient.amount,
 					},
-				};
-			});
+				},
+			}));
 			query.$and = matchConditions;
 		}
 
