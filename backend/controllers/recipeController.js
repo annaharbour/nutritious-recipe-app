@@ -9,7 +9,6 @@ const calculateRecipeNutrition = async (req, res) => {
 	if (!ingredients) {
 		return res.status(400).json({ error: "Ingredients are required" });
 	}
-
 	// Calculate the total nutrition for the recipe
 	try {
 		// Populate the ingredients with the necessary data
@@ -83,16 +82,12 @@ const createRecipe = async (req, res) => {
 			userId: userId,
 		});
 
-		try {
-			const user = await User.findById(userId);
-			user.recipes.push(newRecipe._id);
-			await user.save();
-		} catch (err) {
-			console.error("Error saving recipe to user:", err);
-			return res.status(500).json({ error: "Error saving recipe to user." });
-		}
 		await newRecipe.calculateNutrition();
 		await newRecipe.save();
+
+		// Update user with the new recipe
+		await User.findByIdAndUpdate(userId, { $push: { recipes: newRecipe._id } });
+
 		res.status(201).json(newRecipe);
 	} catch (error) {
 		console.error("Error creating recipe:", error);
@@ -169,7 +164,6 @@ const updateRecipeById = async (req, res) => {
 
 const getRecipeById = async (req, res) => {
 	const recipeId = req.params.id;
-
 	try {
 		const recipe = await Recipe.findById(recipeId);
 		if (!recipe) {
@@ -257,97 +251,59 @@ const toggleSaveRecipe = async (req, res) => {
 		return res.status(500).json({ error: err.message });
 	}
 };
+
 const searchRecipes = async (req, res) => {
 	const {
 		recipeName,
 		userName,
-		nutrients,
-		includeIngredientIds,
-		excludeIngredientIds,
-		sortCriteria,
-	} = req.body;
+		includeIngredients,
+		excludeIngredients,
+		optimizations,
+	} = req.query;
 
 	try {
-		const query = {};
+		// Build query object
+		let query = {};
 
-		// Search by recipe name
 		if (recipeName) {
 			query.name = { $regex: recipeName, $options: "i" };
 		}
 
-		// Search by user name
 		if (userName) {
-			const users = await User.find({
-				name: { $regex: userName, $options: "i" },
-			});
-
-			if (users.length === 0) {
-				return res.status(404).json({ error: "No users found" });
+			const user = await User.findOne({ username: userName });
+			if (user) {
+				query.userId = user._id;
 			}
-
-			const userIds = users.map((user) => user._id);
-			query.userId = { $in: userIds };
 		}
 
-		// Search by nutrients
-		if (nutrients?.length) {
-			const matchConditions = nutrients.map((nutrient) => ({
-				nutrition: {
-					$elemMatch: {
-						_id: nutrient._id,
-						amount: nutrient.amount,
-					},
-				},
-			}));
-			query.$and = matchConditions;
+		if (includeIngredients) {
+			query["ingredients._id"] = { $in: includeIngredients.split(",") };
 		}
 
-		// Search by ingredients
-		if (includeIngredientIds?.length) {
-			query.ingredients = {
-				$all: includeIngredientIds.map((id) => ({ $elemMatch: { _id: id } })),
-			};
+		if (excludeIngredients) {
+			query["ingredients._id"] = { $nin: excludeIngredients.split(",") };
 		}
 
-		if (excludeIngredientIds?.length) {
-			query.ingredients = {
-				...query.ingredients,
-				$not: {
-					$elemMatch: { _id: { $in: excludeIngredientIds } },
-				},
-			};
+		if (optimizations) {
+			const optimizationObject = JSON.parse(optimizations); // Parse the JSON string
+
+			const tags = [];
+			if (optimizationObject.bulking) tags.push("Bulking");
+			if (optimizationObject.lean) tags.push("Lean");
+			if (optimizationObject.highProtein) tags.push("High Protein");
+			if (optimizationObject.lowCarb) tags.push("Low Carb");
+			if (optimizationObject.lowFat) tags.push("Low Fat");
+
+			if (tags.length > 0) {
+				query.labels = { $all: tags }; // Ensure all specified tags are included
+			}
 		}
 
-		// Find recipes based on the combined query
-		let recipes = await Recipe.find(query);
-
-		// Sort the recipes based on the provided sort criteria
-		if (sortCriteria?.length) {
-			recipes.sort((a, b) => {
-				for (let criterion of sortCriteria) {
-					const { nutrientId, order } = criterion;
-					const nutrientA = a.nutrition.find((n) => n._id.equals(nutrientId));
-					const nutrientB = b.nutrition.find((n) => n._id.equals(nutrientId));
-
-					if (nutrientA && nutrientB) {
-						if (nutrientA.amount < nutrientB.amount) {
-							return order === "asc" ? -1 : 1;
-						} else if (nutrientA.amount > nutrientB.amount) {
-							return order === "asc" ? 1 : -1;
-						}
-					}
-				}
-				return 0; // If all criteria are equal, maintain original order
-			});
-		}
-
-		if (recipes.length === 0) {
-			return res.status(404).json({ error: "No recipes found" });
-		}
-
+		const recipes = await Recipe.find(query).lean();
 		res.json(recipes);
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		console.error("Error searching recipes:", err);
+		res.status(500).json({ error: "Error searching recipes" });
 	}
 };
 

@@ -73,7 +73,7 @@ const RecipeForm = ({ showToast }) => {
 	const handleAddIngredient = (e) => {
 		e.preventDefault();
 		if (!selectedIngredient) return;
-		
+
 		// Find the selected ingredient and portion
 		const ingredient = ingredients.find((i) => i._id === selectedIngredient);
 
@@ -142,14 +142,12 @@ const RecipeForm = ({ showToast }) => {
 	const handleSaveRecipe = async (e) => {
 		e.preventDefault();
 		try {
-			// TODO: Add toast
 			if (recipeIngredients.length === 0)
 				return alert("Please add ingredients");
 			if (!recipeName) return alert("Please enter a recipe name");
 			await createRecipe(recipeName, recipeIngredients);
 			navigate("/dashboard");
 		} catch (error) {
-			console.error("Error saving recipe:", error);
 			showToast("Error saving recipe");
 		}
 	};

@@ -1,114 +1,355 @@
+// import React, { useState, useEffect } from "react";
+// import { searchRecipes } from "../../services/recipeService";
+// import { getIngredientsByCategory } from "../../services/ingredientService";
+
+// const Search = ({ showToast }) => {
+// 	const [recipeName, setRecipeName] = useState("");
+// 	const [userName, setUserName] = useState("");
+// 	const [ingredients, setIngredients] = useState([]);
+// 	const [includeIngredients, setIncludeIngredients] = useState([]);
+// 	const [excludeIngredients, setExcludeIngredients] = useState([]);
+// 	const [optimizations, setOptimizations] = useState({
+// 		bulking: false,
+// 		lean: false,
+// 		highProtein: false,
+// 		lowCarb: false,
+// 		lowFat: false,
+// 	});
+// 	const [results, setResults] = useState([]);
+// 	const ingredientCategories = [
+// 		"Fruit",
+// 		"Vegetable",
+// 		"Protein",
+// 		"Nuts & Seeds",
+// 		"Liquid",
+// 		"Flavor",
+// 	];
+
+// 	const labels = [
+// 		"Lean",
+// 		"Bulking",
+// 		"Low Carb",
+// 		"High Protein",
+// 		"Low Fat",
+// 		"Balanced"
+// 	]
+
+// 	const [category, setCategory] = useState();
+
+// 	useEffect(() => {
+// 		const fetchIngredients = async (category) => {
+// 			try {
+// 				const res = await getIngredientsByCategory(category);
+// 				setIngredients(res.data);
+// 			} catch (error) {
+// 				console.error("Error fetching ingredients:", error);
+// 			}
+// 		};
+
+// 		fetchIngredients(category);
+// 	}, [category]);
+
+// 	const handleSearch = async () => {
+// 		try {
+// 			const response = await searchRecipes({
+// 				recipeName,
+// 				userName,
+// 				includeIngredients: includeIngredients.map((ing) => ing._id),
+// 				excludeIngredients: excludeIngredients.map((ing) => ing._id),
+// 				optimizations,
+// 			});
+// 			setResults(response);
+// 		} catch (err) {
+// 			console.error("Error searching recipes:", err);
+// 		}
+// 	};
+
+// 	const handleIncludeIngredient = (ingredientId) => {
+// 		if (ingredientId) {
+// 			// Remove the ingredient from excludeIngredients if it exists there
+// 			const newExcludeIngredients = excludeIngredients.filter(
+// 				(ingredient) => ingredient._id !== ingredientId
+// 			);
+// 			setExcludeIngredients(newExcludeIngredients);
+
+// 			// Add the ingredient to includeIngredients if it's not already there
+// 			if (
+// 				!includeIngredients.some(
+// 					(ingredient) => ingredient._id === ingredientId
+// 				)
+// 			) {
+// 				const ingredient = ingredients.find((ing) => ing._id === ingredientId);
+// 				setIncludeIngredients([...includeIngredients, ingredient]);
+// 			}
+// 		}
+// 	};
+
+// 	const handleExcludeIngredient = (ingredientId) => {
+// 		if (ingredientId) {
+// 			// Remove the ingredient from includeIngredients if it exists there
+// 			const newIncludeIngredients = includeIngredients.filter(
+// 				(ingredient) => ingredient._id !== ingredientId
+// 			);
+// 			setIncludeIngredients(newIncludeIngredients);
+
+// 			// Add the ingredient to excludeIngredients if it's not already there
+// 			if (
+// 				!excludeIngredients.some(
+// 					(ingredient) => ingredient._id === ingredientId
+// 				)
+// 			) {
+// 				const ingredient = ingredients.find((ing) => ing._id === ingredientId);
+// 				setExcludeIngredients([...excludeIngredients, ingredient]);
+// 			}
+// 		}
+// 	};
+
+// 	const handleClearCriteria = () => {
+// 		setRecipeName("");
+// 		setUserName("");
+// 		setIncludeIngredients([]);
+// 		setExcludeIngredients([]);
+// 		setCategory();
+// 		setOptimizations({
+// 			bulking: false,
+// 			lean: false,
+// 			highProtein: false,
+// 			lowCarb: false,
+// 			lowFat: false,
+// 		});
+// 	};
+
+// 	const handleOptimizationChange = (e) => {
+// 		const { name, checked } = e.target;
+// 		setOptimizations((prev) => ({
+// 			...prev,
+// 			[name]: checked,
+// 		}));
+// 	};
+
+// 	return (
+// 		<div>
+// 			<h2>Search Recipes</h2>
+// 			<div>
+// 				<input
+// 					placeholder="Search recipes by name"
+// 					type="text"
+// 					value={recipeName}
+// 					onChange={(e) => setRecipeName(e.target.value)}
+// 				/>
+// 			</div>
+// 			<div>
+// 				<input
+// 					placeholder="Search recipes by user"
+// 					type="text"
+// 					value={userName}
+// 					onChange={(e) => setUserName(e.target.value)}
+// 				/>
+// 			</div>
+// 			<div>
+// 				<h3>Ingredients</h3>
+// 				{ingredientCategories.map((category) => (
+// 					<b
+// 						key={category}
+// 						value={category}
+// 						onClick={(e) => setCategory(category)}>
+// 						{category}
+// 						{"  "}
+// 					</b>
+// 				))}
+// 				<ul>
+// 					{!category ? (
+// 						<i>Include or exclude ingredients from each category</i>
+// 					) : (
+// 						ingredients.map((ingredient) => {
+// 							const isIncluded = includeIngredients.some(
+// 								(ing) => ing._id === ingredient._id
+// 							);
+// 							const isExcluded = excludeIngredients.some(
+// 								(ing) => ing._id === ingredient._id
+// 							);
+
+// 							return (
+// 								<span
+// 									key={ingredient._id}
+// 									className={`ingredient ${isIncluded ? "included" : ""} ${
+// 										isExcluded ? "excluded" : ""
+// 									}`}>
+// 									<i
+// 										className="fa-solid fa-check"
+// 										onClick={() => handleIncludeIngredient(ingredient._id)}
+// 										style={{ cursor: "pointer", marginRight: "10px" }}></i>
+// 									<i
+// 										className="fa-solid fa-x"
+// 										onClick={() => handleExcludeIngredient(ingredient._id)}
+// 										style={{ cursor: "pointer", marginRight: "10px" }}></i>
+// 									{ingredient.description}
+// 								</span>
+// 							);
+// 						})
+// 					)}
+// 				</ul>
+// 			</div>
+
+// 			<div>
+// 				<h3>Optimizations</h3>
+// 				<label>
+// 					<input
+// 						type="checkbox"
+// 						name="bulking"
+// 						checked={optimizations.bulking}
+// 						onChange={handleOptimizationChange}
+// 					/>
+// 					Bulking (over 400 calories)
+// 				</label>
+// 				<label>
+// 					<input
+// 						type="checkbox"
+// 						name="lean"
+// 						checked={optimizations.lean}
+// 						onChange={handleOptimizationChange}
+// 					/>
+// 					Lean (under 400 calories)
+// 				</label>
+// 				<label>
+// 					<input
+// 						type="checkbox"
+// 						name="highProtein"
+// 						checked={optimizations.highProtein}
+// 						onChange={handleOptimizationChange}
+// 					/>
+// 					High Protein (40% protein)
+// 				</label>
+// 				<label>
+// 					<input
+// 						type="checkbox"
+// 						name="lowCarb"
+// 						checked={optimizations.lowCarb}
+// 						onChange={handleOptimizationChange}
+// 					/>
+// 					Low Carb (under 20g)
+// 				</label>
+// 				<label>
+// 					<input
+// 						type="checkbox"
+// 						name="lowFat"
+// 						checked={optimizations.lowFat}
+// 						onChange={handleOptimizationChange}
+// 					/>
+// 					Low Fat (under 5g)
+// 				</label>
+// 			</div>
+
+// 			<button onClick={handleSearch}>Search</button>
+// 			<button onClick={handleClearCriteria}>Clear All Criteria</button>
+// 			<div>
+// 				<h3>Results:</h3>
+// 				<ul>
+// 					{results.length ? (
+// 						results.map((recipe) => <li key={recipe._id}>{recipe.name}</li>)
+// 					) : (
+// 						<div>No results found</div>
+// 					)}
+// 				</ul>
+// 			</div>
+// 		</div>
+// 	);
+// };
+
+// export default Search;
 import React, { useState, useEffect } from "react";
 import { searchRecipes } from "../../services/recipeService";
-import { getIngredients } from "../../services/ingredientService";
-import { getNutrients } from "../../services/nutrientService";
+import { getIngredientsByCategory } from "../../services/ingredientService";
 
-const Search = () => {
+const Search = ({ showToast }) => {
 	const [recipeName, setRecipeName] = useState("");
 	const [userName, setUserName] = useState("");
-	const [allNutrients, setAllNutrients] = useState([]);
-	const [nutrients, setNutrients] = useState([]);
-	const [selectedNutrient, setSelectedNutrient] = useState({
-		_id: "",
-		name: "",
-		unit: "",
-		order: "asc", // Default to ascending order
-	});
 	const [ingredients, setIngredients] = useState([]);
-	const [selectedIngredient, setSelectedIngredient] = useState("");
 	const [includeIngredients, setIncludeIngredients] = useState([]);
 	const [excludeIngredients, setExcludeIngredients] = useState([]);
-	const [sortCriteria, setSortCriteria] = useState([]);
+	const [optimizations, setOptimizations] = useState({
+		bulking: false,
+		lean: false,
+		highProtein: false,
+		lowCarb: false,
+		lowFat: false,
+	});
 	const [results, setResults] = useState([]);
-	const [error, setError] = useState("");
+	const ingredientCategories = [
+		"Fruit",
+		"Vegetable",
+		"Protein",
+		"Nuts & Seeds",
+		"Liquid",
+		"Flavor",
+	];
+
+	const [category, setCategory] = useState();
 
 	useEffect(() => {
-		const fetchIngredients = async () => {
+		const fetchIngredients = async (category) => {
 			try {
-				const res = await getIngredients();
+				const res = await getIngredientsByCategory(category);
 				setIngredients(res.data);
-			} catch (err) {
-				setError(err.response ? err.response.data.error : "An error occurred");
+			} catch (error) {
+				console.error("Error fetching ingredients:", error);
 			}
 		};
 
-		const fetchNutrients = async () => {
-			try {
-				const res = await getNutrients();
-				setAllNutrients(res.data);
-			} catch (err) {
-				setError(err.response ? err.response.data.error : "An error occurred");
-			}
-		};
-		fetchNutrients();
-		fetchIngredients();
-	}, []);
+		if (category) {
+			fetchIngredients(category);
+		}
+	}, [category]);
 
 	const handleSearch = async () => {
 		try {
 			const response = await searchRecipes({
 				recipeName,
 				userName,
-				nutrients,
-				includeIngredients,
-				excludeIngredients,
-				sortCriteria,
+				includeIngredients: includeIngredients.map((ing) => ing._id).join(","),
+				excludeIngredients: excludeIngredients.map((ing) => ing._id).join(","),
+				optimizations: JSON.stringify(optimizations), // Convert optimizations object to JSON string
 			});
 			setResults(response);
-			setError("");
 		} catch (err) {
-			setError(err.response ? err.response.data.error : "An error occurred");
+			console.error("Error searching recipes:", err);
 		}
 	};
 
-	const handleAddNutrient = () => {
-		setNutrients([...nutrients, selectedNutrient]);
-		setSelectedNutrient({
-			_id: "",
-			name: "",
-			unit: "",
-			order: "asc",
-		});
-	};
-
-	const handleIncludeIngredient = () => {
-		if (
-			selectedIngredient &&
-			!includeIngredients.some(
-				(ingredient) => ingredient._id === selectedIngredient._id
-			)
-		) {
-			const ingredient = ingredients.find(
-				(ing) => ing._id === selectedIngredient
+	const handleIncludeIngredient = (ingredientId) => {
+		if (ingredientId) {
+			const newExcludeIngredients = excludeIngredients.filter(
+				(ingredient) => ingredient._id !== ingredientId
 			);
-			setIncludeIngredients([...includeIngredients, ingredient]);
+			setExcludeIngredients(newExcludeIngredients);
+
+			if (
+				!includeIngredients.some(
+					(ingredient) => ingredient._id === ingredientId
+				)
+			) {
+				const ingredient = ingredients.find((ing) => ing._id === ingredientId);
+				setIncludeIngredients([...includeIngredients, ingredient]);
+			}
 		}
 	};
 
-	const handleExcludeIngredient = () => {
-		if (
-			selectedIngredient &&
-			!excludeIngredients.some(
-				(ingredient) => ingredient._id === selectedIngredient._id
-			)
-		) {
-			const ingredient = ingredients.find(
-				(ing) => ing._id === selectedIngredient
+	const handleExcludeIngredient = (ingredientId) => {
+		if (ingredientId) {
+			const newIncludeIngredients = includeIngredients.filter(
+				(ingredient) => ingredient._id !== ingredientId
 			);
-			setExcludeIngredients([...excludeIngredients, ingredient]);
+			setIncludeIngredients(newIncludeIngredients);
+
+			if (
+				!excludeIngredients.some(
+					(ingredient) => ingredient._id === ingredientId
+				)
+			) {
+				const ingredient = ingredients.find((ing) => ing._id === ingredientId);
+				setExcludeIngredients([...excludeIngredients, ingredient]);
+			}
 		}
-	};
-
-	const handleRemoveIncludeIngredient = (id) => {
-		setIncludeIngredients(includeIngredients.filter((ing) => ing._id !== id));
-	};
-
-	const handleRemoveExcludeIngredient = (id) => {
-		setExcludeIngredients(excludeIngredients.filter((ing) => ing._id !== id));
-	};
-
-	const handleRemoveNutrient = (id) => {
-		setNutrients(nutrients.filter((nutrient) => nutrient._id !== id));
 	};
 
 	const handleClearCriteria = () => {
@@ -116,129 +357,143 @@ const Search = () => {
 		setUserName("");
 		setIncludeIngredients([]);
 		setExcludeIngredients([]);
-		setNutrients([]);
-		setSortCriteria([]);
+		setCategory(null);
+		setOptimizations({
+			bulking: false,
+			lean: false,
+			highProtein: false,
+			lowCarb: false,
+			lowFat: false,
+		});
 	};
 
-	const handleNutrientChange = (e) => {
-		const nutrient = allNutrients.find((n) => n._id === e.target.value);
-		setSelectedNutrient({ ...nutrient, order: "asc" });
+	const handleOptimizationChange = (e) => {
+		const { name, checked } = e.target;
+		setOptimizations((prev) => ({
+			...prev,
+			[name]: checked,
+		}));
 	};
 
 	return (
 		<div>
 			<h2>Search Recipes</h2>
 			<div>
-				<label>Recipe Name:</label>
 				<input
+					placeholder="Search recipes by name"
 					type="text"
 					value={recipeName}
 					onChange={(e) => setRecipeName(e.target.value)}
 				/>
 			</div>
 			<div>
-				<label>User Name:</label>
 				<input
+					placeholder="Search recipes by user"
 					type="text"
 					value={userName}
 					onChange={(e) => setUserName(e.target.value)}
 				/>
 			</div>
 			<div>
-				<label>Ingredients</label>
-				<select
-					value={selectedIngredient || ""}
-					onChange={(e) => setSelectedIngredient(e.target.value)}>
-					<option value="">Select an ingredient</option>
-					{ingredients &&
-						ingredients.map((ingredient) => (
-							<option key={ingredient._id} value={ingredient._id}>
-								{ingredient.description}
-							</option>
-						))}
-				</select>
-				<button onClick={handleIncludeIngredient}>Include</button>
-				<button onClick={handleExcludeIngredient}>Exclude</button>
-			</div>
-			{includeIngredients.length > 0 && (
-				<div>
-					<h3>Included Ingredients</h3>
-					<ul>
-						{includeIngredients.map((ingredient) => (
-							<li key={ingredient._id}>
-								{ingredient.description}{" "}
-								<button
-									onClick={() => handleRemoveIncludeIngredient(ingredient._id)}>
-									Remove
-								</button>
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
-			{excludeIngredients.length > 0 && (
-				<div>
-					<h3>Excluded Ingredients</h3>
-					<ul>
-						{excludeIngredients.map((ingredient) => (
-							<li key={ingredient._id}>
-								{ingredient.description}{" "}
-								<button
-									onClick={() => handleRemoveExcludeIngredient(ingredient._id)}>
-									Remove
-								</button>
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
-
-			<div>
-				<h3>Nutrients</h3>
-				<select
-					value={selectedNutrient.order}
-					onChange={(e) =>
-						setSelectedNutrient({
-							...selectedNutrient,
-							order: e.target.value,
-						})
-					}>
-					<option value="asc">Lowest Amount</option>
-					<option value="desc">Highest Amount</option>
-				</select>
-				<select
-					value={selectedNutrient._id || ""}
-					onChange={handleNutrientChange}>
-					<option value="">Select a nutrient</option>
-					{allNutrients &&
-						allNutrients.map((nutrient) => (
-							<option key={nutrient._id} value={nutrient._id}>
-								{nutrient.name}
-							</option>
-						))}
-				</select>
-				<button onClick={handleAddNutrient}>Include</button>
-			</div>
-			<div>
-				<h3>Selected Nutrients</h3>
+				<h3>Ingredients</h3>
+				{ingredientCategories.map((category) => (
+					<b
+						key={category}
+						value={category}
+						onClick={() => setCategory(category)}>
+						{category}
+						{"  "}
+					</b>
+				))}
 				<ul>
-					{nutrients.map((nutrient) => (
-						<li key={nutrient._id}>
-							{nutrient.name} ({nutrient.order}){" "}
-							<button onClick={() => handleRemoveNutrient(nutrient._id)}>
-								Remove
-							</button>
-						</li>
-					))}
+					{!category ? (
+						<i>Include or exclude ingredients from each category</i>
+					) : (
+						ingredients.map((ingredient) => {
+							const isIncluded = includeIngredients.some(
+								(ing) => ing._id === ingredient._id
+							);
+							const isExcluded = excludeIngredients.some(
+								(ing) => ing._id === ingredient._id
+							);
+
+							return (
+								<span
+									key={ingredient._id}
+									className={`ingredient ${isIncluded ? "included" : ""} ${
+										isExcluded ? "excluded" : ""
+									}`}>
+									<i
+										className="fa-solid fa-check"
+										onClick={() => handleIncludeIngredient(ingredient._id)}
+										style={{ cursor: "pointer", marginRight: "10px" }}></i>
+									<i
+										className="fa-solid fa-x"
+										onClick={() => handleExcludeIngredient(ingredient._id)}
+										style={{ cursor: "pointer", marginRight: "10px" }}></i>
+									{ingredient.description}
+								</span>
+							);
+						})
+					)}
 				</ul>
 			</div>
+
+			<div>
+				<h3>Optimizations</h3>
+				<label>
+					<input
+						type="checkbox"
+						name="bulking"
+						checked={optimizations.bulking}
+						onChange={handleOptimizationChange}
+					/>
+					Bulking (over 400 calories)
+				</label>
+				<label>
+					<input
+						type="checkbox"
+						name="lean"
+						checked={optimizations.lean}
+						onChange={handleOptimizationChange}
+					/>
+					Lean (under 400 calories)
+				</label>
+				<label>
+					<input
+						type="checkbox"
+						name="highProtein"
+						checked={optimizations.highProtein}
+						onChange={handleOptimizationChange}
+					/>
+					High Protein (40% protein)
+				</label>
+				<label>
+					<input
+						type="checkbox"
+						name="lowCarb"
+						checked={optimizations.lowCarb}
+						onChange={handleOptimizationChange}
+					/>
+					Low Carb (under 20g)
+				</label>
+				<label>
+					<input
+						type="checkbox"
+						name="lowFat"
+						checked={optimizations.lowFat}
+						onChange={handleOptimizationChange}
+					/>
+					Low Fat (under 5g)
+				</label>
+			</div>
+
 			<button onClick={handleSearch}>Search</button>
 			<button onClick={handleClearCriteria}>Clear All Criteria</button>
-			{error && <p style={{ color: "red" }}>{error}</p>}
 			<div>
 				<h3>Results:</h3>
 				<ul>
-					{results ? (
+					{results && results.length > 0 ? (
 						results.map((recipe) => <li key={recipe._id}>{recipe.name}</li>)
 					) : (
 						<div>No results found</div>

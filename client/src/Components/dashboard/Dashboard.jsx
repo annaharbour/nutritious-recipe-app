@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import {
-	getRecipesByUserId,
-} from "../../services/recipeService";
+import { getRecipesByUserId } from "../../services/recipeService";
 import Search from "./Search";
+import { getUserFavorites } from "../../services/userService";
 
-const Dashboard = () => {
+const Dashboard = ({ showToast }) => {
 	const [loading, setLoading] = useState(false);
 	const userInfo = useAuth().userInfo;
 	const { name } = userInfo;
-	const favoriteRecipes = userInfo.favoriteRecipes;
 	const [userRecipes, setUserRecipes] = useState([]);
+	const [favorites, setFavorites] = useState([]);
 	useEffect(() => {
 		const fetchRecipes = async () => {
 			try {
@@ -23,6 +22,19 @@ const Dashboard = () => {
 				setLoading(false);
 			}
 		};
+
+		const fetchFavorites = async () => {
+			try {
+				setLoading(true);
+				const res = await getUserFavorites();
+				setFavorites(res);
+				setLoading(false);
+			} catch (err) {
+				setLoading(false);
+			}
+		};
+
+		fetchFavorites();
 		fetchRecipes();
 	}, [userInfo]);
 
@@ -37,7 +49,7 @@ const Dashboard = () => {
 			<h3>Your Profile</h3>
 			<Link to="/profiles">View your profile</Link>
 			<h3>Search Recipes</h3>
-			<Search />
+			<Search showToast={showToast} />
 			<h3>Your recipes</h3>
 			<Link to="/recipes/create">Create a new recipe</Link>
 			{loading && <p>Loading...</p>}
@@ -50,8 +62,8 @@ const Dashboard = () => {
 				))}
 			<h3>Your favorites</h3>
 			{loading && <p>Loading...</p>}
-			{favoriteRecipes.length !== 0 ? (
-				favoriteRecipes.map((recipe) => (
+			{favorites.length !== 0 ? (
+				favorites.map((recipe) => (
 					<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
 						<li>{recipe.name}</li>
 					</Link>

@@ -22,6 +22,15 @@
 	padding: 0;
 }
 
+.included {
+	background-color: var(--primary-color);
+}
+
+.excluded {
+	background-color: var(--orange-peel);
+	text-decoration: line-through;
+}
+
 body {
 	font-family: "myriad-pro", "Times New Roman", Times, serif;
 	font-size: 1rem;

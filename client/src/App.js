@@ -87,7 +87,7 @@ const App = () => {
 				<Route path="recipes">
 					<Route
 						path="/recipes/create"
-						element={<PrivateRoute Component={RecipeForm} />}
+						element={<PrivateRoute showToast={showToastMessage} Component={RecipeForm} />}
 					/>
 					<Route path=":id" element={<Recipe showToast={showToastMessage} />} />
 					<Route

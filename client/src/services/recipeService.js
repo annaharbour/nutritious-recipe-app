@@ -28,12 +28,10 @@ export const getRecipeById = async (id) => {
 };
 
 export const createRecipe = async (name, ingredients) => {
-	const user = JSON.parse(localStorage.getItem("user"));
 	try {
 		const res = await axiosInstance.post("/", {
 			name: name,
 			ingredients: ingredients,
-			user: user._id,
 		});
 		return res;
 	} catch (error) {
@@ -81,7 +79,7 @@ export const getRecipesByUserId = async (userId) => {
 
 export const getSavedRecipesByUserId = async (userId) => {
 	try {
-		console.log(userId)
+		console.log(userId);
 		const res = await axiosInstance.get(`/user/${userId}/saved`);
 		return res;
 	} catch (error) {
@@ -109,9 +107,15 @@ export const deleteRecipe = async (id) => {
 
 export const searchRecipes = async (query) => {
 	try {
-		const res = await axiosInstance.get("/search", query);
+		// Construct the query string from the query object
+		const queryString = new URLSearchParams(query).toString();
+		const res = await axiosInstance.get(`/search?${queryString}`);
 		return res.data;
 	} catch (error) {
-		throw new Error(error);
+		if (error.response && error.response.data) {
+			throw new Error(error.response.data.error);
+		} else {
+			throw new Error(error.message || "An error occurred");
+		}
 	}
 };
