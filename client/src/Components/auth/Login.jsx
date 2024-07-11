@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { authURL } from "../../services/endpoints";
+import Dashboard from "../dashboard/Dashboard";
+import Forgotten from "./Forgotten";
 
-const Login = ({ showToast }) => {
+const Login = ({ showToast, showForm }) => {
 	const navigate = useNavigate();
 	const { loginUser, userInfo } = useAuth();
+	const [forgotten, showForgotten] = useState(false);
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
@@ -27,6 +30,7 @@ const Login = ({ showToast }) => {
 		try {
 			await loginUser(email, password);
 			navigate("/dashboard");
+			return;
 		} catch (err) {
 			showToast(
 				err.message,
@@ -37,45 +41,49 @@ const Login = ({ showToast }) => {
 	};
 
 	return userInfo ? (
-		<Navigate to="/dashboard" />
+		<Dashboard />
+	) : !forgotten ? (
+		<div>
+			{" "}
+			<section className="container">
+				<h4>
+					<i className="fas fa-user"></i> Sign into Your Account
+				</h4>
+				<form className="form" onSubmit={(e) => onSubmit(e)}>
+					<div className="form-group">
+						<input
+							type="email"
+							placeholder="Email Address"
+							name="email"
+							value={email}
+							onChange={(e) => onChange(e)}
+							required
+						/>
+					</div>
+					<div className="form-group">
+						<input
+							type="password"
+							placeholder="Password"
+							name="password"
+							value={password}
+							onChange={(e) => onChange(e)}
+						/>
+					</div>
+					<input type="submit" className="btn btn-primary" value="Login" />
+				</form>
+				<a href={`${authURL}/google`}>Sign Up With Google</a>
+				<p>
+					<span onClick={() => showForm("register")}>
+						Don't have an account? <u>Sign Up!</u>
+					</span>
+				</p>
+				<p>
+					Forgot your password? <span onClick={() => showForgotten("forgotten")}>Reset it here!</span>
+				</p>
+			</section>
+		</div>
 	) : (
-		<section className="container">
-			<h1 className="large text-primary">Sign In</h1>
-			<p className="lead">
-				<i className="fas fa-user"></i> Sign into Your Account
-			</p>
-			<form className="form" onSubmit={(e) => onSubmit(e)}>
-				<div className="form-group">
-					<input
-						type="email"
-						placeholder="Email Address"
-						name="email"
-						value={email}
-						onChange={(e) => onChange(e)}
-						required
-					/>
-				</div>
-				<div className="form-group">
-					<input
-						type="password"
-						placeholder="Password"
-						name="password"
-						value={password}
-						onChange={(e) => onChange(e)}
-					/>
-				</div>
-				<input type="submit" className="btn btn-primary" value="Login" />
-			</form>
-			<p className="my-1">
-				Don't have an account? <Link to="/register">Sign Up</Link>
-			</p>
-			<p className="my-1">
-				<Link to={`${authURL}/google`}>Sign In Using Google</Link>
-			</p>
-			<p className="my-1">
-				<Link to="/forgotten">Forgot Password?</Link>{" "}
-			</p>
-		</section>
+		<Forgotten showToast={showToast} showForgotten={showForgotten} />
 	);
 };
 

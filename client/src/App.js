@@ -3,8 +3,6 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Register from "./Components/auth/Register";
-import Login from "./Components/auth/Login";
 import Navbar from "./Components/layout/Navbar";
 import Landing from "./Components/layout/Landing";
 import Dashboard from "./Components/dashboard/Dashboard";
@@ -15,7 +13,6 @@ import RecipeForm from "./Components/recipe-creation/RecipeForm";
 import ProfileView from "./Components/profile/ProfileView";
 import Comments from "./Components/recipe/Comments";
 import Reset from "./Components/auth/Reset";
-import Forgotten from "./Components/auth/Forgotten";
 
 const App = () => {
 	const showToastMessage = (msg, type) => {
@@ -57,37 +54,28 @@ const App = () => {
 				<Route path="profiles">
 					<Route
 						path="/profiles"
-						element={
-							<PrivateRoute Component={Profile} />
-						}
+						element={<PrivateRoute Component={Profile} />}
 					/>
-					<Route
-						path=":id"
-						element={<ProfileView />}
-					/>
+					<Route path=":id" element={<ProfileView />} />
 				</Route>
 				<Route
 					path="/dashboard"
 					element={<PrivateRoute Component={Dashboard} />}
 				/>
-				<Route path="/" element={<Landing />} />
-				<Route
-					path="/register"
-					element={<Register showToast={showToastMessage} />}
-				/>
-				<Route path="/login" element={<Login showToast={showToastMessage} />} />
+				<Route path="/" element={<Landing showToast={showToastMessage} />} />
 				<Route
 					path="/reset/:token"
 					element={<Reset showToast={showToastMessage} />}
 				/>
-				<Route
-					path="/forgotten"
-					element={<Forgotten showToast={showToastMessage} />}
-				/>
 				<Route path="recipes">
 					<Route
 						path="/recipes/create"
-						element={<PrivateRoute showToast={showToastMessage} Component={RecipeForm} />}
+						element={
+							<PrivateRoute
+								showToast={showToastMessage}
+								Component={RecipeForm}
+							/>
+						}
 					/>
 					<Route path=":id" element={<Recipe showToast={showToastMessage} />} />
 					<Route

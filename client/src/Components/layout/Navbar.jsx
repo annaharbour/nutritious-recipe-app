@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 
@@ -30,19 +30,20 @@ const Navbar = () => {
 	const guestLinks = (
 		<ul>
 			<li>
-				<Link to="/register">Sign Up</Link>
+				<Link to="/" formType='register'>Sign Up</Link>
 			</li>
 			<li>
-				<Link to="/login">Login</Link>
+				<Link to="/"  formType={'login'}>Login</Link>
 			</li>
 		</ul>
+
 	);
 
 	return isLoggedIn ? (
-		<Fragment>{authLinks}</Fragment>
+		<nav>{authLinks}</nav>
 
 	) : (
-		<Fragment>{guestLinks}</Fragment>
+		<nav>{guestLinks}</nav>
 	);
 };
 

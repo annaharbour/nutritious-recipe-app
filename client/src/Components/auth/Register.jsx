@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { authURL } from "../../services/endpoints";
 
-const Register = ({ showToast }) => {
+const Register = ({ showToast, showForm }) => {
 	const registerUser = useAuth().registerUser;
 	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
@@ -38,10 +38,9 @@ const Register = ({ showToast }) => {
 	};
 	return (
 		<section className="container">
-			<h1 className="large text-primary">Sign Up</h1>
-			<p className="lead">
+			<h4 className="lead">
 				<i className="fas fa-user" /> Create Your Account
-			</p>
+			</h4>
 			<form className="form" onSubmit={onSubmit}>
 				<div className="form-group">
 					<input
@@ -95,11 +94,11 @@ const Register = ({ showToast }) => {
 				</div>
 				<input type="submit" className="btn btn-primary" value="Register" />
 			</form>
-			<p className="my-1">
-				Already have an account? <Link to="/login">Sign In</Link>
-			</p>
-			<p className="my-1">
-				<Link to={`${authURL}/google`}>Sign Up Using Google</Link>
+			<a href={`${authURL}/google`}>Sign Up With Google</a>
+			<p>
+				<span onClick={() => showForm("login")}>
+					Already have an account? <u>Login here!</u>
+				</span>
 			</p>
 		</section>
 	);

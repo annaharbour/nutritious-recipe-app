@@ -24,7 +24,7 @@ function Reset({ showToast }) {
   return (
     <div>
       <h2>Reset Password</h2>
-      <form onSubmit={onSubmit}>
+      <form className="form" onSubmit={onSubmit}>
         <input
           type="password"
           placeholder="New Password"
@@ -39,7 +39,7 @@ function Reset({ showToast }) {
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
-        <button type="submit">Reset Password</button>
+        <button className="btn btn-primary" type="submit">Reset Password</button>
       </form>
     </div>
   );

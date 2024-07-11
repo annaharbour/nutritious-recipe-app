@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { sendPasswordResetEmail } from '../../services/authService';
 
-function PasswordResetRequest({ showToast }) {
+function PasswordResetRequest({ showToast, showForgotten }) {
   const [email, setEmail] = useState('');
 
   const onSubmit = async (e) => {
@@ -17,7 +17,7 @@ function PasswordResetRequest({ showToast }) {
   return (
     <div>
       <h2>Reset Password</h2>
-      <form onSubmit={onSubmit}>
+      <form className="form" onSubmit={onSubmit}>
         <input
           type="email"
           placeholder="Enter your email"
@@ -25,8 +25,10 @@ function PasswordResetRequest({ showToast }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button type="submit">Send Reset Link</button>
+        <button type="submit" className="btn btn-primary">Send Reset Link</button>
       </form>
+      <br></br>
+      <button className='btn' onClick={()=>showForgotten(false)}>Back</button>
     </div>
   );
 }

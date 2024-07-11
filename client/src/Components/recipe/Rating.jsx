@@ -40,23 +40,21 @@ function RatingComponent({ recipe, showToast }) {
 
 	return (
 		<div>
-			<h1>Rating</h1>
 			<div>
 				{Array.from({ length: 5 }, (_, index) => (
-					<button
+					<i
+						className="fa-solid fa-star"
 						disabled={loading}
 						key={index + 1}
 						style={{
 							cursor: "pointer",
-							color: stars === index + 1 ? "gold" : "black",
+							color: stars === index + 1 ? "gold" : "#F9F6EE		",
 						}}
-						onClick={() => handleRateRecipe(index + 1)}>
-						{index + 1}
-					</button>
+						onClick={() => handleRateRecipe(index + 1)}></i>
 				))}
 			</div>
-			<p>Avg rating: {meanRating !== null ? meanRating : "No ratings yet"}</p>
-			<p>Your rating: {stars !== null ? stars : "Rate this recipe"}</p>
+			{meanRating === null && <p>"No ratings yet"</p>}
+			{stars === null && <p>"Tried this recipe? Leave a rating!"</p>}
 		</div>
 	);
 }
