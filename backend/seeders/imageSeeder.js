@@ -2,9 +2,9 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
+const jsonFilePath = path.join(__dirname, "./ingredientImages.json");
+const Image = require("../models/ImageModel");
 const Ingredient = require("../models/IngredientModel");
-const Nutrient = require("../models/NutrientModel");
-const jsonFilePath = path.join(__dirname, "./ingredients.json");
 
 mongoose.connect(process.env.mongoURI, {
     useNewUrlParser: true,
@@ -25,13 +25,11 @@ mongoose.connection.once("open", async () => {
         for (const ingredient of ingredients) {
             for (const nutrient of ingredient.foodNutrients) {
                 if (!nutrientMap.has(nutrient.name)) {
-                    const nutrientDoc = new Nutrient({
+                    const nutrientDoc = new Image({
                         _id: new mongoose.Types.ObjectId(),  
-                        name: nutrient.name,
-                        unit: nutrient.unitName,
                     });
 
-                    await nutrientDoc.save();
+                    await Image.save();
                     nutrientMap.set(nutrient.name, nutrientDoc._id);
                 }
             }

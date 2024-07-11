@@ -9,6 +9,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.609.0",
 		"axios": "^1.6.8",
 		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.20.2",
@@ -22,7 +23,8 @@
 		"nodemailer": "^6.9.14",
 		"passport": "^0.7.0",
 		"passport-facebook": "^3.0.0",
-		"passport-google-oauth20": "^2.0.0"
+		"passport-google-oauth20": "^2.0.0",
+		"sharp": "^0.33.4"
 	},
 	"seed": "node ./seeders/seed",
 	"devDependencies": {

@@ -24,6 +24,7 @@ function Ingredients({ ingredients }) {
 				<ul>
 					{categoryIngredients.map((ingredient) => (
 						<li key={ingredient._id}>
+							<img src={ingredient.imageUrl} alt={ingredient.description} />
 							{ingredient.description}: {ingredient.amount}{" "}
 							{ingredient.modifier}
 						</li>

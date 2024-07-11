@@ -77,6 +77,7 @@ const RecipeForm = ({ showToast }) => {
 		// Find the selected ingredient and portion
 		const ingredient = ingredients.find((i) => i._id === selectedIngredient);
 
+		console.log(ingredient)
 		const portion = ingredient.foodPortions.find(
 			(p) => p._id === Number(selectedPortion)
 		);
@@ -92,7 +93,7 @@ const RecipeForm = ({ showToast }) => {
 					...ingredient,
 					amount: selectedAmount,
 					portionId: portion._id,
-					modifier: portion.modifier,
+					modifier: portion.modifier
 				},
 			]);
 			setLoading(false);

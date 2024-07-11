@@ -20,6 +20,10 @@ function Ingredient({ ingredient, index, handleRemoveIngredient }) {
 	return (
 		<>
 			<li key={index} onClick={handleFetchIngredientNutrition}>
+				<img
+					src={ingredient.imageUrl}
+					alt={ingredient.description}
+				/>
 				{ingredient.amount} {ingredient.modifier} of{" "}
 				{ingredient.description.toLowerCase()}
 				<button onClick={handleRemoveIngredient(ingredient)}>Remove</button>

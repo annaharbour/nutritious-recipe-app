@@ -48,17 +48,6 @@ export const calculateRecipeNutrition = async (recipe) => {
 	}
 };
 
-export const updateRecipe = async (updatedRecipe) => {
-	try {
-		const res = await axiosInstance.put("/", {
-			updatedRecipe,
-		});
-		return res;
-	} catch (error) {
-		throw new Error(error);
-	}
-};
-
 export const getRecipeByCategory = async (category) => {
 	try {
 		const res = await axiosInstance.get(`/category/${category}`);
@@ -79,7 +68,6 @@ export const getRecipesByUserId = async (userId) => {
 
 export const getSavedRecipesByUserId = async (userId) => {
 	try {
-		console.log(userId);
 		const res = await axiosInstance.get(`/user/${userId}/saved`);
 		return res;
 	} catch (error) {

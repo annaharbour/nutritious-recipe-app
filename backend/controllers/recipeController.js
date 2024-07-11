@@ -3,6 +3,7 @@ const User = require("../models/UserModel");
 const Ingredient = require("../models/IngredientModel");
 const Rating = require("../models/RatingModel");
 const Comment = require("../models/CommentModel");
+const cloudFrontUrl = process.env.CLOUDFRONT_URL;
 
 const calculateRecipeNutrition = async (req, res) => {
 	const { ingredients } = req.body;
@@ -61,17 +62,21 @@ const createRecipe = async (req, res) => {
 				if (!ingredientData) {
 					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
 				}
+
 				const foodPortion = ingredientData.foodPortions.find(
 					(portion) =>
 						portion._id.toString() === ingredient.portionId.toString()
 				);
+
+				const imageUrl = `${cloudFrontUrl}/images/ingredients/${ingredientData.imageUrl}`;
 
 				return {
 					...ingredient,
 					description: ingredientData.description,
 					category: ingredientData.category,
 					modifier: foodPortion ? foodPortion.modifier : "g",
-					gramWeight: foodPortion ? foodPortion.gramWeight : 100, // Assuming default 100g if not found
+					gramWeight: foodPortion ? foodPortion.gramWeight : 100,
+					imageUrl: imageUrl,
 				};
 			})
 		);
