@@ -166,20 +166,37 @@ const resetPassword = async (req, res) => {
 
 	try {
 		const decoded = jwt.verify(resetToken, process.env.jwtSecret);
-		console.log("Decoded resetToken:", decoded);
 
 		const user = await User.findOne({
 			_id: decoded.user.id,
 		});
 
+		if (!user) {
+			return res.status(400).json({ msg: "User not found" });
+		}
+
 		if (
-			!user ||
+			user.oAuthProvider &&
+			user.oAuthProvider === "google" &&
+			user.resetPasswordToken === undefined &&
+			user.resetPasswordExpires === undefined
+		) {
+			// Handle the case where Google OAuth user wants to set a password
+			const salt = await bcrypt.genSalt(10);
+			user.password = await bcrypt.hash(password, salt);
+			user.resetPasswordToken = undefined;
+			user.resetPasswordExpires = undefined;
+			await user.save();
+			return res.status(200).json({ msg: "Password has been set" });
+		}
+
+		if (
 			user.resetPasswordToken !== resetToken ||
 			user.resetPasswordExpires <= Date.now()
 		) {
 			return res
 				.status(400)
-				.json({ msg: "Password resetToken is invalid or has expired" });
+				.json({ msg: "Password reset token is invalid or has expired" });
 		}
 
 		const salt = await bcrypt.genSalt(10);
