@@ -99,15 +99,19 @@ function Recipe({ showToast }) {
 				</p>
 			)}
 			<Link to={`/recipes/${recipe._id}/comments`}>View Comments</Link>
-      <div>{recipe.labels.map((label) => (`${label} `))}</div>
+			<div>{recipe.labels.map((label) => `${label} `)}</div>
 			<Ingredients ingredients={recipe.ingredients} />
 			<Nutrients recipe={recipe.nutrition} />
 			{userInfo ? (
 				<button onClick={toggleSave} disabled={loading}>
-					{isSaved ? "Unsave Recipe" : "Save Recipe"}
+					{isSaved ? (
+						<i class="fa-solid fa-bookmark" style={{ color: "yellow" }}></i>
+					) : (
+						<i class="fa-solid fa-bookmark" style={{ color: "beige" }}></i>
+					)}
 				</button>
 			) : (
-				<Link to="/login">Save Recipe</Link>
+				<Link to="/dashboard">Create an Account to Save</Link>
 			)}
 		</div>
 	);

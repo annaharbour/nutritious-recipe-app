@@ -1,50 +1,60 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 
 const Navbar = () => {
-	const isLoggedIn = useAuth().isLoggedIn;
-	const logoutUser = useAuth().logoutUser;
-
+	const { isLoggedIn, logoutUser } = useAuth();
+	const navigate = useNavigate();
 	const logout = async () => {
 		try {
-			await logoutUser()
-		} catch(err){			
-			console.log('Error logging out:', err)
-	}
-}
+			await logoutUser();
+			navigate("/");
+		} catch (err) {
+			console.log("Error logging out:", err);
+		}
+	};
 
 	const authLinks = (
-	  <ul>
-	    <li>
-	      <Link to="/dashboard">
-	        <i className="fas fa-user" />{' '}
-	      </Link>
-	    </li>
-	    <li onClick={logout}>
-	     Logout
-	    </li>
-	  </ul>
+		<ul>
+			<li onClick={logout}>
+				<Link to="/dashboard">
+					<i className="fas fa-user" />
+					Account
+				</Link>
+			</li>
+			<li>
+				<Link to="/dashboard">
+					<i className="fa-solid fa-blender"></i>Recipes
+				</Link>
+			</li>
+			<li>
+				<Link onClick={logout}>Logout</Link>
+			</li>
+		</ul>
 	);
 
 	const guestLinks = (
 		<ul>
 			<li>
-				<Link to="/" formType='register'>Sign Up</Link>
+				<Link to="/">
+					<i className="fas fa-user" />
+					Sign Up
+				</Link>
 			</li>
 			<li>
-				<Link to="/"  formType={'login'}>Login</Link>
+				<Link to="/recipes/search">
+					<i className="fa-solid fa-search"></i>Recipes
+				</Link>
+			</li>
+			<li>
+				<Link to="/recipes/search">
+					<i className="fa-solid fa-blender"></i>Trending
+				</Link>
 			</li>
 		</ul>
-
 	);
 
-	return isLoggedIn ? (
-		<nav>{authLinks}</nav>
-
-	) : (
-		<nav>{guestLinks}</nav>
-	);
+	return isLoggedIn ? <nav>{authLinks}</nav> : <nav>{guestLinks}</nav>;
 };
 
 export default Navbar;

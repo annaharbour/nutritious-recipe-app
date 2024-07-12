@@ -10,7 +10,7 @@ const PrivateRoute = ({Component, showToast, ...rest}) => {
     }
 
     if (!isLoggedIn) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/" />;
       }
 
     return <Component showToast={showToast} {...rest} />;

@@ -12,8 +12,13 @@
 	--blue-green: #0096c7ff;
 	--honolulu-blue: #0077b6ff;
 	--marian-blue: #023e8aff;
-	--federal-blue: #03045eff;
+
+	--h2-min-size: 0.8rem;
+	--h2-preferred-size: 1vw + 0.5rem; 
+	--h2-max-size: 2rem; 
+	--dash-item-size: clamp(150px, 15vw, 500px);
 }
+
 * {
 	box-sizing: border-box;
 	margin: 0;
@@ -26,6 +31,27 @@ body {
 	line-height: 1.6;
 	background-color: #fff;
 	color: #333;
+}
+
+nav {
+	background-color: var(--primary-color);
+	color: #fff;
+	padding: 1rem;
+}
+
+nav ul {
+	display: flex;
+}
+
+nav ul li a {
+	color: white;
+	list-style: none;
+	padding-right: 1rem;
+}
+
+nav i {
+	color: white;
+	margin-right: 0.2rem;
 }
 
 ul {
@@ -127,6 +153,77 @@ ul {
 	align-items: center;
 	justify-content: center;
 	text-align: center;
+}
+
+/* Dashboard */
+
+.dash-grid {
+	margin: auto;
+	width: 50%;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	justify-content: center;
+	place-items: center;
+	gap: 1rem;
+}
+
+.dash-item {
+	width: var(--dash-item-size);
+	height: var(--dash-item-size);
+	border-radius: 5rem;
+	background-color: var(--primary-color);
+	background-image: url("./img/otherImages/acaibowl.jpg");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	text-decoration: none;
+	text-align: center;
+	font-size: 1rem;
+}
+
+.dash-item:hover {
+	border: 5px solid var(--orange-peel);
+}
+
+.dash-item.search {
+	background-image: url("./img/otherImages/foursmoothies.jpg");
+}
+
+.dash-item.create {
+	background-image: url("./img/otherImages/beachysmoothies6.jpg");
+}
+
+.dash-item.saved {
+	background-image: url("./img/otherImages/beachsmoothies3.jpg");
+}
+
+.dash-item.your-recipes {
+	background-image: url("./img/otherImages/vegsmoothies.jpg");
+}
+
+.dash-item.trending {
+	background-image: url("./img/otherImages/kidstoast.jpg");
+}
+
+.dash-item.account {
+	background-image: url("./img/otherImages/tropicalsmoothiebowl.jpg");
+}
+
+.dash-item h2 {
+	font-size: clamp(
+		var(--h2-min-size),
+		var(--h2-preferred-size),
+		var(--h2-max-size)
+	);
+	padding: .5rem;
+	background-color: var(--orange-peel);
+	border-radius: 5rem;
+	color: white;
 }
 
 /* Forms */

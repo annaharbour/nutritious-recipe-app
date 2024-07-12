@@ -9,10 +9,13 @@ import Dashboard from "./Components/dashboard/Dashboard";
 import Profile from "./Components/profile/Profile";
 import PrivateRoute from "./Components/routing/PrivateRoute";
 import Recipe from "./Components/recipe/Recipe";
+import Search from "./Components/dashboard/Search";
 import RecipeForm from "./Components/recipe-creation/RecipeForm";
 import ProfileView from "./Components/profile/ProfileView";
 import Comments from "./Components/recipe/Comments";
 import Reset from "./Components/auth/Reset";
+import UserRecipes from "./Components/dashboard/UserRecipes";
+import FavoriteRecipes from "./Components/dashboard/FavoriteRecipes";
 
 const App = () => {
 	const showToastMessage = (msg, type) => {
@@ -68,6 +71,9 @@ const App = () => {
 					element={<Reset showToast={showToastMessage} />}
 				/>
 				<Route path="recipes">
+					<Route path="" element={<UserRecipes showToast={showToastMessage} />} />
+					<Route path="/recipes/favorites" element={<FavoriteRecipes showToast={showToastMessage} />} />
+
 					<Route
 						path="/recipes/create"
 						element={
@@ -78,6 +84,7 @@ const App = () => {
 						}
 					/>
 					<Route path=":id" element={<Recipe showToast={showToastMessage} />} />
+					<Route path="search" element={<Search showToast={showToastMessage} />} />
 					<Route
 						path=":id/comments"
 						element={<Comments showToast={showToastMessage} />}

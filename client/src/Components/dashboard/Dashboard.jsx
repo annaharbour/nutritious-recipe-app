@@ -1,77 +1,51 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { getRecipesByUserId } from "../../services/recipeService";
-import Search from "./Search";
-import { getUserFavorites } from "../../services/userService";
 
 const Dashboard = ({ showToast }) => {
-	const [loading, setLoading] = useState(false);
 	const userInfo = useAuth().userInfo;
 	const { name } = userInfo;
-	const [userRecipes, setUserRecipes] = useState([]);
-	const [favorites, setFavorites] = useState([]);
-	useEffect(() => {
-		const fetchRecipes = async () => {
-			try {
-				setLoading(true);
-				const res = await getRecipesByUserId(userInfo._id);
-				setUserRecipes(res.data);
-				setLoading(false);
-			} catch (err) {
-				setLoading(false);
-			}
-		};
-
-		const fetchFavorites = async () => {
-			try {
-				setLoading(true);
-				const res = await getUserFavorites();
-				setFavorites(res);
-				setLoading(false);
-			} catch (err) {
-				setLoading(false);
-			}
-		};
-
-		fetchFavorites();
-		fetchRecipes();
-	}, [userInfo]);
 
 	return (
-		<section className="container">
-			<h1>
-				<Link to="/profile">
-					<i className="fas fa-user"></i>
-				</Link>
-				Hello, {name}
-			</h1>
-			<h3>Your Profile</h3>
-			<Link to="/profiles">View your profile</Link>
-			<h3>Search Recipes</h3>
-			<Search showToast={showToast} />
-			<h3>Your recipes</h3>
-			<Link to="/recipes/create">Create a new recipe</Link>
-			{loading && <p>Loading...</p>}
-			{userRecipes &&
-				userRecipes.length !== 0 &&
-				userRecipes.map((recipe) => (
-					<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
-						<li>{recipe.name}</li>
+		<div className="dash">
+			{userInfo && (
+				<h3>
+					<Link to="/profile">
+						<i className="fas fa-user"></i>
 					</Link>
-				))}
-			<h3>Your favorites</h3>
-			{loading && <p>Loading...</p>}
-			{favorites.length !== 0 ? (
-				favorites.map((recipe) => (
-					<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
-						<li>{recipe.name}</li>
-					</Link>
-				))
-			) : (
-				<p>No favorite recipes yet</p>
+					Hello, {name}
+				</h3>
 			)}
-		</section>
+			<div className="dash-grid">
+				<Link to="/recipes/search" className="dash-item search">
+					<h2>Search Recipes</h2>
+				</Link>
+
+				<Link to="/recipes/create" className="dash-item create">
+					<h2>New Recipe</h2>
+				</Link>
+
+				{userInfo && (
+					<Link to="/recipes" className="dash-item your-recipes">
+						<h2>Your Recipes</h2>
+					</Link>
+				)}
+
+				{userInfo && (
+					<Link to="/recipes/favorites" className="dash-item saved">
+						<h2>Saved Recipes</h2>
+					</Link>
+				)}
+
+				<Link to="/" className="dash-item trending">
+					<h2>Trending</h2>
+				</Link>
+
+				<Link to="/" className="dash-item account">
+					<h2>Your Account</h2>
+				</Link>
+			</div>
+		</div>
 	);
 };
 

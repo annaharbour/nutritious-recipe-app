@@ -64,7 +64,7 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 		try {
 			const res = await deleteResponse(response._id);
 			setResponses(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
-			showToast("Response deleted successfully", "success")
+			showToast("Response deleted successfully", "success");
 		} catch (err) {
 			showToast(err.message, "error");
 		}
@@ -82,8 +82,14 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 				by <Link to={`/profiles/${comment.user}`}>{comment.userName}</Link> on{" "}
 				{date}
 			</p>
-			{likes > 0 && <p>{likes} Likes</p>}
-			<button onClick={handleLike}>{userHasLiked ? "Unlike" : "Like"}</button>
+			{likes > 0 && <p>{likes}</p>}
+			<button onClick={handleLike}>
+				{userHasLiked ? (
+					<i class="fa-solid fa-thumbs-up"></i>
+				) : (
+					<i class="fa-regular fa-thumbs-up"></i>
+				)}
+			</button>
 			<button onClick={handleReply}>Reply</button>
 			{seeReplyBox && (
 				<ResponseForm
