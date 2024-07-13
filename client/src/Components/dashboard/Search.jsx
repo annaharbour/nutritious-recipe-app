@@ -25,6 +25,7 @@ const Search = ({ showToast }) => {
 		"Flavor",
 	];
 
+
 	const [category, setCategory] = useState();
 
 	useEffect(() => {
@@ -49,7 +50,7 @@ const Search = ({ showToast }) => {
 				userName,
 				includeIngredients: includeIngredients.map((ing) => ing._id).join(","),
 				excludeIngredients: excludeIngredients.map((ing) => ing._id).join(","),
-				optimizations: JSON.stringify(optimizations), // Convert optimizations object to JSON string
+				optimizations: JSON.stringify(optimizations),
 			});
 			setResults(response);
 		} catch (err) {
@@ -117,119 +118,124 @@ const Search = ({ showToast }) => {
 	};
 
 	return (
-		<section>
-			<form>
+		<section className="search">
+			<form className="form">
 				<h2>Search Recipes</h2>
 				<div className="form-group">
+					<label htmlFor="recipeName">Search recipes by name</label>
 					<input
-						placeholder="Search recipes by name"
 						type="text"
+						id="recipeName"
 						value={recipeName}
 						onChange={(e) => setRecipeName(e.target.value)}
 					/>
 				</div>
 				<div className="form-group">
+					<label htmlFor="userName">Search recipes by user</label>
 					<input
-						placeholder="Search recipes by user"
 						type="text"
+						id="userName"
 						value={userName}
 						onChange={(e) => setUserName(e.target.value)}
 					/>
-					<div className="form-group">
-						<h3>Ingredients</h3>
-						{ingredientCategories.map((category) => (
-							<b
-								key={category}
-								value={category}
-								onClick={() => setCategory(category)}>
-								{category}
-								{"  "}
-							</b>
-						))}
-						<ul>
-							{!category ? (
-								<i>Include or exclude ingredients from each category</i>
-							) : (
-								ingredients.map((ingredient) => {
-									const isIncluded = includeIngredients.some(
-										(ing) => ing._id === ingredient._id
-									);
-									const isExcluded = excludeIngredients.some(
-										(ing) => ing._id === ingredient._id
-									);
-
-									return (
-										<span
-											key={ingredient._id}
-											className={`ingredient ${isIncluded ? "included" : ""} ${
-												isExcluded ? "excluded" : ""
-											}`}>
-											<i
-												className="fa-solid fa-check"
-												onClick={() => handleIncludeIngredient(ingredient._id)}
-												style={{ cursor: "pointer", marginRight: "10px" }}></i>
-											<i
-												className="fa-solid fa-x"
-												onClick={() => handleExcludeIngredient(ingredient._id)}
-												style={{ cursor: "pointer", marginRight: "10px" }}></i>
-											{ingredient.description}
-										</span>
-									);
-								})
-							)}
-						</ul>
-					</div>
 				</div>
-
 				<div className="form-group">
-					<h3>Optimizations</h3>
-					<label>
+					<h3>Ingredients</h3>
+					{ingredientCategories.map((category) => (
+						<b
+							key={category}
+							value={category}
+							onClick={() => setCategory(category)}>
+							{category}
+							{"  "}
+						</b>
+					))}
+					<ul>
+						{!category ? (
+							<i>Include or exclude ingredients from each category</i>
+						) : (
+							ingredients.map((ingredient) => {
+								const isIncluded = includeIngredients.some(
+									(ing) => ing._id === ingredient._id
+								);
+								const isExcluded = excludeIngredients.some(
+									(ing) => ing._id === ingredient._id
+								);
+
+								return (
+									<span
+										key={ingredient._id}
+										className={`ingredient ${isIncluded ? "included" : ""} ${
+											isExcluded ? "excluded" : ""
+										}`}>
+										<i
+											className="fa-solid fa-check"
+											onClick={() => handleIncludeIngredient(ingredient._id)}
+											style={{ cursor: "pointer", marginRight: "10px" }}></i>
+										<i
+											className="fa-solid fa-x"
+											onClick={() => handleExcludeIngredient(ingredient._id)}
+											style={{ cursor: "pointer", marginRight: "10px" }}></i>
+										{ingredient.description}
+									</span>
+								);
+							})
+						)}
+					</ul>
+				</div>
+				<h3>Optimizations</h3>
+				<div className="form-group optimizations">
+					<div className="optimization">
 						<input
 							type="checkbox"
+							id="bulking"
 							name="bulking"
 							checked={optimizations.bulking}
 							onChange={handleOptimizationChange}
 						/>
-						Bulking (over 400 calories)
-					</label>
-					<label>
+						<label htmlFor="bulking">Bulking</label>
+					</div>
+					<div className="optimization">
 						<input
 							type="checkbox"
+							id="lean"
 							name="lean"
 							checked={optimizations.lean}
 							onChange={handleOptimizationChange}
 						/>
-						Lean (under 400 calories)
-					</label>
-					<label>
+						<label htmlFor="lean">Lean</label>
+					</div>
+					<div className="optimization">
 						<input
 							type="checkbox"
+							id="highProtein"
 							name="highProtein"
 							checked={optimizations.highProtein}
 							onChange={handleOptimizationChange}
 						/>
-						High Protein (40% protein)
-					</label>
-					<label>
+						<label htmlFor="highProtein">High Protein</label>
+					</div>
+					<div className="optimization">
 						<input
 							type="checkbox"
+							id="lowCarb"
 							name="lowCarb"
 							checked={optimizations.lowCarb}
 							onChange={handleOptimizationChange}
 						/>
-						Low Carb (under 20g)
-					</label>
-					<label>
+						<label htmlFor="lowCarb">Low Carb</label>
+					</div>
+					<div className="optimization">
 						<input
 							type="checkbox"
+							id="lowFat"
 							name="lowFat"
 							checked={optimizations.lowFat}
 							onChange={handleOptimizationChange}
 						/>
-						Low Fat (under 5g)
-					</label>
+						<label htmlFor="lowFat">Low Fat</label>
+					</div>
 				</div>
-
 				<button onClick={handleSearch}>Search</button>
 				<button onClick={handleClearCriteria}>Clear All Criteria</button>
 			</form>
