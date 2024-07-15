@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { searchRecipes } from "../../services/recipeService";
 import { getIngredientsByCategory } from "../../services/ingredientService";
 
@@ -31,7 +32,9 @@ const Search = ({ showToast }) => {
 		const fetchIngredients = async (category) => {
 			try {
 				const res = await getIngredientsByCategory(category);
-				const ingredientData = res.data.sort((a, b) => a.description.localeCompare(b.description))
+				const ingredientData = res.data.sort((a, b) =>
+					a.description.localeCompare(b.description)
+				);
 				setIngredients(ingredientData);
 			} catch (error) {
 				console.error("Error fetching ingredients:", error);
@@ -123,7 +126,7 @@ const Search = ({ showToast }) => {
 			<form className="form">
 				<h2>Search Recipes</h2>
 
-				<div className="form-group">
+				<div className="form-group name-search">
 					<input
 						type="text"
 						id="recipeName"
@@ -131,8 +134,6 @@ const Search = ({ showToast }) => {
 						value={recipeName}
 						onChange={(e) => setRecipeName(e.target.value)}
 					/>
-				</div>
-				<div className="form-group">
 					<input
 						type="text"
 						id="userName"
@@ -148,8 +149,7 @@ const Search = ({ showToast }) => {
 								type="button"
 								key={cat}
 								className={`tab-button ${cat === category ? "active" : ""}`}
-								onClick={() => setCategory(cat)}
-							>
+								onClick={() => setCategory(cat)}>
 								{cat}
 							</button>
 						))}
@@ -171,19 +171,22 @@ const Search = ({ showToast }) => {
 										key={ingredient._id}
 										className={`ingredient ${isIncluded ? "included" : ""} ${
 											isExcluded ? "excluded" : ""
-										}`}
-									>
+										}`}>
 										<i
 											className="fa-solid fa-check"
-											onClick={() => handleIncludeIngredient(ingredient._id)}
-											style={{ cursor: "pointer", marginRight: "10px" }}
-										></i>
+											style={{ visibility: !isIncluded ? "visible" : "hidden" }}
+											onClick={() =>
+												handleIncludeIngredient(ingredient._id)
+											}></i>
 										<i
+											style={{ visibility: isExcluded ? "hidden" : "visible" }}
 											className="fa-solid fa-x"
-											onClick={() => handleExcludeIngredient(ingredient._id)}
-											style={{ cursor: "pointer", marginRight: "10px" }}
-										></i>
-										{ingredient.description}
+											onClick={() =>
+												handleExcludeIngredient(ingredient._id)
+											}></i>
+										<span className={`${isExcluded && "strike-through"}`}>
+											{ingredient.description}
+										</span>
 									</span>
 								);
 							})
@@ -242,15 +245,23 @@ const Search = ({ showToast }) => {
 						<label htmlFor="lowFat">Low Fat</label>
 					</div>
 				</div>
-				<button className="btn" onClick={handleSearch}>Search</button>
-				<button className="btn btn-warning" onClick={handleClearCriteria}>Clear All Criteria</button>
+				<button className="btn" onClick={handleSearch}>
+					Search
+				</button>
+				<button className="btn btn-warning" onClick={handleClearCriteria}>
+					Clear All Criteria
+				</button>
 			</form>
 
 			<div>
 				<h3>Results:</h3>
 				<ul>
 					{results && results.length > 0 ? (
-						results.map((recipe) => <li key={recipe._id}>{recipe.name}</li>)
+						results.map((recipe) => (
+							<Link to={`recipes/${recipe._id}}`} key={recipe._id}>
+								{recipe.name}
+							</Link>
+						))
 					) : (
 						<div>No results found</div>
 					)}
