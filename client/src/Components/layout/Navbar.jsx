@@ -16,19 +16,14 @@ const Navbar = () => {
 
 	const authLinks = (
 		<ul>
+			<li>
+				<Link to="/dashboard">
+					<i className="fa-solid fa-blender"></i>Dashboard
+				</Link>
+			</li>
 			<li onClick={logout}>
-				<Link to="/dashboard">
-					<i className="fas fa-user" />
-					Account
-				</Link>
-			</li>
-			<li>
-				<Link to="/dashboard">
-					<i className="fa-solid fa-blender"></i>Recipes
-				</Link>
-			</li>
-			<li>
-				<Link onClick={logout}>Logout</Link>
+				<i className="fas fa-user" />
+				<Link to="/">Logout</Link>
 			</li>
 		</ul>
 	);

@@ -25,14 +25,14 @@ const Search = ({ showToast }) => {
 		"Flavor",
 	];
 
-
-	const [category, setCategory] = useState();
+	const [category, setCategory] = useState(ingredientCategories[0]);
 
 	useEffect(() => {
 		const fetchIngredients = async (category) => {
 			try {
 				const res = await getIngredientsByCategory(category);
-				setIngredients(res.data);
+				const ingredientData = res.data.sort((a, b) => a.description.localeCompare(b.description))
+				setIngredients(ingredientData);
 			} catch (error) {
 				console.error("Error fetching ingredients:", error);
 			}
@@ -43,7 +43,8 @@ const Search = ({ showToast }) => {
 		}
 	}, [category]);
 
-	const handleSearch = async () => {
+	const handleSearch = async (e) => {
+		e.preventDefault();
 		try {
 			const response = await searchRecipes({
 				recipeName,
@@ -99,7 +100,7 @@ const Search = ({ showToast }) => {
 		setUserName("");
 		setIncludeIngredients([]);
 		setExcludeIngredients([]);
-		setCategory(null);
+		setCategory(ingredientCategories[0]);
 		setOptimizations({
 			bulking: false,
 			lean: false,
@@ -118,39 +119,42 @@ const Search = ({ showToast }) => {
 	};
 
 	return (
-		<section className="search">
+		<section className="search-recipes">
 			<form className="form">
 				<h2>Search Recipes</h2>
+
 				<div className="form-group">
-					<label htmlFor="recipeName">Search recipes by name</label>
 					<input
 						type="text"
 						id="recipeName"
+						placeholder="Recipe Keyword"
 						value={recipeName}
 						onChange={(e) => setRecipeName(e.target.value)}
 					/>
 				</div>
 				<div className="form-group">
-					<label htmlFor="userName">Search recipes by user</label>
 					<input
 						type="text"
 						id="userName"
+						placeholder="User Name"
 						value={userName}
 						onChange={(e) => setUserName(e.target.value)}
 					/>
 				</div>
 				<div className="form-group">
-					<h3>Ingredients</h3>
-					{ingredientCategories.map((category) => (
-						<b
-							key={category}
-							value={category}
-							onClick={() => setCategory(category)}>
-							{category}
-							{"  "}
-						</b>
-					))}
-					<ul>
+					<div className="tabs">
+						{ingredientCategories.map((cat) => (
+							<button
+								type="button"
+								key={cat}
+								className={`tab-button ${cat === category ? "active" : ""}`}
+								onClick={() => setCategory(cat)}
+							>
+								{cat}
+							</button>
+						))}
+					</div>
+					<ul className="ingredients">
 						{!category ? (
 							<i>Include or exclude ingredients from each category</i>
 						) : (
@@ -167,15 +171,18 @@ const Search = ({ showToast }) => {
 										key={ingredient._id}
 										className={`ingredient ${isIncluded ? "included" : ""} ${
 											isExcluded ? "excluded" : ""
-										}`}>
+										}`}
+									>
 										<i
 											className="fa-solid fa-check"
 											onClick={() => handleIncludeIngredient(ingredient._id)}
-											style={{ cursor: "pointer", marginRight: "10px" }}></i>
+											style={{ cursor: "pointer", marginRight: "10px" }}
+										></i>
 										<i
 											className="fa-solid fa-x"
 											onClick={() => handleExcludeIngredient(ingredient._id)}
-											style={{ cursor: "pointer", marginRight: "10px" }}></i>
+											style={{ cursor: "pointer", marginRight: "10px" }}
+										></i>
 										{ingredient.description}
 									</span>
 								);
@@ -183,7 +190,6 @@ const Search = ({ showToast }) => {
 						)}
 					</ul>
 				</div>
-				<h3>Optimizations</h3>
 				<div className="form-group optimizations">
 					<div className="optimization">
 						<input
@@ -236,8 +242,8 @@ const Search = ({ showToast }) => {
 						<label htmlFor="lowFat">Low Fat</label>
 					</div>
 				</div>
-				<button onClick={handleSearch}>Search</button>
-				<button onClick={handleClearCriteria}>Clear All Criteria</button>
+				<button className="btn" onClick={handleSearch}>Search</button>
+				<button className="btn btn-warning" onClick={handleClearCriteria}>Clear All Criteria</button>
 			</form>
 
 			<div>

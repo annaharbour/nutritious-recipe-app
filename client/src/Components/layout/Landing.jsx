@@ -5,13 +5,13 @@ import Register from "../auth/Register";
 
 const Landing = ({ isLoggedIn, showToast }) => {
 	const [formToShow, setFormToShow] = useState(null);
-
+	
 	const showForm = (formType) => {
 		setFormToShow(formType);
 	};
 
 	return isLoggedIn ? (
-		<Navigate to="/" />
+		<Navigate to="/dashboard" />
 	) : (
 		<section className="landing">
 			<div className="dark-overlay">
