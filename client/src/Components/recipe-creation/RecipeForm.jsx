@@ -49,7 +49,7 @@ const RecipeForm = ({ showToast }) => {
 			try {
 				setLoading(true);
 				if (recipeIngredients.length === 0) return;
-
+				// Send only necessary fields
 				const ingredientsPayload = recipeIngredients.map(
 					({ _id, portionId, amount }) => ({
 						_id,
@@ -87,6 +87,21 @@ const RecipeForm = ({ showToast }) => {
 			(p) => p._id === Number(selectedPortion)
 		);
 
+		if (!portion || portion === undefined) {
+			showToast("Please select a portion", "error");
+			return;
+		}
+
+		const isIngredientAdded = recipeIngredients.some(
+			(i) => i._id === ingredient._id
+		);
+		if (isIngredientAdded) {
+			showToast(
+				ingredient.description + " already included in recipe",
+				"error"
+			);
+			return;
+		}
 		if (recipeIngredients.length < 12) {
 			setLoading(true);
 			setRecipeIngredients([
