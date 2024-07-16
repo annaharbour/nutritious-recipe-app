@@ -6,50 +6,50 @@ const Comment = require("../models/CommentModel");
 const cloudFrontUrl = process.env.CLOUDFRONT_URL;
 
 const calculateRecipeNutrition = async (req, res) => {
-	const { ingredients } = req.body;
-	if (!ingredients) {
-		return res.status(400).json({ error: "Ingredients are required" });
-	}
-	// Calculate the total nutrition for the recipe
-	try {
-		// Populate the ingredients with the necessary data
-		const populatedIngredients = await Promise.all(
-			// Promise.all will wait for all ingredient data to be fetched before continuing
-			ingredients.map(async (ingredient) => {
-				const ingredientData = await Ingredient.findById(ingredient._id).lean();
-				if (!ingredientData) {
-					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
-				}
-				// Find the food portion for the ingredient
-				const foodPortion = ingredientData.foodPortions.find(
-					(portion) =>
-						portion._id.toString() === ingredient.portionId.toString()
-				);
+    const { ingredients } = req.body;
+    if (!ingredients) {
+        return res.status(400).json({ error: "Ingredients are required" });
+    }
 
-				// Return the ingredient with the necessary data
-				return {
-					...ingredient,
-					description: ingredientData.description,
-					category: ingredientData.category,
-					modifier: foodPortion ? foodPortion.modifier : "g",
-					gramWeight: foodPortion ? foodPortion.gramWeight : "100",
-				};
-			})
-		);
+    try {
+        const populatedIngredients = await Promise.all(
+            ingredients.map(async (ingredient) => {
+                if (!ingredient._id) {
+                    throw new Error("Ingredient ID is missing");
+                }
 
-		// Construct a recipe with the populated ingredients
-		const recipe = new Recipe({
-			ingredients: populatedIngredients,
-		});
+                const ingredientData = await Ingredient.findById(ingredient._id).lean();
+                if (!ingredientData) {
+                    throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+                }
 
-		// Calculate the total nutrition for the recipe without saving
-		const totalNutrition = await recipe.calculateNutrition();
+                const foodPortion = ingredientData.foodPortions.find(
+                    (portion) => portion._id.toString() === ingredient.portionId.toString()
+                );
 
-		return res.json(totalNutrition);
-	} catch (err) {
-		return res.status(500).json({ error: err.message });
-	}
+                return {
+                    ...ingredient,
+                    description: ingredientData.description,
+                    category: ingredientData.category,
+                    modifier: foodPortion ? foodPortion.modifier : "g",
+                    gramWeight: foodPortion ? foodPortion.gramWeight : "100",
+                };
+            })
+        );
+
+        const recipe = new Recipe({
+            ingredients: populatedIngredients,
+        });
+
+        const totalNutrition = await recipe.calculateNutrition();
+
+        return res.json(totalNutrition);
+    } catch (err) {
+        console.error("Error in calculateRecipeNutrition:", err.message);
+        return res.status(500).json({ error: err.message });
+    }
 };
+
 
 const createRecipe = async (req, res) => {
 	const { name, ingredients } = req.body;

@@ -30,7 +30,6 @@ const RecipeForm = ({ showToast }) => {
 	const [category, setCategory] = useState(ingredientCategories[0]);
 
 	useEffect(() => {
-		// Fetch the ingredients for the selected category
 		const fetchIngredients = async (category) => {
 			try {
 				setLoading(true);
@@ -45,22 +44,30 @@ const RecipeForm = ({ showToast }) => {
 		fetchIngredients(category);
 	}, [category]);
 
-	// Fetch the nutrition information for the recipe
-	const fetchRecipeNutrition = async (recipeIngredients) => {
-		try {
-			setLoading(true);
-			if (recipeIngredients.length === 0) return;
-			const res = await calculateRecipeNutrition({
-				ingredients: recipeIngredients,
-			});
-			setRecipeNutrition(res.data);
-			setLoading(false);
-		} catch (error) {
-			console.error("Error calculating recipe nutrition:", error);
-		}
-	};
-
 	useEffect(() => {
+		const fetchRecipeNutrition = async (recipeIngredients) => {
+			try {
+				setLoading(true);
+				if (recipeIngredients.length === 0) return;
+
+				const ingredientsPayload = recipeIngredients.map(
+					({ _id, portionId, amount }) => ({
+						_id,
+						portionId,
+						amount,
+					})
+				);
+
+				const res = await calculateRecipeNutrition({
+					ingredients: ingredientsPayload,
+				});
+				setRecipeNutrition(res.data);
+				setLoading(false);
+			} catch (error) {
+				console.error("Error calculating recipe nutrition:", error);
+			}
+		};
+
 		fetchRecipeNutrition(recipeIngredients);
 	}, [recipeIngredients]);
 
@@ -74,18 +81,13 @@ const RecipeForm = ({ showToast }) => {
 		e.preventDefault();
 		if (!selectedIngredient) return;
 
-		// Find the selected ingredient and portion
 		const ingredient = ingredients.find((i) => i._id === selectedIngredient);
 
-		console.log(ingredient)
 		const portion = ingredient.foodPortions.find(
 			(p) => p._id === Number(selectedPortion)
 		);
-		// TODO: Add toast
-		if (!portion) return alert("Please select a portion");
 
-		// Add the ingredient to the recipe
-		if (recipeIngredients.length < 5) {
+		if (recipeIngredients.length < 12) {
 			setLoading(true);
 			setRecipeIngredients([
 				...recipeIngredients,
@@ -93,14 +95,14 @@ const RecipeForm = ({ showToast }) => {
 					...ingredient,
 					amount: selectedAmount,
 					portionId: portion._id,
-					modifier: portion.modifier
+					modifier: portion.modifier,
 				},
 			]);
 			setLoading(false);
 		} else {
-			showToast("You can only add up to 5 ingredients");
+			showToast("You can only add up to a dozen ingredients");
 		}
-		// Reset the form
+
 		setSelectedIngredient(null);
 		setSelectedPortion("");
 		setSelectedAmount(1);
@@ -143,9 +145,6 @@ const RecipeForm = ({ showToast }) => {
 	const handleSaveRecipe = async (e) => {
 		e.preventDefault();
 		try {
-			if (recipeIngredients.length === 0)
-				return alert("Please add ingredients");
-			if (!recipeName) return alert("Please enter a recipe name");
 			await createRecipe(recipeName, recipeIngredients);
 			navigate("/dashboard");
 		} catch (error) {
@@ -167,6 +166,7 @@ const RecipeForm = ({ showToast }) => {
 					id="recipeName"
 					value={recipeName}
 					onChange={handleRecipeNameChange}
+					required
 				/>
 				<h3>{category}</h3>
 				<select
@@ -188,6 +188,7 @@ const RecipeForm = ({ showToast }) => {
 							value={selectedAmount}
 							min="1"
 							onChange={(e) => setSelectedAmount(e.target.value)}
+							required
 						/>
 						<select
 							value={selectedPortion || ""}
@@ -205,6 +206,7 @@ const RecipeForm = ({ showToast }) => {
 				)}
 
 				<button onClick={handleAddIngredient}>Add +</button>
+
 				{recipeIngredients.length > 0 && (
 					<>
 						<RecipeIngredients
@@ -215,7 +217,14 @@ const RecipeForm = ({ showToast }) => {
 						<button disabled={loading} type="submit">
 							Post Recipe
 						</button>
-						<Nutrients recipe={recipeNutrition} />
+
+						{loading ? (
+							<div className="loader">
+								<i className="fa-solid fa-spinner spinner"></i>
+							</div>
+						) : (
+							<Nutrients recipe={recipeNutrition} />
+						)}
 					</>
 				)}
 			</form>

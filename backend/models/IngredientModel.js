@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Nutrient = require("./NutrientModel");
 require("dotenv").config();
-const cloudFrontUrl = process.env.CLOUDFRONT_URL;
 
 const ingredientSchema = new mongoose.Schema({
 	_id: {
@@ -35,18 +34,6 @@ const ingredientSchema = new mongoose.Schema({
 		},
 	],
 });
-
-ingredientSchema.methods.getImageUrl = async function () {
-	// return `${cloudFrontUrl}/images/ingredients/${this.imageUrl}`;
-	const getObjectParams = {
-		Bucket: process.env.S3_BUCKET_NAME,
-		Key: `images/ingredients/${this.imageUrl}`,
-	}
-
-	const command = new GetObjectCommand(getObjectParams);
-	const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-	return url;
-};
 
 ingredientSchema.methods.calculateNutrition = async function (
 	portionId,

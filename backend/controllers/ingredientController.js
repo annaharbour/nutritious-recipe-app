@@ -47,6 +47,7 @@ const getIngredientNutrition = async (req, res) => {
 			return res
 				.status(200)
 				.json({ description, _id, amount, portionId, nutrition });
+				
 		} catch (err) {
 			return res
 				.status(500)

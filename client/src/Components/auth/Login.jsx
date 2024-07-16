@@ -74,11 +74,11 @@ const Login = ({ showToast, showForm }) => {
 				<a href={`${authURL}/google`}>Sign Up With Google</a>
 				<p>
 					<span onClick={() => showForm("register")}>
-						Don't have an account? <u>Sign Up!</u>
+						Don't have an account? <span className="link">Sign Up!</span>
 					</span>
 				</p>
 				<p>
-					Forgot your password? <span onClick={() => showForgotten("forgotten")}>Reset it here!</span>
+					Forgot your password? <span className="link" onClick={() => showForgotten("forgotten")}>Reset it here!</span>
 				</p>
 			</section>
 		</div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Login from "../auth/Login";
 import Register from "../auth/Register";
@@ -12,9 +12,13 @@ const Landing = ({ showToast }) => {
 	};
 	const { isLoggedIn } = useAuth();
 
-	return isLoggedIn ? (
-		navigate("/dashboard")
-	) : (
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigate("/dashboard");
+		}
+	}, [isLoggedIn, navigate]);
+
+	return (
 		<section className="landing">
 			<div className="dark-overlay">
 				<div className="landing-inner">
@@ -27,7 +31,7 @@ const Landing = ({ showToast }) => {
 					)}
 					{!formToShow && (
 						<>
-							<p>Time to up your smoothie game</p>
+							<h3>Time to up your smoothie game</h3>
 							<div className="buttons">
 								<button
 									onClick={() => showForm("register")}
