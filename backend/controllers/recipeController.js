@@ -6,7 +6,8 @@ const Comment = require("../models/CommentModel");
 const cloudFrontUrl = process.env.CLOUDFRONT_URL;
 
 const calculateRecipeNutrition = async (req, res) => {
-    const { ingredients } = req.body;
+    const { ingredients, servings } = req.body;
+	// const { ingredients } = req.body;
     if (!ingredients) {
         return res.status(400).json({ error: "Ingredients are required" });
     }
@@ -37,8 +38,13 @@ const calculateRecipeNutrition = async (req, res) => {
             })
         );
 
+        // const recipe = new Recipe({
+        //     ingredients: populatedIngredients
+        // });
+
         const recipe = new Recipe({
             ingredients: populatedIngredients,
+			servings
         });
 
         const totalNutrition = await recipe.calculateNutrition();
@@ -53,6 +59,7 @@ const calculateRecipeNutrition = async (req, res) => {
 
 const createRecipe = async (req, res) => {
 	const { name, ingredients } = req.body;
+
 	const userId = req.user.id;
 
 	try {

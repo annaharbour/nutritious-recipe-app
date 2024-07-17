@@ -12,11 +12,13 @@ const RecipeForm = ({ showToast }) => {
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 	const [recipeName, setRecipeName] = useState("");
+	const [servings, setServings] = useState(1);
 	const [recipeIngredients, setRecipeIngredients] = useState([]);
 	const [ingredients, setIngredients] = useState([]);
 	const [selectedIngredient, setSelectedIngredient] = useState(null);
 	const [selectedPortion, setSelectedPortion] = useState("");
 	const [selectedAmount, setSelectedAmount] = useState(1);
+
 	const [recipeNutrition, setRecipeNutrition] = useState([]);
 	const ingredientCategories = [
 		"Fruit",
@@ -60,6 +62,7 @@ const RecipeForm = ({ showToast }) => {
 
 				const res = await calculateRecipeNutrition({
 					ingredients: ingredientsPayload,
+					servings,
 				});
 				setRecipeNutrition(res.data);
 				setLoading(false);
@@ -69,11 +72,17 @@ const RecipeForm = ({ showToast }) => {
 		};
 
 		fetchRecipeNutrition(recipeIngredients);
-	}, [recipeIngredients]);
+	}, [recipeIngredients, servings]);
 
 	const handleRecipeNameChange = (e) => {
 		setLoading(true);
 		setRecipeName(e.target.value);
+		setLoading(false);
+	};
+
+	const handleServingsChange = (e) => {
+		setLoading(true);
+		setServings(e.target.value);
 		setLoading(false);
 	};
 
@@ -168,22 +177,43 @@ const RecipeForm = ({ showToast }) => {
 	};
 
 	return (
-		<div>
+		<div className="create-recipe">
 			<h2>Create a Recipe</h2>
-			<div>
-				<button onClick={handleGoBack}>Previous Category</button>
-				<button onClick={handleGoForward}>Next Category</button>
-			</div>
-			<form onSubmit={handleSaveRecipe}>
-				<label htmlFor="recipeName">Recipe Name:</label>
-				<input
-					type="text"
-					id="recipeName"
-					value={recipeName}
-					onChange={handleRecipeNameChange}
-					required
-				/>
-				<h3>{category}</h3>
+
+			<form className="form" onSubmit={handleSaveRecipe}>
+				<div className="form-group">
+					<label htmlFor="recipeName">Recipe Name:</label>
+					<input
+						type="text"
+						id="recipeName"
+						value={recipeName}
+						onChange={handleRecipeNameChange}
+						required
+					/>
+				</div>
+				<div className="form-group">
+					<label htmlFor="servings">Servings:</label>
+					<input
+						type="number"
+						id="servings"
+						onChange={handleServingsChange}
+						onInput={(e) => {
+							if (e.target.value > 6) {
+								e.target.value = 6;
+							}
+						}}
+						value={servings}
+						min="1"
+						max="6"
+					/>
+				</div>
+				<div className="form-group">
+				<label htmlFor="category">
+					<i className="fa fa-arrow-left" onClick={handleGoBack} />
+					{category}
+					<i className="fa fa-arrow-right" onClick={handleGoForward} />
+				</label>
+				
 				<select
 					value={selectedIngredient || ""}
 					onChange={(e) => setSelectedIngredient(e.target.value)}>
@@ -219,8 +249,10 @@ const RecipeForm = ({ showToast }) => {
 						</select>
 					</div>
 				)}
+				
 
 				<button onClick={handleAddIngredient}>Add +</button>
+				</div>
 
 				{recipeIngredients.length > 0 && (
 					<>
