@@ -18,7 +18,6 @@ const RecipeForm = ({ showToast }) => {
 	const [selectedIngredient, setSelectedIngredient] = useState(null);
 	const [selectedPortion, setSelectedPortion] = useState("");
 	const [selectedAmount, setSelectedAmount] = useState(1);
-
 	const [recipeNutrition, setRecipeNutrition] = useState([]);
 	const ingredientCategories = [
 		"Fruit",
@@ -28,7 +27,6 @@ const RecipeForm = ({ showToast }) => {
 		"Liquid",
 		"Flavor",
 	];
-
 	const [category, setCategory] = useState(ingredientCategories[0]);
 
 	useEffect(() => {
@@ -46,99 +44,100 @@ const RecipeForm = ({ showToast }) => {
 		fetchIngredients(category);
 	}, [category]);
 
-	useEffect(() => {
-		const fetchRecipeNutrition = async (recipeIngredients) => {
-			try {
-				setLoading(true);
-				if (recipeIngredients.length === 0) return;
-				// Send only necessary fields
-				const ingredientsPayload = recipeIngredients.map(
-					({ _id, portionId, amount }) => ({
-						_id,
-						portionId,
-						amount,
-					})
-				);
+	const fetchRecipeNutrition = async () => {
+		try {
+			setLoading(true);
+			if (recipeIngredients.length === 0) return;
 
-				const res = await calculateRecipeNutrition({
-					ingredients: ingredientsPayload,
-					servings,
-				});
-				setRecipeNutrition(res.data);
-				setLoading(false);
-			} catch (error) {
-				console.error("Error calculating recipe nutrition:", error);
-			}
-		};
+			const ingredientsPayload = recipeIngredients.map(
+				({ _id, portionId, amount }) => ({
+					_id,
+					portionId,
+					amount,
+				})
+			);
 
-		fetchRecipeNutrition(recipeIngredients);
-	}, [recipeIngredients, servings]);
+			const res = await calculateRecipeNutrition({
+				ingredients: ingredientsPayload,
+				servings,
+			});
+			setRecipeNutrition(res.data);
+		} catch (error) {
+			console.error("Error calculating recipe nutrition:", error);
+			showToast("Error calculating recipe nutrition", "error");
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const handleRecipeNameChange = (e) => {
-		setLoading(true);
+		e.preventDefault();
 		setRecipeName(e.target.value);
-		setLoading(false);
 	};
 
 	const handleServingsChange = (e) => {
-		setLoading(true);
-		setServings(e.target.value);
-		setLoading(false);
-	};
-
-	const handleAddIngredient = (e) => {
 		e.preventDefault();
-		if (!selectedIngredient) return;
-
-		const ingredient = ingredients.find((i) => i._id === selectedIngredient);
-
-		const portion = ingredient.foodPortions.find(
-			(p) => p._id === Number(selectedPortion)
-		);
-
-		if (!portion || portion === undefined) {
-			showToast("Please select a portion", "error");
-			return;
-		}
-
-		const isIngredientAdded = recipeIngredients.some(
-			(i) => i._id === ingredient._id
-		);
-		if (isIngredientAdded) {
-			showToast(
-				ingredient.description + " already included in recipe",
-				"error"
-			);
-			return;
-		}
-		if (recipeIngredients.length < 12) {
-			setLoading(true);
-			setRecipeIngredients([
-				...recipeIngredients,
-				{
-					...ingredient,
-					amount: selectedAmount,
-					portionId: portion._id,
-					modifier: portion.modifier,
-				},
-			]);
-			setLoading(false);
-		} else {
-			showToast("You can only add up to a dozen ingredients");
-		}
-
-		setSelectedIngredient(null);
-		setSelectedPortion("");
-		setSelectedAmount(1);
+		setServings(e.target.value);
 	};
 
-	const handleRemoveIngredient = (ingredient) => () => {
+	const handleAddIngredient = async (e) => {
+		e.preventDefault();
+
 		try {
 			setLoading(true);
-			setRecipeIngredients(
-				recipeIngredients.filter((i) => i._id !== ingredient._id)
+			if (!selectedIngredient) return;
+
+			const ingredient = ingredients.find((i) => i._id === selectedIngredient);
+
+			const portion = ingredient.foodPortions.find(
+				(p) => p._id === Number(selectedPortion)
 			);
+
+			if (!portion || portion === undefined) {
+				showToast("Please select a portion", "error");
+				return;
+			}
+
+			const isIngredientAdded = recipeIngredients.some(
+				(i) => i._id === ingredient._id
+			);
+			if (isIngredientAdded) {
+				showToast(
+					ingredient.description + " already included in recipe",
+					"error"
+				);
+				return;
+			}
+			if (recipeIngredients.length < 12) {
+				setRecipeIngredients([
+					...recipeIngredients,
+					{
+						...ingredient,
+						amount: selectedAmount,
+						portionId: portion._id,
+						modifier: portion.modifier,
+					},
+				]);
+			} else {
+				showToast("You can only add up to a dozen ingredients");
+			}
+
+			setSelectedIngredient(null);
+			setSelectedPortion("");
+			setSelectedAmount(1);
+		} catch {
+			showToast("Error adding ingredient, please try again", "error");
+		} finally {
 			setLoading(false);
+		}
+	};
+
+	const handleRemoveIngredient = (ingredient) => {
+		try {
+			const updatedIngredients = recipeIngredients.filter(
+				(i) => i._id !== ingredient._id
+			);
+			setRecipeIngredients(updatedIngredients);
 		} catch (error) {
 			showToast("Error removing ingredient, please try again", "error");
 		}
@@ -191,7 +190,7 @@ const RecipeForm = ({ showToast }) => {
 						required
 					/>
 				</div>
-				<div className="form-group">
+				<div className="form-group portion">
 					<label htmlFor="servings">Servings:</label>
 					<input
 						type="number"
@@ -208,69 +207,85 @@ const RecipeForm = ({ showToast }) => {
 					/>
 				</div>
 				<div className="form-group">
-				<label htmlFor="category">
-					<i className="fa fa-arrow-left" onClick={handleGoBack} />
-					{category}
-					<i className="fa fa-arrow-right" onClick={handleGoForward} />
-				</label>
-				
-				<select
-					value={selectedIngredient || ""}
-					onChange={(e) => setSelectedIngredient(e.target.value)}>
-					<option value="">Select an ingredient</option>
-					{ingredients &&
-						ingredients.map((ingredient) => (
-							<option key={ingredient._id} value={ingredient._id}>
-								{ingredient.description}
-							</option>
-						))}
-				</select>
-				{selectedIngredient && (
+					<label htmlFor="category">
+						<i className="fa fa-caret-left" onClick={handleGoBack} />
+						{category}
+						<i className="fa fa-caret-right" onClick={handleGoForward} />
+					</label>
+					<select
+						value={selectedIngredient || ""}
+						onChange={(e) => setSelectedIngredient(e.target.value)}>
+						<option value="">Select an ingredient</option>
+						{ingredients &&
+							ingredients.map((ingredient) => (
+								<option key={ingredient._id} value={ingredient._id}>
+									{ingredient.description}
+								</option>
+							))}
+					</select>
+				</div>
+				<div className="portion form-group">
 					<div>
 						<label htmlFor="portion">Portion:</label>
-						<input
-							type="number"
-							value={selectedAmount}
-							min="1"
-							onChange={(e) => setSelectedAmount(e.target.value)}
-							required
-						/>
-						<select
-							value={selectedPortion || ""}
-							onChange={(e) => setSelectedPortion(e.target.value)}>
-							<option value="">Select a portion</option>
-							{ingredients
-								.find((i) => i._id === selectedIngredient)
-								?.foodPortions.map((portion) => (
-									<option key={portion._id} value={portion._id}>
-										{portion.modifier}
-									</option>
-								))}
-						</select>
-					</div>
-				)}
-				
 
-				<button onClick={handleAddIngredient}>Add +</button>
+						<div className="portion">
+							<input
+								className="amount"
+								type="number"
+								value={selectedAmount}
+								min="1"
+								max="12"
+								onChange={(e) => setSelectedAmount(e.target.value)}
+								required
+							/>
+							<select
+								value={selectedPortion || ""}
+								onChange={(e) => setSelectedPortion(e.target.value)}>
+								<option value="">Select a portion</option>
+								{ingredients
+									.find((i) => i._id === selectedIngredient)
+									?.foodPortions.map((portion) => (
+										<option key={portion._id} value={portion._id}>
+											{portion.modifier}
+										</option>
+									))}
+							</select>
+							<i
+								className="fa fa-plus"
+								onClick={handleAddIngredient}
+								disabled={loading}
+								style={{ color: loading && "gray" }}
+							/>
+						</div>
+					</div>
 				</div>
 
-				{recipeIngredients.length > 0 && (
+				{recipeIngredients && recipeIngredients.length > 0 && (
 					<>
 						<RecipeIngredients
 							recipeIngredients={recipeIngredients}
 							handleRemoveIngredient={handleRemoveIngredient}
+							setRecipeNutrition={setRecipeNutrition} // Pass the setter function down
 						/>
 						<br></br>
-						<button disabled={loading} type="submit">
+						<button
+							className="btn btn-primary"
+							disabled={loading}
+							type="submit">
 							Post Recipe
 						</button>
-
+						<button className="btn btn-primary" onClick={fetchRecipeNutrition}>
+							Nutrition
+						</button>
 						{loading ? (
 							<div className="loader">
 								<i className="fa-solid fa-spinner spinner"></i>
 							</div>
 						) : (
-							<Nutrients recipe={recipeNutrition} />
+							recipeNutrition &&
+							recipeNutrition.length > 0 && (
+								<Nutrients recipe={recipeNutrition} />
+							)
 						)}
 					</>
 				)}

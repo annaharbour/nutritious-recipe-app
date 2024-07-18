@@ -7,14 +7,13 @@ function RecipeIngredients({ handleRemoveIngredient, recipeIngredients }) {
 	);
 
 	return (
-		<div>
-			<h4>Selected Ingredients:</h4>
+		<div className="recipe-ingredients">
+			<h3>Recipe Ingredients</h3>
 			<ul>
-				{ingredients.map((ingredient, index) => (
+				{ingredients.map((ingredient) => (
 					<Ingredient
-						key={index}
+						key={ingredient._id}
 						ingredient={ingredient}
-						index={index}
 						handleRemoveIngredient={handleRemoveIngredient}
 					/>
 				))}
