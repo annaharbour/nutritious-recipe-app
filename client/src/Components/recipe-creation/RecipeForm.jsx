@@ -265,7 +265,6 @@ const RecipeForm = ({ showToast }) => {
 						<RecipeIngredients
 							recipeIngredients={recipeIngredients}
 							handleRemoveIngredient={handleRemoveIngredient}
-							setRecipeNutrition={setRecipeNutrition} // Pass the setter function down
 						/>
 						<br></br>
 						<button

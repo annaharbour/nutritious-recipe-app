@@ -43,10 +43,13 @@ const getIngredientNutrition = async (req, res) => {
 
 		try {
 			const nutrition = await ingredient.calculateNutrition(portionId, amount);
+
+			const macros = nutrition.filter((nutrient) => nutrient.name === "Protein" || nutrient.name === "Carbohydrates" || nutrient.name === "Fat");
+
 			const { description, _id } = ingredient;
 			return res
 				.status(200)
-				.json({ description, _id, amount, portionId, nutrition });
+				.json({ description, _id, amount, portionId, nutrition, macros });
 				
 		} catch (err) {
 			return res

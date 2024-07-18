@@ -58,8 +58,8 @@ import { PieChart } from "react-minimal-pie-chart";
 import { getIngredientNutrition } from "../../services/ingredientService";
 
 const Ingredient = ({ ingredient, handleRemoveIngredient }) => {
-  const [ingredientNutrition, setIngredientNutrition] = useState([]);
   const [showChart, setShowChart] = useState(false);
+  const [macros, setMacros] = useState([]);
 
   const handleFetchIngredientNutrition = async (id) => {
     try {
@@ -68,26 +68,24 @@ const Ingredient = ({ ingredient, handleRemoveIngredient }) => {
         ingredient.portionId,
         ingredient.amount
       );
-      setIngredientNutrition(res.nutrition);
+	  setMacros(res.macros)
     } catch (error) {
       console.error("Error fetching ingredient nutrition:", error);
     }
-  };
-
+};
   const handleImageClick = async () => {
     await handleFetchIngredientNutrition(ingredient._id);
     setShowChart(!showChart);
   };
 
-  const macroData = ingredientNutrition
-    .filter((nutrient) => nutrient.isMacroNutrient)
-    .map((nutrient) => ({
+  const macroData = macros.map((nutrient) => ({
       title: nutrient.name,
       value: nutrient.amount,
       color: nutrient.name === "Protein" ? "#f39c12" :
-             nutrient.name === "Carbohydrate" ? "#e74c3c" :
-             nutrient.name === "Fat" ? "#3498db" : "#2ecc71"
+             nutrient.name === "Carbohydrates" ? "#e74c3c" :
+             nutrient.name === "Fat" && "#3498db"
     }));
+
 
   return (
     <div className="ingredient">
