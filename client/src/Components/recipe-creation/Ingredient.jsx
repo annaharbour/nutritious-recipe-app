@@ -28,8 +28,6 @@ const Ingredient = ({ ingredient, handleRemoveIngredient }) => {
 	const macroData = macros.map((nutrient) => ({
 		title: nutrient.name,
 		value: nutrient.amount,
-		// label: `${nutrient.name} ${nutrient.amount}g`,
-		// labelStyle: { fontSize: "5px", fontFamily: "sans-serif" },
 		color:
 			nutrient.name === "Protein"
 				? "#00b4d8ff"
@@ -53,15 +51,13 @@ const Ingredient = ({ ingredient, handleRemoveIngredient }) => {
 								data={macroData}
 								lineWidth={20}
 								segmentsStyle={{ transition: "stroke .3s", cursor: "pointer" }}
-								label={({ dataEntry }) =>
-									`${Math.round(dataEntry.value)}g`
-								}
+								label={({ dataEntry }) => `${Math.round(dataEntry.value)}g`}
 								labelStyle={{
 									fontSize: "1rem",
 									fontFamily: "sans-serif",
 									fill: "#14281f",
 								}}
-								labelPosition={110}
+								labelPosition={115}
 								animate
 							/>
 							<span className="calories">

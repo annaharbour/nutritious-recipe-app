@@ -9,21 +9,20 @@ function RecipeIngredients({ handleRemoveIngredient, recipeIngredients }) {
 	return (
 		<div className="recipe-ingredients">
 			<h3>Recipe Ingredients</h3>
-			<ul className="graph-guide">
-				<li>
-					<i className="fas fa-square" style={{color: '#00b4d8ff'}}/>
-					<span>Protein</span>
-				</li>
-				<li>
-					<i className="fas fa-square" style={{color: '#699b46'}}/>
-					<span>Carbohydrates</span>
-				</li>
-				<li>
-					<i className="fas fa-square" style={{color: '#ff9e00ff'}}/>
-					<span>Fat</span>
-				</li>
-				
-			</ul>
+			<div className="graph-guide">
+				<span>
+					<i className="fas fa-square" style={{ color: "#00b4d8ff" }} />
+					Protein
+				</span>
+				<span>
+					<i className="fas fa-square" style={{ color: "#699b46" }} />
+					Carbohydrates
+				</span>
+				<span>
+					<i className="fas fa-square" style={{ color: "#ff9e00ff" }} />
+					Fat
+				</span>
+			</div>
 
 			<ul>
 				{ingredients.map((ingredient) => (

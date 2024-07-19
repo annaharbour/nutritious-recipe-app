@@ -327,7 +327,6 @@ button {
 .search-recipes .ingredient {
 	display: flex;
 	align-items: center;
-	padding: 0.5rem;
 	border-bottom: 1px dashed #ccc;
 	border-right: 1px dashed #ccc;
 	width: 100%;
@@ -438,15 +437,23 @@ button {
 	font-size: 1rem;
 }
 
+
 .create-recipe .portion {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin: auto;
+	width: 20rem;
 }
 
 .create-recipe .portion input[type="number"] {
 	width: 4rem;
 	margin: 0 0.5rem;
+}
+
+.create-recipe input[type="text"], .create-recipe select {
+	width: 20rem;
+	margin: auto;
 }
 
 .create-recipe .recipe-ingredients ul {
@@ -458,6 +465,8 @@ button {
 	margin: auto;
 	gap: 2.5rem;
 }
+
+
 
 .create-recipe .recipe-ingredients ul li,
 .create-recipe .ingredient {
@@ -497,6 +506,41 @@ button {
 	position: absolute;
 	width: 150%;
 	height: 125px;
+}
+
+
+.nutrient-grid {
+	margin: 1rem auto;
+	width:  80%;
+	display: grid;
+	justify-items: center;
+	border: 1px solid var(--pacific-cyan);
+	border-radius: 5px;
+	
+}
+
+.nutrient-grid .classification {
+	width: 100%;
+	text-align: center;
+	background-color: var(--pacific-cyan);
+	color: white;
+}
+
+.nutrients {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 0 5rem;
+}
+
+.nutrient {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	
 }
 
 @media screen and (max-width: 768px) {

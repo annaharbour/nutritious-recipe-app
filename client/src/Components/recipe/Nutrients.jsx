@@ -25,13 +25,12 @@ function Nutrients({ recipe }) {
 			});
 
 		return (
-			<div key={classification}>
-				<h3>
-					<u>{classification}</u>
-				</h3>
-				<ul>
+			<div className="nutrient-grid" key={classification}>
+				
+				<h4 className="classification">{classification}</h4>
+				<ul className="nutrients">
 					{sortedNutrients.map((nutrient) => (
-						<li
+						<li className="nutrient"
 							key={nutrient._id}
 							style={{ fontWeight: nutrient.isMacroNutrient ? "bold" : "normal" }}
 						>
