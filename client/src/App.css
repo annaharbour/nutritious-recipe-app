@@ -452,17 +452,20 @@ button {
 .create-recipe .recipe-ingredients ul {
 	display: flex;
 	flex-wrap: wrap;
-	width: 100%;
+	width: 80%;
 	justify-content: center;
 	list-style: none;
 	margin: auto;
+	gap: 2.5rem;
 }
 
-.create-recipe .recipe-ingredients ul li, .create-recipe .ingredient {
+.create-recipe .recipe-ingredients ul li,
+.create-recipe .ingredient {
 	position: relative;
 }
 
 .create-recipe .ingredient img {
+	margin: 2rem;
 	width: 125px;
 	height: 125px;
 	border-radius: 50%;
@@ -475,16 +478,25 @@ button {
 	left: 0;
 	display: flex;
 	justify-content: center;
-	opacity: .8;
 	width: 100%;
 	height: 100%;
 	pointer-events: none;
 }
 
+.create-recipe .ingredient .calories {
+	position: absolute;
+	display: flex;
+	top: 0;
+	left: 0;	
+	color: var(--dark-color);
+	font-size: 1.5rem;
+}
+
 .create-recipe .ingredient .chart svg {
-	width: 125px;
+	margin: 2rem;
+	position: absolute;
+	width: 150%;
 	height: 125px;
-	opacity: .5;
 }
 
 @media screen and (max-width: 768px) {

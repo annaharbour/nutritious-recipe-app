@@ -46,10 +46,12 @@ const getIngredientNutrition = async (req, res) => {
 
 			const macros = nutrition.filter((nutrient) => nutrient.name === "Protein" || nutrient.name === "Carbohydrates" || nutrient.name === "Fat");
 
+			const energy = nutrition.find((nutrient) => nutrient.name === "Energy");
+
 			const { description, _id } = ingredient;
 			return res
 				.status(200)
-				.json({ description, _id, amount, portionId, nutrition, macros });
+				.json({ description, _id, amount, portionId, nutrition, macros, energy });
 				
 		} catch (err) {
 			return res
