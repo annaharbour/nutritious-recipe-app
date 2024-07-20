@@ -48,12 +48,26 @@ function RatingComponent({ recipe, showToast }) {
 						key={index + 1}
 						style={{
 							cursor: "pointer",
-							color: stars === index + 1 ? "gold" : "#F9F6EE		",
+							color: stars === index + 1 ? "gold" : "#F9F6EE",
 						}}
 						onClick={() => handleRateRecipe(index + 1)}></i>
 				))}
 			</div>
-			{meanRating === null && <p>"No ratings yet"</p>}
+			{meanRating === null ? (
+				<p>No ratings</p>
+			) : (
+				Array.from({ length: 5 }, (_, index) => (
+					<i
+						className="fa-solid fa-star"
+						disabled={loading}
+						key={index + 1}
+						style={{
+							cursor: "pointer",
+							color: meanRating >= index + 1 ? "gold" : "#F9F6EE",
+						}}
+						/>
+				))
+			)}
 			{stars === null && <p>"Tried this recipe? Leave a rating!"</p>}
 		</div>
 	);

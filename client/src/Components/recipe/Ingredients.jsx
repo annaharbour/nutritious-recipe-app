@@ -19,15 +19,16 @@ function Ingredients({ ingredients }) {
 			return null;
 		}
 		return (
-			<div key={category}>
+			<div className="recipe-ingredients" key={category}>
 				<h3>{category}</h3>
 				<ul>
 					{categoryIngredients.map((ingredient) => (
-						<li key={ingredient._id}>
-							<img className="ingredient-img" src={ingredient.imageUrl} alt={ingredient.description} />
+						<li className="ingredient" key={ingredient._id}>
+							<img className="ingredient-image" src={ingredient.imageUrl} alt={ingredient.description} />
 							{ingredient.description}: {ingredient.amount}{" "}
 							{ingredient.modifier}
 						</li>
+						
 					))}
 				</ul>
 			</div>

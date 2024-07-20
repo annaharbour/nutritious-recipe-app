@@ -90,8 +90,14 @@ function Recipe({ showToast }) {
 	}
 
 	return (
-		<div>
+		<div className="recipe">
 			<h1>{recipe.name}</h1>
+			{userInfo ? (
+					<i className="fa-solid fa-bookmark" onClick={toggleSave} disabled={loading} style={{ color: isSaved ? "yellow" : "white" }}></i>
+				
+			) : (
+				<Link to="/dashboard">Create an Account to Save</Link>
+			)}
 			{userInfo && <Rating showToast={showToast} recipe={recipe} />}
 			{user && (
 				<p>
@@ -102,17 +108,7 @@ function Recipe({ showToast }) {
 			<div>{recipe.labels.map((label) => `${label} `)}</div>
 			<Ingredients ingredients={recipe.ingredients} />
 			<Nutrients recipe={recipe.nutrition} />
-			{userInfo ? (
-				<button onClick={toggleSave} disabled={loading}>
-					{isSaved ? (
-						<i class="fa-solid fa-bookmark" style={{ color: "yellow" }}></i>
-					) : (
-						<i class="fa-solid fa-bookmark" style={{ color: "beige" }}></i>
-					)}
-				</button>
-			) : (
-				<Link to="/dashboard">Create an Account to Save</Link>
-			)}
+		
 		</div>
 	);
 }

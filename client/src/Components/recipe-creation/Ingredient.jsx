@@ -49,15 +49,16 @@ const Ingredient = ({ ingredient, handleRemoveIngredient }) => {
 						<div className="chart">
 							<PieChart
 								data={macroData}
-								lineWidth={20}
+								lineWidth={30}
 								segmentsStyle={{ transition: "stroke .3s", cursor: "pointer" }}
 								label={({ dataEntry }) => `${Math.round(dataEntry.value)}g`}
 								labelStyle={{
-									fontSize: "1rem",
+									fontSize: ".5rem",
+									fontWeight: "750",
 									fontFamily: "sans-serif",
 									fill: "#14281f",
 								}}
-								labelPosition={115}
+								labelPosition={85}
 								animate
 							/>
 							<span className="calories">
@@ -67,13 +68,13 @@ const Ingredient = ({ ingredient, handleRemoveIngredient }) => {
 					)}
 				</div>
 				<div>
-					{ingredient.amount} {ingredient.modifier}{" "}
-					{ingredient.description.toLowerCase()}
-					<i
+					{ingredient.description}: {ingredient.amount} {ingredient.modifier}
+					
+				</div>
+				<i
 						className="fa fa-x"
 						onClick={() => handleRemoveIngredient(ingredient)}
 					/>
-				</div>
 			</li>
 		</div>
 	);
