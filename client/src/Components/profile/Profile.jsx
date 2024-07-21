@@ -3,9 +3,7 @@ import { getUser, updateUser, deleteUser } from "../../services/userService";
 
 function Profile({ showToast }) {
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
 	const [userInfo, setUserInfo] = useState({});
-	const [isEditing, setIsEditing] = useState(false);
 	const [changePw, setChangePw] = useState(false);
 	const [formData, setFormData] = useState({
 		name: "",
@@ -25,16 +23,15 @@ function Profile({ showToast }) {
 				setUserInfo(response);
 				const { name, email, phone } = response;
 				setFormData({
-					name,
-					email,
-					phone,
+					name: name || "",
+					email: email || "",
+					phone: phone || "",
 					password: "",
 					newPassword: "",
 					newPassword2: "",
 				});
 				setLoading(false);
 			} catch (error) {
-				setError("Failed to fetch data. Please try again later.");
 				setLoading(false);
 			}
 		};
@@ -65,7 +62,7 @@ function Profile({ showToast }) {
 			}
 		}
 		try {
-			const res = await updateUser(
+			await updateUser(
 				name,
 				email,
 				phone,
@@ -73,134 +70,112 @@ function Profile({ showToast }) {
 				changePw ? newPassword : null
 			);
 
-			if (res) {
-				showToast("Profile updated successfully", "success");
-				setIsEditing(false);
-			} else {
-				showToast("Update failed. Please try again.", "error");
-			}
+			showToast("Profile updated successfully", "success");
 		} catch (error) {
-			console.log(error);
-			showToast(
-				error.message || "Update failed. Please try again.",
-				"error",
-				"error"
-			);
+			showToast("Update failed. Please try again.", "error");
 		}
 	};
 
 	return (
 		<div>
-			{isEditing ? (
-				<div>
-					{loading ? (
-						<div>Loading...</div>
-					) : (
-						<div>
-							<h1>{userInfo.name}</h1>
-							<section className="container">
-								<h1 className="large text-primary">Change Account Details</h1>
-								<p className="lead">
-									<i className="fas fa-user" /> Update Your Information
-								</p>
-								<form className="form" onSubmit={onSubmit}>
-									<div className="form-group">
-										<input
-											type="text"
-											placeholder="Name"
-											name="name"
-											value={name}
-											onChange={onChange}
-											required
-										/>
-									</div>
-									<div className="form-group">
-										<input
-											type="email"
-											placeholder="Email Address"
-											name="email"
-											value={email}
-											onChange={onChange}
-											required
-										/>
-									</div>
-									<div className="form-group">
-										<input
-											type="text"
-											placeholder="Phone Number"
-											name="phone"
-											value={phone}
-											onChange={onChange}
-											required
-										/>
-									</div>
-									<div className="form-group">
-										<input
-											required
-											type="password"
-											placeholder="Password"
-											name="password"
-											value={password}
-											onChange={onChange}
-										/>
-										<i onClick={() => setChangePw(!changePw)}>
-											{!changePw ? (
-												<i className="fa-solid fa-lock"></i>
-											) : (
-												<i className="fa-solid fa-lock-open"></i>
-											)}{" "}
-											Update password?{" "}
-										</i>
-										{changePw && (
-											<>
-												<h4>
-													<i className="fa-solid fa-key"></i>Change your
-													password
-												</h4>
-												<div className="form-group">
-													<input
-														type="password"
-														placeholder="New Password"
-														name="newPassword"
-														value={newPassword}
-														onChange={onChange}
-														required
-													/>
-												</div>
-												<div className="form-group">
-													<input
-														type="password"
-														placeholder="Confirm Password"
-														name="newPassword2"
-														value={newPassword2}
-														onChange={onChange}
-														required
-													/>
-												</div>
-											</>
-										)}
-									</div>
+			<h1>{userInfo.name}</h1>
+			<section className="container">
+				<h1 className="large text-primary">Change Account Details</h1>
+				<p className="lead">
+					<i className="fas fa-user" /> Update Your Information
+				</p>
+				<form className="form" onSubmit={onSubmit}>
+					<div className="form-group">
+						<input
+							type="text"
+							placeholder="Name"
+							name="name"
+							value={name || ""}
+							onChange={onChange}
+							required
+						/>
+					</div>
+					<div className="form-group">
+						<input
+							type="email"
+							placeholder="Email Address"
+							name="email"
+							value={email || ""}
+							onChange={onChange}
+							required
+						/>
+					</div>
+					<div className="form-group">
+						<input
+							type="text"
+							placeholder="Phone Number"
+							name="phone"
+							value={phone || ""}
+							onChange={onChange}
+							required
+						/>
+					</div>
+					<div className="form-group">
+						<input
+							required
+							type="password"
+							placeholder="Password"
+							name="password"
+							value={password || ""}
+							onChange={onChange}
+						/>
+						<i onClick={() => setChangePw(!changePw)}>
+							{!changePw ? (
+								<i className="fa-solid fa-lock"></i>
+							) : (
+								<i className="fa-solid fa-lock-open"></i>
+							)}{" "}
+							Update password?{" "}
+						</i>
+						{changePw && (
+							<div>
+								<h4>
+									<i className="fa-solid fa-key"></i>Change your password
+								</h4>
+								<div className="form-group">
 									<input
-										type="submit"
-										className="btn btn-primary"
-										value="Update"
+										type="password"
+										placeholder="New Password"
+										name="newPassword"
+										value={newPassword || ""}
+										onChange={onChange}
+										required
 									/>
-								</form>
-							</section>
-						</div>
-					)}
-					{error && <div>{error}</div>}
-					<button onClick={() => setIsEditing(false)}>Cancel</button>
-					<button onClick={deleteAccount}>Delete Account</button>
-				</div>
-			) : (
-				<>
-					<h2>Edit Account Details</h2>
-					<button onClick={() => setIsEditing(true)}>
-						<i className="fa-solid fa-pencil"></i>
+								</div>
+								<div className="form-group">
+									<input
+										type="password"
+										placeholder="Confirm Password"
+										name="newPassword2"
+										value={newPassword2 || ""}
+										onChange={onChange}
+										required
+									/>
+								</div>
+							</div>
+						)}
+					</div>
+					<button
+						type="submit"
+						disabled={loading}
+						className="btn btn-primary"
+						value="Update">
+						Submit
 					</button>
-				</>
-			)}
+
+					<button
+						className="btn btn-warning"
+						disabled={loading}
+						onClick={deleteAccount}>
+						Delete Account
+					</button>
+				</form>
+			</section>
 		</div>
 	);
 }

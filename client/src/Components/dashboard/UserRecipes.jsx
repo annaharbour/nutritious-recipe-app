@@ -52,7 +52,7 @@ function UserRecipes() {
 				</div>
 			)}
 			<div className="links">
-				<Link to="/recipes/create">Create a new recipe</Link>
+				<Link to="/recipes/create">Create a New Recipe</Link>
 				<Link to="/dashboard">Back to Dashboard</Link>
 			</div>
 		</div>

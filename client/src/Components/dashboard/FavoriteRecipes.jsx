@@ -24,7 +24,7 @@ function FavoriteRecipes() {
 	}, [userInfo]);
 
 	return (
-		<div className="favorite-recipes">
+		<div className="recipes">
 			<h1>Your Saved Recipes</h1>
 			{loading && <p>Loading...</p>}
 			{favorites && favorites.length !== 0 ? (
@@ -54,7 +54,7 @@ function FavoriteRecipes() {
 				</div>
 			)}
 			<div className="links">
-				<Link to="/recipes/search">Find new recipes</Link>
+				<Link to="/recipes/search">Find New Recipes</Link>
 				<Link to="/dashboard">Back to Dashboard</Link>
 			</div>
 		</div>

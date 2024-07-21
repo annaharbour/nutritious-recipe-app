@@ -7,50 +7,51 @@ const Dashboard = ({ showToast }) => {
 	const userInfo = useAuth().userInfo;
 	const navigate = useNavigate();
 
-	return (
-		userInfo ? (
-			<div className="dash-grid">
-				<Link to="/recipes/search" className="dash-item search">
+	return userInfo ? (
+		<div className="dash-grid">
+			<Link to="/recipes/search" className="dash-item search">
+				<h2>
+					<i className="fa-solid fa-search"></i> Search Recipes
+				</h2>
+			</Link>
+
+			<Link to="/recipes/create" className="dash-item create">
+				<h2>
+					<i className="fa-solid fa-plus"></i> New Recipe
+				</h2>
+			</Link>
+
+			{userInfo && (
+				<Link to="/recipes" className="dash-item your-recipes">
 					<h2>
-						<i className="fa-solid fa-search"></i> Search Recipes
+						<i className="fa-solid fa-book"></i> Your Recipes
 					</h2>
 				</Link>
+			)}
 
-				<Link to="/recipes/create" className="dash-item create">
+			{userInfo && (
+				<Link to="/recipes/favorites" className="dash-item saved">
 					<h2>
-						<i className="fa-solid fa-plus"></i> New Recipe
+						<i className="fa-solid fa-bookmark"></i> Saved Recipes
 					</h2>
 				</Link>
+			)}
 
-				{userInfo && (
-					<Link to="/recipes" className="dash-item your-recipes">
-						<h2>
-							<i className="fa-solid fa-book"></i> Your Recipes
-						</h2>
-					</Link>
-				)}
-
-				{userInfo && (
-					<Link to="/recipes/favorites" className="dash-item saved">
-						<h2>
-							<i className="fa-solid fa-bookmark"></i> Saved Recipes
-						</h2>
-					</Link>
-				)}
-
-				<Link to="/" className="dash-item trending">
-					<h2>
-						<i className="fa-solid fa-chart-line"></i> Trending
-					</h2>
-				</Link>
-
-				<Link to="/" className="dash-item account">
+			<Link to="/" className="dash-item trending">
+				<h2>
+					<i className="fa-solid fa-chart-line"></i> Trending
+				</h2>
+			</Link>
+			{userInfo && (
+				<Link to="/account" className="dash-item account">
 					<h2>
 						<i className="fa-solid fa-user"></i> Your Account
 					</h2>
 				</Link>
-			</div>
-		) : navigate("/")
+			)}
+		</div>
+	) : (
+		navigate("/")
 	);
 };
 

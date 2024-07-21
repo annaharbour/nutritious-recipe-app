@@ -32,7 +32,7 @@ const getUserById = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-	const userId = req.user.id;
+	const userId = req.user.id || req.user._id;
 	try {
 		const user = await User.findById(userId).select("-password");
 		if (!user) {
