@@ -258,7 +258,7 @@ const Search = ({ showToast }) => {
 				<ul>
 					{results && results.length > 0 ? (
 						results.map((recipe) => (
-							<Link to={`recipes/${recipe._id}}`} key={recipe._id}>
+							<Link to={`/recipes/${recipe._id}`} key={recipe._id}>
 								{recipe.name}
 							</Link>
 						))

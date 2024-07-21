@@ -313,7 +313,7 @@ a:visited {
 button {
 	font: inherit;
 }
-
+/* 
 .table th,
 .table td {
 	padding: 1rem;
@@ -322,7 +322,7 @@ button {
 
 .table th {
 	background: var(--light-color);
-}
+} */
 
 .search-recipes .ingredients {
 	display: grid;
@@ -367,6 +367,7 @@ button {
 	align-items: center;
 	justify-content: center;
 	text-align: center;
+	gap: .5rem;
 }
 
 .recipe .ratings {
@@ -581,7 +582,7 @@ button {
 }
 
 .nutrient-grid {
-	margin: 2rem auto;
+	margin: auto;
 	width:  80%;
 	display: grid;
 	justify-items: center;

@@ -11,25 +11,28 @@ import Rating from "./Rating";
 
 function Recipe({ showToast }) {
 	const userInfo = useAuth().userInfo;
+	const userId = userInfo ? userInfo._id : null;
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const { id } = useParams();
 	const [recipe, setRecipe] = useState(null);
-	const [user, setUser] = useState(null);
+	const [recipeAuthor, setRecipeAuthor] = useState(null);
 	const [isSaved, setIsSaved] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				setLoading(true);
-
+				// Fetch recipe data
 				const recipeData = await getRecipeById(id);
 				if (recipeData) {
+					// Set Recipe Data
 					setRecipe(recipeData);
-
-					const userData = await getUserById(recipeData.userId);
-					if (userData) {
-						setUser(userData);
+					// Find Recipe Author
+					const authorData = await getUserById(recipeData.userId);
+					if (authorData) {
+						setRecipeAuthor(authorData);
+						console.log("User", authorData);
 					}
 				} else {
 					setError("Recipe not found");
@@ -40,16 +43,11 @@ function Recipe({ showToast }) {
 				setLoading(false);
 			}
 		};
-
-		fetchData();
-	}, [id]);
-
-	useEffect(() => {
 		const fetchSavedRecipes = async () => {
 			try {
-				if (userInfo) {
+				if (userId) {
 					setLoading(true);
-					const res = await getUserFavorites(userInfo._id);
+					const res = await getUserFavorites(userId);
 					setIsSaved(res.some((item) => item._id === id));
 					setLoading(false);
 				}
@@ -57,9 +55,9 @@ function Recipe({ showToast }) {
 				setLoading(false);
 			}
 		};
-
+		fetchData();
 		fetchSavedRecipes();
-	}, [userInfo, id]);
+	}, [id, isSaved, userId]);
 
 	const toggleSave = async () => {
 		try {
@@ -87,16 +85,17 @@ function Recipe({ showToast }) {
 		return <NotFound message={error} />;
 	}
 
-	if (!recipe || !user) {
+	if (!recipe || !recipeAuthor) {
 		return <NotFound message="Recipe not found." />;
 	}
 
 	return (
 		<div className="recipe">
 			<h1>{recipe.name}</h1>
-			{user && (
+			{recipeAuthor && (
 				<h6>
-					by <Link to={`/profiles/${user._id}`}>{user.name}</Link>
+					by{" "}
+					<Link to={`/profiles/${recipeAuthor._id}`}>{recipeAuthor.name}</Link>
 				</h6>
 			)}
 
@@ -119,6 +118,8 @@ function Recipe({ showToast }) {
 				<Link to={`/recipes/${recipe._id}/comments`}>
 					<i className="fa-solid fa-comment"></i> View Comments
 				</Link>
+			</div>
+			<div>
 				<ul className="labels">
 					{recipe.labels.map((label) => (
 						<li

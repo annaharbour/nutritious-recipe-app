@@ -6,56 +6,56 @@ const Comment = require("../models/CommentModel");
 const cloudFrontUrl = process.env.CLOUDFRONT_URL;
 
 const calculateRecipeNutrition = async (req, res) => {
-    const { ingredients, servings } = req.body;
+	const { ingredients, servings } = req.body;
 	// const { ingredients } = req.body;
-    if (!ingredients) {
-        return res.status(400).json({ error: "Ingredients are required" });
-    }
+	if (!ingredients) {
+		return res.status(400).json({ error: "Ingredients are required" });
+	}
 
-    try {
-        const populatedIngredients = await Promise.all(
-            ingredients.map(async (ingredient) => {
-                if (!ingredient._id) {
-                    throw new Error("Ingredient ID is missing");
-                }
+	try {
+		const populatedIngredients = await Promise.all(
+			ingredients.map(async (ingredient) => {
+				if (!ingredient._id) {
+					throw new Error("Ingredient ID is missing");
+				}
 
-                const ingredientData = await Ingredient.findById(ingredient._id).lean();
-                if (!ingredientData) {
-                    throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
-                }
+				const ingredientData = await Ingredient.findById(ingredient._id).lean();
+				if (!ingredientData) {
+					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+				}
 
-                const foodPortion = ingredientData.foodPortions.find(
-                    (portion) => portion._id.toString() === ingredient.portionId.toString()
-                );
+				const foodPortion = ingredientData.foodPortions.find(
+					(portion) =>
+						portion._id.toString() === ingredient.portionId.toString()
+				);
 
-                return {
-                    ...ingredient,
-                    description: ingredientData.description,
-                    category: ingredientData.category,
-                    modifier: foodPortion ? foodPortion.modifier : "g",
-                    gramWeight: foodPortion ? foodPortion.gramWeight : "100",
-                };
-            })
-        );
+				return {
+					...ingredient,
+					description: ingredientData.description,
+					category: ingredientData.category,
+					modifier: foodPortion ? foodPortion.modifier : "g",
+					gramWeight: foodPortion ? foodPortion.gramWeight : "100",
+				};
+			})
+		);
 
-        // const recipe = new Recipe({
-        //     ingredients: populatedIngredients
-        // });
+		// const recipe = new Recipe({
+		//     ingredients: populatedIngredients
+		// });
 
-        const recipe = new Recipe({
-            ingredients: populatedIngredients,
-			servings
-        });
+		const recipe = new Recipe({
+			ingredients: populatedIngredients,
+			servings,
+		});
 
-        const totalNutrition = await recipe.calculateNutrition();
+		const totalNutrition = await recipe.calculateNutrition();
 
-        return res.json(totalNutrition);
-    } catch (err) {
-        console.error("Error in calculateRecipeNutrition:", err.message);
-        return res.status(500).json({ error: err.message });
-    }
+		return res.json(totalNutrition);
+	} catch (err) {
+		console.error("Error in calculateRecipeNutrition:", err.message);
+		return res.status(500).json({ error: err.message });
+	}
 };
-
 
 const createRecipe = async (req, res) => {
 	const { name, ingredients } = req.body;
@@ -243,7 +243,7 @@ const getSavedRecipesByUserId = async (req, res) => {
 };
 
 const toggleSaveRecipe = async (req, res) => {
-	const userId = req.user.id;
+	const userId = req.user.id || req.user._id;
 	const recipeId = req.params.id;
 	try {
 		const user = await User.findById(userId);

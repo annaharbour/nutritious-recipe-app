@@ -45,14 +45,16 @@ const getUser = async (req, res) => {
 };
 
 const getUserFavorites = async (req, res) => {
-	const userId = req.user.id;
+	const userId = req.user.id || req.user._id;
 	try {
 		const user = await User.findById(userId);
 		if (!user) {
 			return res.status(404).json({ error: "User not found." });
 		}
-		
-		const favoriteRecipes = await Recipe.find({ _id: { $in: user.favoriteRecipes } });
+
+		const favoriteRecipes = await Recipe.find({
+			_id: { $in: user.favoriteRecipes },
+		});
 		return res.status(200).json(favoriteRecipes);
 	} catch (err) {
 		return res.status(500).json({ error: err.message });
@@ -72,12 +74,10 @@ const updateUser = async (req, res) => {
 		// Check if the email is already in use by another user
 		let user = await User.findOne({ email });
 		if (user && user._id.toString() !== userId.toString()) {
-			return res
-				.status(400)
-				.json({
-					message:
-						"Email already in use. Please use a different email to register.",
-				});
+			return res.status(400).json({
+				message:
+					"Email already in use. Please use a different email to register.",
+			});
 		}
 
 		// Find the user by ID
@@ -89,11 +89,9 @@ const updateUser = async (req, res) => {
 		// Validate the current password
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
-			return res
-				.status(400)
-				.json({
-					message: "Please validate the password associated with your account.",
-				});
+			return res.status(400).json({
+				message: "Please validate the password associated with your account.",
+			});
 		}
 
 		// Update user information
