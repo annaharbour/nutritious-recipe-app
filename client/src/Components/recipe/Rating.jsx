@@ -40,21 +40,20 @@ function RatingComponent({ recipe, showToast }) {
 
 	return (
 		<div>
-			<div>
-				{Array.from({ length: 5 }, (_, index) => (
-					<i
-						className="fa-solid fa-star"
-						disabled={loading}
-						key={index + 1}
-						style={{
-							cursor: "pointer",
-							color: stars === index + 1 ? "gold" : "#F9F6EE",
-						}}
-						onClick={() => handleRateRecipe(index + 1)}></i>
-				))}
-			</div>
 			{meanRating === null ? (
-				<p>No ratings</p>
+				<div>
+					{Array.from({ length: 5 }, (_, index) => (
+						<i
+							className="fa-solid fa-star"
+							disabled={loading}
+							key={index + 1}
+							style={{
+								cursor: "pointer",
+								color: stars === index + 1 ? "gold" : "#F9F6EE",
+							}}
+							onClick={() => handleRateRecipe(index + 1)}></i>
+					))}
+				</div>
 			) : (
 				Array.from({ length: 5 }, (_, index) => (
 					<i
@@ -64,11 +63,11 @@ function RatingComponent({ recipe, showToast }) {
 						style={{
 							cursor: "pointer",
 							color: meanRating >= index + 1 ? "gold" : "#F9F6EE",
+							fontSize: stars === index + 1 ? "2rem" : "1.5rem",
 						}}
-						/>
+					/>
 				))
 			)}
-			{stars === null && <p>"Tried this recipe? Leave a rating!"</p>}
 		</div>
 	);
 }

@@ -26,7 +26,7 @@ function UserRecipes() {
 			{loading && <p>Loading...</p>}
 			{userRecipes && userRecipes.length !== 0 ? (
 				userRecipes.map((recipe) => (
-					<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
+					<Link key={recipe._id} style={{color: 'red'}} to={`/recipes/${recipe._id}`}>
 						<li>{recipe.name}</li>
 					</Link>
 				))

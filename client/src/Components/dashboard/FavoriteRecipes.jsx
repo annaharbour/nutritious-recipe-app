@@ -28,7 +28,7 @@ function FavoriteRecipes() {
 			{loading && <p>Loading...</p>}
 			{favorites && favorites.length !== 0 ? (
 				favorites.map((recipe) => (
-					<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
+					<Link key={recipe._id} style={{color: 'red'}} to={`/recipes/${recipe._id}`}>
 						<li>{recipe.name}</li>
 					</Link>
 				))

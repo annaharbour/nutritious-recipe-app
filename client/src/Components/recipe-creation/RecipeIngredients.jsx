@@ -10,6 +10,9 @@ function RecipeIngredients({ handleRemoveIngredient, recipeIngredients }) {
 		<div className="recipe-ingredients">
 			<h3>Recipe Ingredients</h3>
 			<div className="graph-guide">
+				<div>
+					<i>Click ingredient to view macros.</i>
+				</div>
 				<span>
 					<i className="fas fa-square" style={{ color: "#00b4d8ff" }} />
 					Protein

@@ -50,7 +50,7 @@ function Recipe({ showToast }) {
 				if (userInfo) {
 					setLoading(true);
 					const res = await getUserFavorites(userInfo._id);
-					setIsSaved(res.includes(id));
+					setIsSaved(res.some((item) => item._id === id));
 					setLoading(false);
 				}
 			} catch (err) {
@@ -64,10 +64,12 @@ function Recipe({ showToast }) {
 	const toggleSave = async () => {
 		try {
 			setLoading(true);
-			const res = await toggleSaveRecipe(recipe._id);
-			setIsSaved(res.includes(recipe._id));
+			await toggleSaveRecipe(recipe._id);
+			setIsSaved(!isSaved);
 			showToast(
-				isSaved ? "Recipe unsaved successfully!" : "Recipe saved successfully!",
+				!isSaved
+					? "Recipe saved successfully!"
+					: "Recipe unsaved successfully!",
 				"success"
 			);
 			setLoading(false);
@@ -92,23 +94,46 @@ function Recipe({ showToast }) {
 	return (
 		<div className="recipe">
 			<h1>{recipe.name}</h1>
-			{userInfo ? (
-					<i className="fa-solid fa-bookmark" onClick={toggleSave} disabled={loading} style={{ color: isSaved ? "yellow" : "white" }}></i>
-				
-			) : (
-				<Link to="/dashboard">Create an Account to Save</Link>
-			)}
-			{userInfo && <Rating showToast={showToast} recipe={recipe} />}
 			{user && (
-				<p>
-					<Link to={`/profiles/${user._id}`}>{user.name}</Link>
-				</p>
+				<h6>
+					by <Link to={`/profiles/${user._id}`}>{user.name}</Link>
+				</h6>
 			)}
-			<Link to={`/recipes/${recipe._id}/comments`}>View Comments</Link>
-			<div>{recipe.labels.map((label) => `${label} `)}</div>
-			<Ingredients ingredients={recipe.ingredients} />
+
+			<div className="ratings">
+				{userInfo ? (
+					<i
+						className="fa-solid fa-bookmark"
+						onClick={toggleSave}
+						disabled={loading}
+						style={{
+							fontSize: "2rem",
+							color: !isSaved ? "#F9F6EE" : "gold",
+						}}></i>
+				) : (
+					<Link to="/dashboard">Create an Account to Save</Link>
+				)}
+				{userInfo && <Rating showToast={showToast} recipe={recipe} />}
+			</div>
+			<div>
+				<Link to={`/recipes/${recipe._id}/comments`}>
+					<i className="fa-solid fa-comment"></i> View Comments
+				</Link>
+				<ul className="labels">
+					{recipe.labels.map((label) => (
+						<li
+							key={label}
+							className={`label ${label.toLowerCase().replace(/\s+/g, "-")}`}>
+							{label}
+						</li>
+					))}
+				</ul>
+			</div>
+			<Ingredients
+				servings={recipe.servings}
+				ingredients={recipe.ingredients}
+			/>
 			<Nutrients recipe={recipe.nutrition} />
-		
 		</div>
 	);
 }

@@ -78,11 +78,19 @@ h1 {
 	font-size: 3rem;
 }
 
-a:visited {
+a {
 	text-decoration: none;
-	color: white;
+	color: var(--pacific-cyan)
+}
+
+nav a:visited {
+	color: var(--white)
+}
+
+a:visited {
 	font-style: bold;
 	text-shadow: 0.1rem;
+	color: var(--marian-blue)
 }
 
 @keyframes spin {
@@ -361,6 +369,49 @@ button {
 	text-align: center;
 }
 
+.recipe .ratings {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.recipe .labels {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+	justify-items: center;
+	gap: .5rem;
+}
+
+.label {
+	padding: 0 .5rem;
+	border-radius: 5px;
+	color: white;
+}
+
+.low-carb {
+	background-color: var(--primary-color);
+}
+
+.low-fat {
+	background-color: var(--pumpkin);
+}
+
+.high-protein {
+	background-color: var(--honolulu-blue);
+}
+
+.bulking {
+	background-color: var(--marian-blue);
+}
+
+.lean {
+	background-color: var(--blue-green);
+
+}
+
+
+
 .search-recipes .form {
 	width: 100%;
 }
@@ -438,7 +489,7 @@ button {
 	font-size: 1rem;
 }
 
-.create-recipe .portion {
+.portion {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -446,14 +497,14 @@ button {
 	width: 20rem;
 }
 
-.create-recipe .portion input[type="number"] {
+.portion input[type="number"] {
 	width: 4rem;
 	margin: 0 0.5rem;
 }
 
 .create-recipe input[type="text"], .create-recipe select {
 	width: 20rem;
-	margin: auto;
+	margin: 2rem auto;
 }
 
 .recipe-ingredients ul {
@@ -462,8 +513,8 @@ button {
 	width: 90%;
 	justify-content: center;
 	list-style: none;
-	margin: auto;
-	gap: 5rem;
+	margin: 2rem auto;
+	
 }
 
 .recipe-ingredients li {
@@ -530,7 +581,7 @@ button {
 }
 
 .nutrient-grid {
-	margin: 1rem auto;
+	margin: 2rem auto;
 	width:  80%;
 	display: grid;
 	justify-items: center;
