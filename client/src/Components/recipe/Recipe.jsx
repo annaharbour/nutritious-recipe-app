@@ -32,7 +32,6 @@ function Recipe({ showToast }) {
 					const authorData = await getUserById(recipeData.userId);
 					if (authorData) {
 						setRecipeAuthor(authorData);
-						console.log("User", authorData);
 					}
 				} else {
 					setError("Recipe not found");

@@ -12,6 +12,7 @@ function FavoriteRecipes() {
 			try {
 				setLoading(true);
 				const res = await getUserFavorites();
+				console.log(res);
 				setFavorites(res);
 				setLoading(false);
 			} catch (err) {
@@ -23,21 +24,39 @@ function FavoriteRecipes() {
 	}, [userInfo]);
 
 	return (
-		<div>
-			<h3>Your favorites</h3>
+		<div className="favorite-recipes">
+			<h1>Your Saved Recipes</h1>
 			{loading && <p>Loading...</p>}
 			{favorites && favorites.length !== 0 ? (
-				favorites.map((recipe) => (
-					<Link key={recipe._id} style={{color: 'red'}} to={`/recipes/${recipe._id}`}>
-						<li>{recipe.name}</li>
-					</Link>
-				))
+				<ul className="recipe-list">
+					{favorites.map((recipe) => (
+						<li>
+							<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
+								<h4>{recipe.name}</h4>
+							</Link>
+							<span className="recipe labels">
+								{recipe.labels.map((label) => (
+									<span
+										className={`label ${label
+											.toLowerCase()
+											.replace(/\s+/g, "-")}`}>
+										{label}
+									</span>
+								))}
+							</span>
+							<span>Serves {recipe.servings}</span>
+						</li>
+					))}
+				</ul>
 			) : (
 				<div>
 					<p>No favorite recipes yet</p>
-					<Link to="/recipes">Find recipes</Link>
 				</div>
 			)}
+			<div className="links">
+				<Link to="/recipes/search">Find new recipes</Link>
+				<Link to="/dashboard">Back to Dashboard</Link>
+			</div>
 		</div>
 	);
 }

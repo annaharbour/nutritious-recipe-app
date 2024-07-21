@@ -22,20 +22,39 @@ function UserRecipes() {
 	}, [userInfo]);
 
 	return (
-		<div>
+		<div className="recipes">
+			<h1>Your Recipes</h1>
 			{loading && <p>Loading...</p>}
 			{userRecipes && userRecipes.length !== 0 ? (
-				userRecipes.map((recipe) => (
-					<Link key={recipe._id} style={{color: 'red'}} to={`/recipes/${recipe._id}`}>
-						<li>{recipe.name}</li>
-					</Link>
-				))
+				<ul className="recipe-list">
+					{userRecipes.map((recipe) => (
+						<li>
+							<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
+								<h4>{recipe.name}</h4>
+							</Link>
+							<span className="recipe labels">
+								{recipe.labels.map((label) => (
+									<span
+										className={`label ${label
+											.toLowerCase()
+											.replace(/\s+/g, "-")}`}>
+										{label}
+									</span>
+								))}
+							</span>
+							<span>Serves {recipe.servings}</span>
+						</li>
+					))}
+				</ul>
 			) : (
 				<div>
-					<div>You haven't created any recipes yet!</div>
-					<Link to="/recipes/create">Create a new recipe</Link>
+					<p>No favorite recipes yet</p>
 				</div>
 			)}
+			<div className="links">
+				<Link to="/recipes/create">Create a new recipe</Link>
+				<Link to="/dashboard">Back to Dashboard</Link>
+			</div>
 		</div>
 	);
 }
