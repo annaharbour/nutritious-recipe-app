@@ -373,8 +373,9 @@ button {
 }
 
 .recipe-list ul {
-	width: 100%;
-	display: grid;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	margin: auto;
@@ -383,12 +384,9 @@ button {
 
 .recipe-list li {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	width: 50%;
-	margin: auto;
-	justify-content: space-evenly;
+	grid-template-columns: 1fr 1fr 1fr;
 	align-items: center;
-	gap: 1rem;
+	justify-content: center;
 	border-bottom: 1px dotted var(--honolulu-blue);
 }
 
@@ -398,11 +396,12 @@ button {
 	justify-content: center;
 }
 
-.recipe .labels {
+.labels {
 	display: flex;
+	flex-direction: row;
 	flex-wrap: wrap;
 	align-content: center;
-	justify-items: center;
+	justify-content: center;
 	gap: 0.5rem;
 }
 
@@ -447,8 +446,8 @@ button {
 .name-search input[type="text"] {
 	width: 15rem;
 	margin: 0.5rem 2rem;
-	font-size: 1rem;
-	height: 2rem;
+	font-size: 1.5rem;
+	height: 3rem;
 }
 
 .tabs {

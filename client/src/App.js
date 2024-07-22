@@ -76,7 +76,6 @@ const App = () => {
 						path="/recipes/favorites"
 						element={<FavoriteRecipes showToast={showToastMessage} />}
 					/>
-
 					<Route
 						path="/recipes/create"
 						element={

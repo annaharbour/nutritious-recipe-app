@@ -253,14 +253,27 @@ const Search = ({ showToast }) => {
 				</button>
 			</form>
 
-			<div>
+			<div className="recipes">
 				<h3>Results:</h3>
-				<ul>
+				<ul className="recipe-list">
 					{results && results.length > 0 ? (
 						results.map((recipe) => (
-							<Link to={`/recipes/${recipe._id}`} key={recipe._id}>
-								{recipe.name}
-							</Link>
+							<li>
+								<Link to={`/recipes/${recipe._id}`} key={recipe._id}>
+									{recipe.name}
+								</Link>
+								<div className="recipe labels">
+									{recipe.labels.map((label) => (
+										<span
+											className={`label ${label
+												.toLowerCase()
+												.replace(/\s+/g, "-")}`}>
+											{label}
+										</span>
+									))}
+								</div>
+								<span>Serves {recipe.servings}</span>
+							</li>
 						))
 					) : (
 						<div>No results found</div>
