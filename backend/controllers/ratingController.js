@@ -3,7 +3,7 @@ const User = require("../models/UserModel");
 const Rating = require("../models/RatingModel");
 
 const rateRecipe = async (req, res) => {
-	const userId = req.user.id;
+	const userId = req.user.id || req.user._id;
 	const recipeId = req.params.recipeId;
 	const { stars } = req.body;
 
