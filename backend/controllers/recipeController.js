@@ -39,10 +39,6 @@ const calculateRecipeNutrition = async (req, res) => {
 			})
 		);
 
-		// const recipe = new Recipe({
-		//     ingredients: populatedIngredients
-		// });
-
 		const recipe = new Recipe({
 			ingredients: populatedIngredients,
 			servings,
@@ -123,7 +119,7 @@ const getRecipes = async (req, res) => {
 			const averageRating = totalRating / recipeRatings.length;
 			recipe.averageRating = averageRating;
 		});
-		return res.json(recipes);
+		return res.json(recipes).limit(10);
 	} catch (err) {
 		return res.status(500).json({ error: "Failed to fetch recipes." });
 	}
