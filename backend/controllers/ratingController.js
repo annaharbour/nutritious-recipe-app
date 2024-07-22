@@ -82,7 +82,7 @@ const getRating = async (req, res) => {
 };
 
 const getUserRatings = async (req, res) => {
-	const userId = req.user._id;
+	const userId = req.user._id || req.user.id;
 	try {
 		const ratings = await Rating.find({ "userRatings.user": userId });
 		if (!ratings) {

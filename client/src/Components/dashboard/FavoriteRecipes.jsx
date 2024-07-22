@@ -39,7 +39,7 @@ function FavoriteRecipes() {
 									<span
 										className={`label ${label
 											.toLowerCase()
-											.replace(/\s+/g, "-")}`}>
+											.replace(/\s+/g, "-")}`} key={label}>
 										{label}
 									</span>
 								))}

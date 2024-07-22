@@ -56,7 +56,7 @@ const calculateRecipeNutrition = async (req, res) => {
 const createRecipe = async (req, res) => {
 	const { name, ingredients } = req.body;
 
-	const userId = req.user.id;
+	const userId = req.user.id || req.user._id;
 
 	try {
 		const populatedIngredients = await Promise.all(

@@ -77,7 +77,7 @@ function Profile({ showToast }) {
 	};
 
 	return (
-		<div>
+		<div className="account">
 			<h1>{userInfo.name}</h1>
 			<section className="container">
 				<h1 className="large text-primary">Change Account Details</h1>

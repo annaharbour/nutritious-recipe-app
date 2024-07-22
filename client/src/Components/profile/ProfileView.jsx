@@ -49,20 +49,24 @@ function ProfileView() {
 		return null;
 	}
 
-	const date = new Date().getTime();
-	const createdAtDate = new Date(user.createdAt).getTime();
-	const dateDiff = date - createdAtDate;
-	const days = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+	console.log(user);
+
+	// Sort recipes and ratedRecipes by date in descending order
+	const sortedRecipes = recipes.sort(
+		(a, b) => new Date(b.createDate) - new Date(a.createDate)
+	);
+	const sortedRatedRecipes = ratedRecipes.sort(
+		(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+	);
 
 	return (
-		<div>
-			<h1>{user.name}</h1>
-			{days ? <i>Joined {days} days ago</i> : <></>}
-			<h2>{user.name}'s Recipes</h2>
-			<ul>
-				{recipes.length > 0 ? (
-					recipes.map((recipe) => (
+		<div className="account">
+			<h3>{user.name}'s Recipes</h3>
+			<ul className="recipe-list">
+				{sortedRecipes.length > 0 ? (
+					sortedRecipes.map((recipe) => (
 						<li key={recipe._id}>
+							<span>{new Date(recipe.createDate).toLocaleDateString()}</span>
 							<a href={`/recipes/${recipe._id}`}>{recipe.name}</a>
 						</li>
 					))
@@ -70,15 +74,23 @@ function ProfileView() {
 					<p>No recipes found</p>
 				)}
 			</ul>
-			<h2>Rated Recipes</h2>
-			<ul>
-				{ratedRecipes.length > 0 ? (
-					ratedRecipes.map((recipe) => (
+			<h3>{user.name}'s Activity</h3>
+			<ul className="recipe-list">
+				{sortedRatedRecipes.length > 0 ? (
+					sortedRatedRecipes.map((recipe) => (
 						<li key={recipe.recipeId}>
-							{user.name} gave{" "}
-							<a href={`/recipes/${recipe._id}`}>{recipe.recipeName}</a>{" "}
-							{recipe.stars} stars on{" "}
-							{new Date(recipe.createdAt).toLocaleDateString()}
+							<span>{new Date(recipe.createdAt).toLocaleDateString()}</span>
+							<span>
+								<a href={`/recipes/${recipe._id}`}>{recipe.recipeName}</a>
+							</span>
+							<span>
+								{Array.from({ length: recipe.stars }, (_, index) => (
+									<i
+										key={index}
+										className="fa-solid fa-star"
+										style={{ fontSize: "1rem", color: "gold" }}></i>
+								))}
+							</span>
 						</li>
 					))
 				) : (

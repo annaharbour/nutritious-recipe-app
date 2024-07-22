@@ -75,7 +75,7 @@ ul {
 }
 
 h1 {
-	font-size: 3rem;
+	font-size: 2rem;
 }
 
 a {
@@ -312,6 +312,25 @@ a:visited {
 .form input[type="submit"],
 button {
 	font: inherit;
+}
+
+.account {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin: 1rem;
+}
+
+.account .recipe-list li {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.account span {
+	margin: 1rem;
+
 }
 
 .search-recipes .ingredients {

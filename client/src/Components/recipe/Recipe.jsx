@@ -106,7 +106,7 @@ function Recipe({ showToast }) {
 						disabled={loading}
 						style={{
 							fontSize: "2rem",
-							color: !isSaved ? "#F9F6EE" : "gold",
+							color: !isSaved ? "#F9F6EE" : "#ebd92d"
 						}}></i>
 				) : (
 					<Link to="/dashboard">Create an Account to Save</Link>
