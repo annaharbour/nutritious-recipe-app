@@ -107,7 +107,8 @@ const getRecipes = async (req, res) => {
 	try {
 		const recipes = await Recipe.find();
 		const ratings = await Rating.find();
-		// Loop through the recipes and calculate the average rating for each recipe then return recipes by descending rating
+
+		// Loop through the recipes and calculate the average rating for each recipe
 		recipes.forEach((recipe) => {
 			const recipeRatings = ratings.filter(
 				(rating) => rating.recipe.toString() === recipe._id.toString()
@@ -116,10 +117,17 @@ const getRecipes = async (req, res) => {
 				(acc, rating) => acc + rating.value,
 				0
 			);
-			const averageRating = totalRating / recipeRatings.length;
+			const averageRating = recipeRatings.length
+				? totalRating / recipeRatings.length
+				: 0;
 			recipe.averageRating = averageRating;
 		});
-		return res.json(recipes).limit(10);
+
+		// Sort recipes by averageRating in descending order
+		recipes.sort((a, b) => b.averageRating - a.averageRating);
+
+		// Return the top 10 recipes
+		return res.json(recipes.slice(0, 10));
 	} catch (err) {
 		return res.status(500).json({ error: "Failed to fetch recipes." });
 	}

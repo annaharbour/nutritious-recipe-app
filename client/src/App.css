@@ -335,7 +335,7 @@ button {
 }
 
 .recipes {
-	margin: 1rem auto;
+	margin: auto;
 	text-align: center;
 	width: 100%;
 	gap: 1rem;
@@ -345,6 +345,7 @@ button {
 	display: grid;
 	gap: .5rem;
 	grid-template-rows: 1fr 1fr;
+	margin-top: 1rem;
 }
 
 .subheader {
@@ -376,10 +377,10 @@ button {
 	background-position: center 40%;
 }
 
-/* .header .trending {
-	background-image: url("./img/kidssmoothies/.jpg");
+.header .trending {
+	background-image: url("./img/otherImages/kidssmoothies.jpg");
 	background-position: center 40%;
-  } */
+  }
 
 .header h1 {
 	position: absolute;
@@ -429,6 +430,22 @@ button {
 	justify-content: space-evenly;
 	align-items: center;
 	justify-content: center;
+}
+
+.trending li {
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.trending .number {
+	border-radius: 50%;
+	background-color: var(--primary-color);
+	width: 2rem;
+	height: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: auto;
+	color: white;
 }
 
 .recipe .ratings {
