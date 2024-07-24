@@ -23,7 +23,10 @@ function UserRecipes() {
 
 	return (
 		<div className="recipes">
-			<h1>Your Recipes</h1>
+			<div className="header">
+				<div className="user-recipes img"/>
+				<h1>Your Recipes</h1>
+			</div>
 			{loading && <p>Loading...</p>}
 			{userRecipes && userRecipes.length !== 0 ? (
 				<ul className="recipe-list">
@@ -52,8 +55,8 @@ function UserRecipes() {
 				</div>
 			)}
 			<div className="links">
-				<Link to="/recipes/create">Create a New Recipe</Link>
-				<Link to="/dashboard">Back to Dashboard</Link>
+				<Link to="/recipes/create"><i className="fa fa-plus"/>Create a New Recipe</Link>
+				<Link to="/dashboard"><i className="fa fa-arrow-left"/>Back to Dashboard</Link>
 			</div>
 		</div>
 	);

@@ -37,9 +37,10 @@ const Dashboard = ({ showToast }) => {
 				</Link>
 			)}
 
-			<Link to="/" className="dash-item trending">
+			<Link to="/recipes/trending" className="dash-item trending">
 				<h2>
-					<i className="fa-solid fa-chart-line"></i> Trending
+					<i className="fa-solid fa-chart-line"></i>
+					Trending
 				</h2>
 			</Link>
 			{userInfo && (

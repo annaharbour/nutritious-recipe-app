@@ -16,6 +16,7 @@ import Comments from "./Components/recipe/Comments";
 import Reset from "./Components/auth/Reset";
 import UserRecipes from "./Components/dashboard/UserRecipes";
 import FavoriteRecipes from "./Components/dashboard/FavoriteRecipes";
+import Trending from "./Components/dashboard/Trending";
 
 const App = () => {
 	const showToastMessage = (msg, type) => {
@@ -77,6 +78,15 @@ const App = () => {
 						element={<FavoriteRecipes showToast={showToastMessage} />}
 					/>
 					<Route
+						path="/recipes/trending"
+						element={
+							<PrivateRoute
+								showToast={showToastMessage}
+								Component={Trending}
+							/>
+						}
+					/>
+					<Route
 						path="/recipes/create"
 						element={
 							<PrivateRoute
@@ -85,6 +95,7 @@ const App = () => {
 							/>
 						}
 					/>
+					
 					<Route path=":id" element={<Recipe showToast={showToastMessage} />} />
 					<Route
 						path="search"

@@ -47,10 +47,15 @@ nav ul {
 	display: flex;
 }
 
-nav ul li a {
+nav a {
 	color: white;
 	list-style: none;
 	padding-right: 1rem;
+}
+
+
+nav a:visited {
+	color: var(--white);
 }
 
 nav i {
@@ -83,14 +88,12 @@ a {
 	color: var(--pacific-cyan);
 }
 
-nav a:visited {
-	color: var(--white);
-}
 
 a:visited {
 	font-style: bold;
 	text-shadow: 0.1rem;
 	color: var(--marian-blue);
+	text-decoration: underline;
 }
 
 @keyframes spin {
@@ -135,41 +138,8 @@ a:visited {
 	height: 100%;
 }
 
-/* Navbar */
-.navbar {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 1rem 2rem;
-	position: fixed;
-	z-index: 1;
-	width: 100%;
-	top: 0;
-	border-bottom: solid 1px var(--primary-color);
-	opacity: 0.9;
-}
 
-.navbar ul {
-	display: flex;
-}
 
-.navbar li {
-	font-size: 3rem;
-}
-
-.navbar a {
-	color: #fff;
-	padding: 0.5rem;
-	margin: 0 0.5rem;
-}
-
-.navbar a:hover {
-	color: var(--primary-color);
-}
-
-.navbar .welcome span {
-	margin-right: 0.6rem;
-}
 
 /* Landing Page */
 .landing {
@@ -269,6 +239,10 @@ a:visited {
 
 /* Forms */
 
+.form {
+	margin-top: 2rem;
+}
+
 .form .form-group {
 	margin: 1.2rem 0;
 	width: 100%;
@@ -312,25 +286,6 @@ a:visited {
 .form input[type="submit"],
 button {
 	font: inherit;
-}
-
-.account {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	margin: 1rem;
-}
-
-.account .recipe-list li {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-}
-
-.account span {
-	margin: 1rem;
-
 }
 
 .search-recipes .ingredients {
@@ -380,15 +335,81 @@ button {
 }
 
 .recipes {
-	margin: auto;
+	margin: 1rem auto;
 	text-align: center;
 	width: 100%;
 	gap: 1rem;
 }
 
-.recipes .links a {
-	margin-top: 1rem;
+.links {
+	display: grid;
+	gap: .5rem;
+	grid-template-rows: 1fr 1fr;
+}
+
+.subheader {
+	margin-top: 2rem;
+}
+
+.header {
+	position: relative;
+	width: 100vw;
+	height: 25rem;
+}
+
+.header .img {
+	background-repeat: no-repeat;
+	background-size: cover;
+	opacity: 0.75;
+	width: 100%;
+	height: 100%;
 	display: block;
+}
+/*   
+  
+	background-image: url("./img/otherImages/beachysmoothies4.jpg");
+
+  } */
+
+.header .img {
+	background-image: url("./img/otherImages/beachysmoothies2.jpg");
+	background-position: center 40%;
+}
+
+/* .header .trending {
+	background-image: url("./img/kidssmoothies/.jpg");
+	background-position: center 40%;
+  } */
+
+.header h1 {
+	position: absolute;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	color: var(--blue-green);
+	text-shadow: var(--marian-blue) 0.1rem 0.1rem 0.2rem;
+	font-size: 4rem;
+}
+
+.recipes li {
+	margin: auto;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-bottom: 1px solid var(--primary-color);
+	width: 70%;
+	padding: 2rem 0;
+	
+}
+
+.recipes .date {
+	border-bottom: 1px dotted var(--blue-green);
+	font-style: italic;
 }
 
 .recipe-list ul {
@@ -402,11 +423,12 @@ button {
 }
 
 .recipe-list li {
+	width: 70%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
+	justify-content: space-evenly;
 	align-items: center;
 	justify-content: center;
-	border-bottom: 1px dotted var(--honolulu-blue);
 }
 
 .recipe .ratings {
@@ -658,5 +680,21 @@ button {
 	.tabs {
 		width: 90%;
 		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.recipes span {
+		display: inline;
+
+	}
+
+	.rating { 
+		display: grid;
+	}
+
+	.recipe-list li {
+		display: flex;
+		flex-wrap: wrap;
+		border-bottom: 1px dotted var(--blue-green);
+		width: 90%;
 	}
 }

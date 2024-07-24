@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import NotFound from "../layout/NotFound";
 import { getUserById } from "../../services/userService";
@@ -49,48 +50,86 @@ function ProfileView() {
 		return null;
 	}
 
-	console.log(user);
-
 	// Sort recipes and ratedRecipes by date in descending order
 	const sortedRecipes = recipes.sort(
 		(a, b) => new Date(b.createDate) - new Date(a.createDate)
 	);
-	const sortedRatedRecipes = ratedRecipes.sort(
-		(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-	);
+
+	console.log(sortedRecipes);
+
+	const sortedCombinedRecipes = ratedRecipes
+		.concat(recipes)
+		.sort(
+			(a, b) =>
+				new Date(b.createdAt || b.createDate) -
+				new Date(a.createdAt || a.createDate)
+		);
 
 	return (
-		<div className="account">
-			<h3>{user.name}'s Recipes</h3>
+		<div className="recipes">
+			<div className="header">
+				<div className="img" />
+				<h1>{user.name}</h1>
+			</div>
+
+			<div className="subheader user-recipes">
+				<h3>{user.name}'s Recipes</h3>
+			</div>
+
 			<ul className="recipe-list">
-				{sortedRecipes.length > 0 ? (
-					sortedRecipes.map((recipe) => (
-						<li key={recipe._id}>
-							<span>{new Date(recipe.createDate).toLocaleDateString()}</span>
-							<a href={`/recipes/${recipe._id}`}>{recipe.name}</a>
-						</li>
-					))
-				) : (
-					<p>No recipes found</p>
-				)}
+				{sortedRecipes.map((recipe) => (
+					<li>
+						<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
+							<h4>{recipe.name}</h4>
+						</Link>
+						<span className="recipe labels">
+							{recipe.labels.map((label) => (
+								<span
+									className={`label ${label
+										.toLowerCase()
+										.replace(/\s+/g, "-")}`}>
+									{label}
+								</span>
+							))}
+						</span>
+						<span>Serves {recipe.servings}</span>
+					</li>
+				))}
 			</ul>
-			<h3>{user.name}'s Activity</h3>
-			<ul className="recipe-list">
-				{sortedRatedRecipes.length > 0 ? (
-					sortedRatedRecipes.map((recipe) => (
+			<div className="subheader activity">
+				<h3>{user.name}'s Activity</h3>
+			</div>
+			<ul className="recipes">
+				{sortedCombinedRecipes.length > 0 ? (
+					sortedCombinedRecipes.map((recipe) => (
 						<li key={recipe.recipeId}>
-							<span>{new Date(recipe.createdAt).toLocaleDateString()}</span>
-							<span>
-								<a href={`/recipes/${recipe._id}`}>{recipe.recipeName}</a>
+							<span className="date">
+								{recipe.createdAt
+									? `Rated a recipe on ${new Date(
+											recipe.createdAt
+									  ).toLocaleDateString()} `
+									: `Created a new recipe on ${new Date(
+											recipe.createDate
+									  ).toLocaleDateString()} `}
 							</span>
-							<span>
-								{Array.from({ length: recipe.stars }, (_, index) => (
-									<i
-										key={index}
-										className="fa-solid fa-star"
-										style={{ fontSize: "1rem", color: "gold" }}></i>
-								))}
-							</span>
+							{recipe.createdAt ? (
+								<div className="rating">
+								<span>
+									Gave{" "}
+									<a href={`/recipes/${recipe._id}`}>{recipe.recipeName}</a>{" "}a rating:{" "}
+									</span>
+									<span className="stars">{Array.from({ length: recipe.stars }, (_, index) => (
+										<i
+											key={index}
+											className="fa-solid fa-star"
+											style={{ fontSize: "1rem", color: "gold" }}></i>
+									))}</span>
+								</div>
+							) : (
+								<span>
+									<a href={`/recipes/${recipe._id}`}>{recipe.name}</a>
+								</span>
+							)}
 						</li>
 					))
 				) : (

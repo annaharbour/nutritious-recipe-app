@@ -25,7 +25,11 @@ function FavoriteRecipes() {
 
 	return (
 		<div className="recipes">
-			<h1>Your Saved Recipes</h1>
+			<div className="header">
+				<div className="favorites img"/>
+				<h1>Your Saved Recipes</h1>
+			</div>
+			
 			{loading && <p>Loading...</p>}
 			{favorites && favorites.length !== 0 ? (
 				<ul className="recipe-list">
@@ -54,8 +58,8 @@ function FavoriteRecipes() {
 				</div>
 			)}
 			<div className="links">
-				<Link to="/recipes/search">Find New Recipes</Link>
-				<Link to="/dashboard">Back to Dashboard</Link>
+				<Link to="/recipes/search"><i className="fa fa-magnifying-glass"/>Find New Recipes</Link>
+				<Link to="/dashboard"><i className="fa fa-arrow-left"/>Back to Dashboard</Link>
 			</div>
 		</div>
 	);
