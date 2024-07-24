@@ -568,12 +568,10 @@ button {
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 2rem;
-	font-size: 1rem;
 }
 
 .optimization label {
 	margin-left: 0.5rem;
-	font-size: 1rem;
 }
 
 .search-recipes .optimizations {
@@ -581,16 +579,15 @@ button {
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 2rem;
-	font-size: 1rem;
 }
 
 .optimization input[type="checkbox"] {
 	accent-color: var(--blue-green);
+	
 }
 
 .optimization label {
 	margin-left: 0.5rem;
-	font-size: 1rem;
 }
 
 .portion {
