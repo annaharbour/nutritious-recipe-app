@@ -59,12 +59,13 @@ const getCommentById = async (req, res) => {
 
 const deleteCommentById = async (req, res) => {
 	const commentId = req.params.commentId;
+	const userId = req.user.id || req.user._id;
 	try {
 		const comment = await Comment.findById(commentId);
 		if (!comment) {
 			return res.status(404).json({ msg: "Comment not found" });
 		}
-		if (comment.user.toString() !== req.user.id) {
+		if (comment.user.toString() !== userId) {
 			return res.status(401).json({ msg: "User not authorized" });
 		}
 		await Comment.findByIdAndDelete(commentId);
@@ -80,6 +81,7 @@ const deleteCommentById = async (req, res) => {
 
 const toggleLikeComment = async (req, res) => {
 	const commentId = req.params.commentId;
+	const userId = req.user.id || req.user._id;
 	try {
 		const comment = await Comment.findById(commentId);
 		if (!comment) {
@@ -87,7 +89,7 @@ const toggleLikeComment = async (req, res) => {
 		}
 
 		const alreadyLikedIndex = comment.likes.findIndex(
-			(like) => like.user.toString() === req.user.id
+			(like) => like.user.toString() === userId
 		);
 
 		if (alreadyLikedIndex !== -1) {
@@ -95,7 +97,7 @@ const toggleLikeComment = async (req, res) => {
 			await comment.save();
 			return res.status(200).json(comment);
 		} else {
-			comment.likes.unshift({ user: req.user.id });
+			comment.likes.unshift({ user: userId });
 			await comment.save();
 			return res.status(200).json(comment);
 		}
@@ -157,6 +159,7 @@ const getResponse = async (req, res) => {
 
 const deleteResponse = async (req, res) => {
 	const responseId = req.params.responseId;
+	const userId = req.user.id || req.user._id;
 	try {
 		const comment = await Comment.findOne({ "responses._id": responseId });
 		if (!comment) {
@@ -168,7 +171,7 @@ const deleteResponse = async (req, res) => {
 		if (!response) {
 			return res.status(404).json({ msg: "Response not found" });
 		}
-		if (response.user.toString() !== req.user.id) {
+		if (response.user.toString() !== userId) {
 			return res.status(401).json({ msg: "User not authorized" });
 		}
 		comment.responses = comment.responses.filter(({ id }) => id !== responseId);

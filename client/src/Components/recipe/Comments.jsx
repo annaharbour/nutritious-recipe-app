@@ -4,7 +4,7 @@ import NotFound from "../layout/NotFound";
 import {
 	getCommentsByRecipeId,
 	deleteCommentById,
-	createComment
+	createComment,
 } from "../../services/commentService";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
@@ -53,27 +53,27 @@ const Comments = ({ showToast }) => {
 		<NotFound message={error} />
 	) : (
 		<div className="comments-container">
-		<div className="comment-main-level">
+			<div className="comment-main-level">
 				{comments.length > 0 ? (
 					<ul className="comments-list">
-					{comments.map((comment) => (
-						<Comment
-							showToast={showToast}
-							key={comment._id}
-							comment={comment}
-							deleteComment={handleDeleteComment}
-						/>
-					))}
+						{comments.map((comment) => (
+							<Comment
+								showToast={showToast}
+								key={comment._id}
+								comment={comment}
+								deleteComment={handleDeleteComment}
+							/>
+						))}
 					</ul>
 				) : (
 					<p>This recipe has no comments</p>
 				)}
-			<CommentForm
-				loading={loading}
-				handleAddComment={handleAddComment}
-				showToast={showToast}
-			/>
-		</div>
+				<CommentForm
+					loading={loading}
+					handleAddComment={handleAddComment}
+					showToast={showToast}
+				/>
+			</div>
 		</div>
 	);
 };

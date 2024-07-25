@@ -20,16 +20,14 @@ const CommentForm = ({ showToast, loading, handleAddComment }) => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form className="comment-form" onSubmit={handleSubmit}>
 			<textarea
 				onChange={(e) => setText(e.target.value)}
 				value={text}
 				placeholder="Write your comment..."
 				disabled={loading}
 			/>
-			<button disabled={loading} className="btn btn-submit" type="submit">
-				{loading ? "Submitting..." : "Submit"}
-			</button>
+			<i className="fas fa-paper-plane" onClick={handleSubmit}>{" "}comment</i>
 		</form>
 	);
 };

@@ -73,33 +73,40 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 	return (
 		<div>
 			<li className="comment-box">
-				<div className="comment-content">{comment.text}</div>
-
-				{comment.user === userInfo._id && (
-					<i className="fas fa-x" onClick={handleDeleteComment} />
-				)}
 				<div className="comment-head">
-					by{" "}
 					<Link
 						className="comment-name by-author"
 						to={`/profiles/${comment.user}`}>
 						{comment.userName}
 					</Link>{" "}
-					on {date}
-					{likes > 0 && <p>{likes}</p>}
-					{userHasLiked ? (
-						<i className="fa-solid fa-thumbs-up" onClick={handleLike} />
-					) : (
-						<i className="fa-regular fa-thumbs-up" onClick={handleLike} />
+					<span>{date}</span>
+					{comment.user === userInfo._id && (
+						<i className="fas fa-x" onClick={handleDeleteComment} />
 					)}
-					<i className="fa fa-reply" onClick={handleReply} />
 				</div>
+				<div className="comment-content">{comment.text}</div>
+				<div className="comment-content">
+					{responses.length > 0 && (
+						<span onClick={handleToggleResponses}>
+							{seeResponses ? (
+								<i className="fa-solid fa-caret-up"></i>
+							) : (
+								<i className="fa-solid fa-caret-down"></i>
+							)}{" "}
+							Responses ({responses.length})
+						</span>
+					)}
+					<div className="icons">
+						<i className="fa fa-reply" onClick={handleReply} />
 
-				{responses.length > 0 && (
-					<button onClick={handleToggleResponses}>
-						{seeResponses ? "Hide" : "View"} {responses.length} Responses
-					</button>
-				)}
+						{userHasLiked ? (
+							<i className="fa-solid fa-thumbs-up" onClick={handleLike} />
+						) : (
+							<i className="fa-regular fa-thumbs-up" onClick={handleLike} />
+						)}
+						{likes > 0 && <i>({likes})</i>}
+					</div>
+				</div>
 			</li>
 			{seeResponses && (
 				<ul className="reply-list">

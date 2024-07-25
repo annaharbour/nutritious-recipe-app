@@ -4,6 +4,7 @@ function ResponseForm({ commentId, addResponse, showToast }) {
 	const [text, setText] = useState("");
 
 	const handleSubmit = async (e) => {
+
 		try {
 			e.preventDefault();
 			if (!text) {
@@ -20,12 +21,13 @@ function ResponseForm({ commentId, addResponse, showToast }) {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form className="reply-form" onSubmit={handleSubmit}>
 			<textarea
 				value={text}
 				onChange={(e) => setText(e.target.value)}
 				placeholder="Write your response..."></textarea>
-			<button type="submit">Submit</button>
+			<i className="fas fa-paper-plane" onClick={handleSubmit}>{" "}reply</i>
+
 		</form>
 	);
 }
