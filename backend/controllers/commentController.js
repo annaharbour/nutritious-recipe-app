@@ -5,7 +5,7 @@ const Recipe = require("../models/RecipeModel");
 
 const createComment = async (req, res) => {
 	const recipe = req.params.recipeId;
-	const userId = req.user.id;
+	const userId = req.user.id || req.user._id;
 	const { text } = req.body;
 	try {
 		const user = await User.findById(userId).select("-password");
@@ -106,10 +106,11 @@ const toggleLikeComment = async (req, res) => {
 
 const respondToComment = async (req, res) => {
 	const commentId = req.params.commentId;
+	const userId = req.user.id || req.user._id;
 	const { text } = req.body;
 
 	try {
-		const user = await User.findById(req.user.id).select("-password");
+		const user = await User.findById(userId).select("-password");
 		const userName = user.name;
 		const comment = await Comment.findById(commentId);
 		if (!comment) {

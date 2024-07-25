@@ -27,7 +27,7 @@ const CommentForm = ({ showToast, loading, handleAddComment }) => {
 				placeholder="Write your comment..."
 				disabled={loading}
 			/>
-			<button disabled={loading} type="submit">
+			<button disabled={loading} className="btn btn-submit" type="submit">
 				{loading ? "Submitting..." : "Submit"}
 			</button>
 		</form>

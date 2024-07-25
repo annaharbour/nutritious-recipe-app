@@ -52,26 +52,28 @@ const Comments = ({ showToast }) => {
 	return error ? (
 		<NotFound message={error} />
 	) : (
-		<div>
-			<ul>
+		<div className="comments-container">
+		<div className="comment-main-level">
 				{comments.length > 0 ? (
-					comments.map((comment) => (
+					<ul className="comments-list">
+					{comments.map((comment) => (
 						<Comment
 							showToast={showToast}
 							key={comment._id}
 							comment={comment}
 							deleteComment={handleDeleteComment}
 						/>
-					))
+					))}
+					</ul>
 				) : (
 					<p>This recipe has no comments</p>
 				)}
-			</ul>
 			<CommentForm
 				loading={loading}
 				handleAddComment={handleAddComment}
 				showToast={showToast}
 			/>
+		</div>
 		</div>
 	);
 };

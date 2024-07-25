@@ -71,40 +71,38 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 	};
 
 	return (
-		<div
-			className="comment"
-			style={{ border: "1px solid black", width: "50%" }}>
-			<p>
-				{comment.text}
-				<button onClick={handleDeleteComment}>X</button>
-			</p>
-			<p>
-				by <Link to={`/profiles/${comment.user}`}>{comment.userName}</Link> on{" "}
-				{date}
-			</p>
-			{likes > 0 && <p>{likes}</p>}
-			<button onClick={handleLike}>
-				{userHasLiked ? (
-					<i class="fa-solid fa-thumbs-up"></i>
-				) : (
-					<i class="fa-regular fa-thumbs-up"></i>
+		<div>
+			<li className="comment-box">
+				<div className="comment-content">{comment.text}</div>
+
+				{comment.user === userInfo._id && (
+					<i className="fas fa-x" onClick={handleDeleteComment} />
 				)}
-			</button>
-			<button onClick={handleReply}>Reply</button>
-			{seeReplyBox && (
-				<ResponseForm
-					showToast={showToast}
-					addResponse={handleAddResponse}
-					commentId={comment._id}
-				/>
-			)}
-			{responses.length > 0 && (
-				<button onClick={handleToggleResponses}>
-					{seeResponses ? "Hide" : "View"} {responses.length} Responses
-				</button>
-			)}
+				<div className="comment-head">
+					by{" "}
+					<Link
+						className="comment-name by-author"
+						to={`/profiles/${comment.user}`}>
+						{comment.userName}
+					</Link>{" "}
+					on {date}
+					{likes > 0 && <p>{likes}</p>}
+					{userHasLiked ? (
+						<i className="fa-solid fa-thumbs-up" onClick={handleLike} />
+					) : (
+						<i className="fa-regular fa-thumbs-up" onClick={handleLike} />
+					)}
+					<i className="fa fa-reply" onClick={handleReply} />
+				</div>
+
+				{responses.length > 0 && (
+					<button onClick={handleToggleResponses}>
+						{seeResponses ? "Hide" : "View"} {responses.length} Responses
+					</button>
+				)}
+			</li>
 			{seeResponses && (
-				<ul>
+				<ul className="reply-list">
 					{responses.map((response, index) => (
 						<Response
 							showToast={showToast}
@@ -114,6 +112,13 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 						/>
 					))}
 				</ul>
+			)}
+			{seeReplyBox && (
+				<ResponseForm
+					showToast={showToast}
+					addResponse={handleAddResponse}
+					commentId={comment._id}
+				/>
 			)}
 		</div>
 	);

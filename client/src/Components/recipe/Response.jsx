@@ -12,17 +12,17 @@ function Response({ response, deleteResponse, showToast }) {
 		}
 	};
 	return (
-		<div>
+		<li className="comment-box">
 			{" "}
-			<button onClick={handleDeleteResponse}>X</button>
+			<i className="fas fa-x" onClick={handleDeleteResponse} />
 			<div key={response._id}>
-				<p>{response.text}</p>
-				<p>
+				<div className="comment-content">{response.text}</div>
+				<div className="comment-head">
 					by <Link to={`/profiles/${response.user}`}>{response.userName}</Link>{" "}
 					on {responseDate}
-				</p>
+				</div>
 			</div>
-		</div>
+		</li>
 	);
 }
 
