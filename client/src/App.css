@@ -1,10 +1,10 @@
 :root {
+	/* Color Pallete */
 	--primary-color: #699b46;
 	--dark-color: #14281f;
 	--light-color: #ebd92d;
 	--danger-color: #96100f;
 	--success-color: #7cb518;
-
 	--orange-pantone: #ff5400ff;
 	--pumpkin: #ff6d00ff;
 	--orange-peel: #ff9e00ff;
@@ -13,11 +13,14 @@
 	--honolulu-blue: #0077b6ff;
 	--marian-blue: #023e8aff;
 
+	/* Sizes */
 	--h2-min-size: 0.8rem;
 	--h2-preferred-size: 1vw + 0.5rem;
 	--h2-max-size: 2rem;
 	--dash-item-size: clamp(150px, 15vw, 500px);
 }
+
+/* Global Styles */
 
 * {
 	box-sizing: border-box;
@@ -36,6 +39,28 @@ body {
 i {
 	margin: 0 0.5rem;
 }
+
+ul {
+	list-style: none;
+}
+
+h1 {
+	font-size: 2rem;
+}
+
+a {
+	text-decoration: none;
+	color: var(--pacific-cyan);
+}
+
+a:visited {
+	font-style: bold;
+	text-shadow: 0.1rem;
+	color: var(--marian-blue);
+	text-decoration: underline;
+}
+
+/* Nav */
 
 nav {
 	background-color: var(--primary-color);
@@ -62,9 +87,7 @@ nav i {
 	margin-right: 0.2rem;
 }
 
-ul {
-	list-style: none;
-}
+/* Utilities */
 
 .loader {
 	width: 100%;
@@ -76,22 +99,6 @@ ul {
 
 .spinner {
 	animation: spin 2s linear infinite;
-}
-
-h1 {
-	font-size: 2rem;
-}
-
-a {
-	text-decoration: none;
-	color: var(--pacific-cyan);
-}
-
-a:visited {
-	font-style: bold;
-	text-shadow: 0.1rem;
-	color: var(--marian-blue);
-	text-decoration: underline;
 }
 
 @keyframes spin {
@@ -126,7 +133,82 @@ a:visited {
 	margin: 1.5rem 0;
 }
 
-/* Overlay */
+.subheader {
+	margin-top: 2rem;
+}
+
+.header {
+	position: relative;
+	width: 100vw;
+	height: 25rem;
+}
+
+.header .img {
+	background-repeat: no-repeat;
+	background-size: cover;
+	opacity: 0.75;
+	width: 100%;
+	height: 100%;
+	display: block;
+	background-image: url("./img/otherImages/beachysmoothies2.jpg");
+	background-position: center 40%;
+}
+
+.header .trending {
+	background-image: url("./img/otherImages/kidssmoothies.jpg");
+	background-position: center 40%;
+}
+
+.header h1 {
+	position: absolute;
+	top: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	color: var(--blue-green);
+	text-shadow: var(--marian-blue) 0.1rem 0.1rem 0.2rem;
+	font-size: 4rem;
+}
+
+.labels {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-content: center;
+	justify-content: center;
+	gap: 0.5rem;
+}
+
+.label {
+	padding: 0 0.5rem;
+	border-radius: 5px;
+	color: white;
+}
+
+.low-carb {
+	background-color: var(--primary-color);
+}
+
+.low-fat {
+	background-color: var(--pumpkin);
+}
+
+.high-protein {
+	background-color: var(--honolulu-blue);
+}
+
+.bulking {
+	background-color: var(--marian-blue);
+}
+
+.lean {
+	background-color: var(--blue-green);
+}
+
+/* Landing */
+
 .dark-overlay {
 	background-color: rgba(0, 0, 0, 0.4);
 	position: absolute;
@@ -136,7 +218,6 @@ a:visited {
 	height: 100%;
 }
 
-/* Landing Page */
 .landing {
 	position: relative;
 	background-image: url("./img/fruit-frame.jpg");
@@ -283,6 +364,8 @@ button {
 	font: inherit;
 }
 
+/* Recipe Search */
+
 .search-recipes .ingredients {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -316,6 +399,8 @@ button {
 	text-decoration: line-through;
 }
 
+/* Create Recipe */
+
 .search-recipes,
 .create-recipe,
 .recipe {
@@ -336,18 +421,17 @@ button {
 
 .category {
 	display: grid;
-	grid-template-columns: auto 1fr auto; 
-	align-items: center; 
-	justify-items: space-evenly; 
-	width: 100vw; 
+	align-items: center;
+	justify-items: space-evenly;
+	width: 100vw;
 	margin: auto;
-	padding: 1rem; 
+	padding: 1rem;
 }
 
 .category-prev,
 .category-current,
 .category-next {
-	padding: 0 1rem; 
+	padding: 0 1rem;
 }
 
 .category-prev {
@@ -355,72 +439,39 @@ button {
 }
 
 .category-current {
-	font-weight: bold; 
+	font-weight: bold;
 }
 
 .category-next {
 	opacity: 0.5;
 }
 
+.portion {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: auto;
+	width: 20rem;
+}
+
+.portion input[type="number"] {
+	width: 4rem;
+	margin: 0 0.5rem;
+}
+
+.create-recipe input[type="text"],
+.create-recipe select {
+	width: 20rem;
+	margin: 2rem auto;
+}
+
+/* Recipes */
+
 .recipes {
 	margin: auto;
 	text-align: center;
 	width: 100%;
 	gap: 1rem;
-}
-
-.links {
-	display: grid;
-	gap: 0.5rem;
-	grid-template-rows: 1fr 1fr;
-	margin-top: 1rem;
-}
-
-.subheader {
-	margin-top: 2rem;
-}
-
-.header {
-	position: relative;
-	width: 100vw;
-	height: 25rem;
-}
-
-.header .img {
-	background-repeat: no-repeat;
-	background-size: cover;
-	opacity: 0.75;
-	width: 100%;
-	height: 100%;
-	display: block;
-}
-/*   
-  
-	background-image: url("./img/otherImages/beachysmoothies4.jpg");
-
-  } */
-
-.header .img {
-	background-image: url("./img/otherImages/beachysmoothies2.jpg");
-	background-position: center 40%;
-}
-
-.header .trending {
-	background-image: url("./img/otherImages/kidssmoothies.jpg");
-	background-position: center 40%;
-}
-
-.header h1 {
-	position: absolute;
-	top: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	height: 100%;
-	color: var(--blue-green);
-	text-shadow: var(--marian-blue) 0.1rem 0.1rem 0.2rem;
-	font-size: 4rem;
 }
 
 .recipes li {
@@ -433,11 +484,6 @@ button {
 	border-bottom: 1px solid var(--primary-color);
 	width: 70%;
 	padding: 2rem 0;
-}
-
-.recipes .date {
-	border-bottom: 1px dotted var(--blue-green);
-	font-style: italic;
 }
 
 .recipe-list ul {
@@ -457,6 +503,18 @@ button {
 	justify-content: space-evenly;
 	align-items: center;
 	justify-content: center;
+}
+
+.recipes .date {
+	border-bottom: 1px dotted var(--blue-green);
+	font-style: italic;
+}
+
+.links {
+	display: grid;
+	gap: 0.5rem;
+	grid-template-rows: 1fr 1fr;
+	margin-top: 1rem;
 }
 
 .trending li {
@@ -481,40 +539,7 @@ button {
 	justify-content: center;
 }
 
-.labels {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	align-content: center;
-	justify-content: center;
-	gap: 0.5rem;
-}
-
-.label {
-	padding: 0 0.5rem;
-	border-radius: 5px;
-	color: white;
-}
-
-.low-carb {
-	background-color: var(--primary-color);
-}
-
-.low-fat {
-	background-color: var(--pumpkin);
-}
-
-.high-protein {
-	background-color: var(--honolulu-blue);
-}
-
-.bulking {
-	background-color: var(--marian-blue);
-}
-
-.lean {
-	background-color: var(--blue-green);
-}
+/* Search Recipes */
 
 .search-recipes .form {
 	width: 100%;
@@ -574,48 +599,24 @@ button {
 	margin-left: 0.5rem;
 }
 
-.search-recipes .optimizations {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 2rem;
-}
-
 .optimization input[type="checkbox"] {
 	accent-color: var(--blue-green);
-	
 }
 
-.optimization label {
+.optimization .label {
 	margin-left: 0.5rem;
 }
 
-.portion {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: auto;
-	width: 20rem;
-}
-
-.portion input[type="number"] {
-	width: 4rem;
-	margin: 0 0.5rem;
-}
-
-.create-recipe input[type="text"],
-.create-recipe select {
-	width: 20rem;
-	margin: 2rem auto;
-}
+/* Recipe Ingredients */
 
 .recipe-ingredients ul {
 	display: flex;
 	flex-wrap: wrap;
-	width: 90%;
-	justify-content: center;
+	gap: 1rem;
+	width: 80vw;
+	justify-content: space-evenly;
 	list-style: none;
-	margin: 2rem auto;
+	margin: 2rem 2rem;
 }
 
 .recipe-ingredients li {
@@ -623,10 +624,6 @@ button {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-}
-
-.create-recipe .recipe-ingredients ul li,
-.create-recipe .ingredient {
 	position: relative;
 }
 
@@ -636,6 +633,8 @@ button {
 	height: 175px;
 	border-radius: 50%;
 }
+
+/* ingredient pie chart */
 
 .create-recipe .ingredient .chart {
 	position: absolute;
@@ -680,6 +679,8 @@ button {
 	color: var(--danger-color);
 }
 
+/* Nutrition */
+
 .nutrient-grid {
 	margin: auto;
 	width: 80%;
@@ -712,6 +713,8 @@ button {
 	justify-content: center;
 }
 
+/* Media Queries */
+
 @media screen and (max-width: 768px) {
 	.ingredients {
 		width: 90%;
@@ -736,5 +739,10 @@ button {
 		flex-wrap: wrap;
 		border-bottom: 1px dotted var(--blue-green);
 		width: 90%;
+	}
+
+	.category-prev,
+	.category-next {
+		display: none;
 	}
 }
