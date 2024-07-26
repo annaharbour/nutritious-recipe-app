@@ -44,7 +44,7 @@ const Dashboard = ({ showToast }) => {
 				</h2>
 			</Link>
 			{userInfo && (
-				<Link to="/account" className="dash-item account">
+				<Link to="/account" className="dash-item account-details">
 					<h2>
 						<i className="fa-solid fa-user"></i> Your Account
 					</h2>
