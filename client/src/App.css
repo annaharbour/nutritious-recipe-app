@@ -403,7 +403,7 @@ button {
 
 .search-recipes,
 .create-recipe,
-.recipe {
+.recipe, .account {
 	width: 100%;
 	margin: 1rem auto;
 	display: flex;
@@ -571,6 +571,7 @@ button {
 .comment-form textarea, .reply-form textarea {
 	width: 100%;
 	height: 10rem;
+	font-size: 1rem;
 	-webkit-box-shadow: 0 1px 1px var(--dark-color);
 	-moz-box-shadow: 0 1px 1px var(--dark-color);
 	box-shadow: 0 1px 1px var(--dark-color);
