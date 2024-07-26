@@ -8,6 +8,7 @@ import NotFound from "../layout/NotFound";
 import Ingredients from "./Ingredients";
 import Nutrients from "./Nutrients";
 import Rating from "./Rating";
+import Comments from "./Comments";
 
 function Recipe({ showToast }) {
 	const userInfo = useAuth().userInfo;
@@ -18,6 +19,8 @@ function Recipe({ showToast }) {
 	const [recipe, setRecipe] = useState(null);
 	const [recipeAuthor, setRecipeAuthor] = useState(null);
 	const [isSaved, setIsSaved] = useState(false);
+	const [nutritionPanelOpen, setNutritionPanelOpen] = useState(false);
+	const [commentPanelOpen, setCommentPanelOpen] = useState(false);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -106,18 +109,14 @@ function Recipe({ showToast }) {
 						disabled={loading}
 						style={{
 							fontSize: "2rem",
-							color: !isSaved ? "#F9F6EE" : "#ebd92d"
+							color: !isSaved ? "#F9F6EE" : "#ebd92d",
 						}}></i>
 				) : (
 					<Link to="/dashboard">Create an Account to Save</Link>
 				)}
 				{userInfo && <Rating showToast={showToast} recipe={recipe} />}
 			</div>
-			<div>
-				<Link to={`/recipes/${recipe._id}/comments`}>
-					<i className="fa-solid fa-comment"></i> View Comments
-				</Link>
-			</div>
+
 			<div>
 				<ul className="labels">
 					{recipe.labels.map((label) => (
@@ -129,11 +128,30 @@ function Recipe({ showToast }) {
 					))}
 				</ul>
 			</div>
+			<div className="links">
+				<span onClick={() => setCommentPanelOpen(true)}>
+					<i className="fa-solid fa-comment"></i> View Comments
+				</span>
+				<span onClick={() => setNutritionPanelOpen(true)}>
+					<i className="fa-solid fa-glass-water"></i> View Nutrition
+				</span>
+			</div>
 			<Ingredients
 				servings={recipe.servings}
 				ingredients={recipe.ingredients}
 			/>
-			<Nutrients recipe={recipe.nutrition} />
+			<Comments
+				recipe={recipe._id}
+				panelOpen={commentPanelOpen}
+				onClose={() => setCommentPanelOpen(false)}
+				showToast={showToast}
+			/>
+			<Nutrients
+				recipe={recipe.nutrition}
+				panelOpen={nutritionPanelOpen}
+				onClose={() => setNutritionPanelOpen(false)}
+				showToast={showToast}
+			/>
 		</div>
 	);
 }

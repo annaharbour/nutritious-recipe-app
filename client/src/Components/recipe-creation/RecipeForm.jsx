@@ -18,7 +18,7 @@ const RecipeForm = ({ showToast }) => {
 	const [selectedIngredient, setSelectedIngredient] = useState(null);
 	const [selectedPortion, setSelectedPortion] = useState("");
 	const [selectedAmount, setSelectedAmount] = useState(1);
-	const [panelOpen, setPanelOpen] = useState(true);
+	const [panelOpen, setPanelOpen] = useState(false);
 
 	const [recipeNutrition, setRecipeNutrition] = useState([]);
 	const ingredientCategories = [

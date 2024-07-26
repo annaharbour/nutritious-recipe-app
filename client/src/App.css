@@ -477,6 +477,7 @@ button {
 .comments-container {
 	display: grid;
 	justify-items: center;
+	align-content: center;
 	grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
 	width: 100vw;
 	min-height: 100vh;
@@ -604,14 +605,9 @@ button {
 	left: -11px;
 }
 
-.comments-list .comment-box:before {
-	border-width: 11px 13px 11px 0;
-	border-color: transparent rgba(0, 0, 0, 0.05);
-	left: -12px;
-}
-
 .reply-list .comment-box {
-	width: 610px;
+	max-width: 610px;
+
 }
 .comment-box .comment-head {
 	background: #fcfcfc;
@@ -696,6 +692,7 @@ button {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
+
 
 /* Recipes */
 
@@ -907,7 +904,7 @@ button {
 
 /* Nutrition */
 
-.nutrient-panel {
+.panel {
 	margin: auto;
 	padding: 2rem 0 2rem 0;
 	animation: slide-in 1s ease-out forwards;
@@ -923,7 +920,7 @@ button {
 	overflow-y: auto;
 }
 
-.nutrient-panel .fa-x {
+.panel .fa-x {
 	position: absolute;
 	font-size: 2rem;
 	top: 1rem;
@@ -1013,13 +1010,42 @@ button {
 	.category-next {
 		display: none;
 	}
+	.comments-container {
+		grid-template-columns: 1fr; 
+		padding: 0 1rem; 
+	}
+
+	.comments-list {
+		padding-left: 42px;
+		padding-right: 16px;
+		width: 100%;
+		max-width: 100%; 
+	}
 
 	.comments-list .comment-box {
-		width: 90vw;
-		margin: auto;
+		width: 100%; 
+		max-width: 100%; 
 	}
 
-	.reply-list .comment-box {
-		width: 90%;
+	.comments-list .comment-box:before,
+	.comments-list .comment-box:after {
+		left: -8px;
 	}
+
+	.reply-list {
+		padding-left: 30px;
+	}
+
+	.reply-form {
+		padding-left: 30px;
+	}
+
+	.reply-form textarea {
+		width: 100%;
+	}
+	.comment-form textarea {
+		width: 90%;
+		font-size: 1rem; 
+	}
+	
 }

@@ -98,10 +98,10 @@ const App = () => {
 						path="search"
 						element={<Search showToast={showToastMessage} />}
 					/>
-					<Route
+					{/* <Route
 						path=":id/comments"
 						element={<Comments showToast={showToastMessage} />}
-					/>
+					/> */}
 				</Route>
 				<Route path="*" element={<Login />} />
 			</Routes>
