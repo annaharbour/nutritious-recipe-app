@@ -1,6 +1,6 @@
 import React from "react";
 
-function Nutrients({ recipe }) {
+function Nutrients({ recipe, loading, panelOpen, onClose }) {
 	const classifications = [
 		"General",
 		"Protein",
@@ -26,14 +26,15 @@ function Nutrients({ recipe }) {
 
 		return (
 			<div className="nutrient-grid" key={classification}>
-				
 				<h4 className="classification">{classification}</h4>
 				<ul className="nutrients">
 					{sortedNutrients.map((nutrient) => (
-						<li className="nutrient"
+						<li
+							className="nutrient"
 							key={nutrient._id}
-							style={{ fontWeight: nutrient.isMacroNutrient ? "bold" : "normal" }}
-						>
+							style={{
+								fontWeight: nutrient.isMacroNutrient ? "bold" : "normal",
+							}}>
 							{nutrient.name}:{" "}
 							{Math.round((nutrient.amount + Number.EPSILON) * 10) / 10}{" "}
 							{nutrient.unit}
@@ -44,11 +45,12 @@ function Nutrients({ recipe }) {
 		);
 	});
 
-	return (
-		<>
+	return (panelOpen && recipe.length > 0) && (
+		<div className="nutrient-panel">
+			<i className="fa fa-x" onClick={onClose}/>
 			<h2>Nutrition</h2>
-			{nutrientList}
-		</>
+			{loading ? <div>Loading...</div> : nutrientList}
+		</div>
 	);
 }
 
