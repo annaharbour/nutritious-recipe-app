@@ -25,7 +25,7 @@ function Trending() {
 				<div className="trending img" />
 				<h1>Trending Recipes</h1>
 			</div>
-			{loading && <p>Loading...</p>}
+			{loading && <i className="fa fa-spinner spinner"></i>}
 			{recipes && recipes.length !== 0 ? (
 				<ul className="trending recipe-list">
 					{recipes.map((recipe) => (

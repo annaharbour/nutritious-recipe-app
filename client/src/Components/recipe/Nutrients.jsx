@@ -49,8 +49,8 @@ function Nutrients({ recipe, loading, panelOpen, onClose }) {
 		<div className="panel ">
 			<i className="fa fa-x" onClick={onClose}/>
 			<h2>Nutrition</h2>
-			{loading ? <div>Loading...</div> : nutrientList}
-		</div>
+			{loading ? <i className="fa fa-spinner spinner"></i> : nutrientList}
+			</div>
 	);
 }
 

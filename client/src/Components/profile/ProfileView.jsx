@@ -39,7 +39,7 @@ function ProfileView() {
 	}, [id]);
 
 	if (loading) {
-		return <p>Loading...</p>;
+		return <i className="fa fa-spinner spinner"></i>;
 	}
 
 	if (error) {
@@ -114,16 +114,19 @@ function ProfileView() {
 							</span>
 							{recipe.createdAt ? (
 								<div className="rating">
-								<span>
-									Gave{" "}
-									<a href={`/recipes/${recipe._id}`}>{recipe.recipeName}</a>{" "}a rating:{" "}
+									<span>
+										Gave{" "}
+										<a href={`/recipes/${recipe._id}`}>{recipe.recipeName}</a> a
+										rating:{" "}
 									</span>
-									<span className="stars">{Array.from({ length: recipe.stars }, (_, index) => (
-										<i
-											key={index}
-											className="fa-solid fa-star"
-											style={{ fontSize: "1rem", color: "gold" }}></i>
-									))}</span>
+									<span className="stars">
+										{Array.from({ length: recipe.stars }, (_, index) => (
+											<i
+												key={index}
+												className="fa-solid fa-star"
+												style={{ fontSize: "1rem", color: "gold" }}></i>
+										))}
+									</span>
 								</div>
 							) : (
 								<span>

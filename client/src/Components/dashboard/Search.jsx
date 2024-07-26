@@ -4,6 +4,7 @@ import { searchRecipes } from "../../services/recipeService";
 import { getIngredientsByCategory } from "../../services/ingredientService";
 
 const Search = ({ showToast }) => {
+	const [loading, setLoading] = useState(false);
 	const [recipeName, setRecipeName] = useState("");
 	const [userName, setUserName] = useState("");
 	const [ingredients, setIngredients] = useState([]);
@@ -49,6 +50,7 @@ const Search = ({ showToast }) => {
 	const handleSearch = async (e) => {
 		e.preventDefault();
 		try {
+			setLoading(true);
 			const response = await searchRecipes({
 				recipeName,
 				userName,
@@ -57,6 +59,7 @@ const Search = ({ showToast }) => {
 				optimizations: JSON.stringify(optimizations),
 			});
 			setResults(response);
+			setLoading(false);
 		} catch (err) {
 			console.error("Error searching recipes:", err);
 		}
@@ -255,7 +258,9 @@ const Search = ({ showToast }) => {
 
 			<div className="recipes">
 				<h3>Results:</h3>
+				
 				<ul className="recipe-list">
+				{loading && <i className="fa fa-spinner spinner"></i>}
 					{results && results.length > 0 ? (
 						results.map((recipe) => (
 							<li>

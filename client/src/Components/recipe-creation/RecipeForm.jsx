@@ -325,7 +325,7 @@ const RecipeForm = ({ showToast }) => {
 						<button className="btn btn-primary" disabled={loading} onClick={fetchRecipeNutrition}>
 							Nutrition
 						</button>
-						{loading && <p>Loading...</p>}
+						
 					</>
 				)}
 			</form>

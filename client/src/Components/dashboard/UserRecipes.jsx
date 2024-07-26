@@ -24,10 +24,10 @@ function UserRecipes() {
 	return (
 		<div className="recipes">
 			<div className="header">
-				<div className="user-recipes img"/>
+				<div className="user-recipes img" />
 				<h1>Your Recipes</h1>
 			</div>
-			{loading && <p>Loading...</p>}
+			{loading && <i className="fa-solid fa-spinner spinner"></i>}{" "}
 			{userRecipes && userRecipes.length !== 0 ? (
 				<ul className="recipe-list">
 					{userRecipes.map((recipe) => (
@@ -55,8 +55,14 @@ function UserRecipes() {
 				</div>
 			)}
 			<div className="links">
-				<Link to="/recipes/create"><i className="fa fa-plus"/>Create a New Recipe</Link>
-				<Link to="/dashboard"><i className="fa fa-arrow-left"/>Back to Dashboard</Link>
+				<Link to="/recipes/create">
+					<i className="fa fa-plus" />
+					Create a New Recipe
+				</Link>
+				<Link to="/dashboard">
+					<i className="fa fa-arrow-left" />
+					Back to Dashboard
+				</Link>
 			</div>
 		</div>
 	);

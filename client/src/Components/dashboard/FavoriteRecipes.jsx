@@ -26,11 +26,10 @@ function FavoriteRecipes() {
 	return (
 		<div className="recipes">
 			<div className="header">
-				<div className="favorites img"/>
+				<div className="favorites img" />
 				<h1>Your Saved Recipes</h1>
 			</div>
-			
-			{loading && <p>Loading...</p>}
+			{loading && <i className="fa-solid fa-spinner spinner"></i>}{" "}
 			{favorites && favorites.length !== 0 ? (
 				<ul className="recipe-list">
 					{favorites.map((recipe) => (
@@ -43,7 +42,8 @@ function FavoriteRecipes() {
 									<span
 										className={`label ${label
 											.toLowerCase()
-											.replace(/\s+/g, "-")}`} key={label}>
+											.replace(/\s+/g, "-")}`}
+										key={label}>
 										{label}
 									</span>
 								))}
@@ -58,8 +58,14 @@ function FavoriteRecipes() {
 				</div>
 			)}
 			<div className="links">
-				<Link to="/recipes/search"><i className="fa fa-magnifying-glass"/>Find New Recipes</Link>
-				<Link to="/dashboard"><i className="fa fa-arrow-left"/>Back to Dashboard</Link>
+				<Link to="/recipes/search">
+					<i className="fa fa-magnifying-glass" />
+					Find New Recipes
+				</Link>
+				<Link to="/dashboard">
+					<i className="fa fa-arrow-left" />
+					Back to Dashboard
+				</Link>
 			</div>
 		</div>
 	);

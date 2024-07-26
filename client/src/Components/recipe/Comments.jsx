@@ -57,8 +57,13 @@ const Comments = ({ showToast, panelOpen, onClose, recipe }) => {
 					<div className="comment-main-level">
 						<h2>Comments</h2>
 						<links>
-							<span onClick={onClose}><i className="fas fa-arrow-left" />Back to recipe</span>
+							<span onClick={onClose}>
+								<i className="fas fa-arrow-left" />
+								Back to recipe
+							</span>
 						</links>
+						{loading && <i className="fa fa-spinner spinner"></i>}
+
 						{comments.length > 0 ? (
 							<ul className="comments-list">
 								{comments.map((comment) => (
