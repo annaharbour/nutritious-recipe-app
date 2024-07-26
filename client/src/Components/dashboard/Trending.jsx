@@ -52,7 +52,7 @@ function Trending() {
 				</ul>
 			) : (
 				<div>
-					<p>No favorite recipes yet</p>
+					<p>Oops! We're having an error in our rating system. Check back later!</p>
 				</div>
 			)}
 			<div className="links">

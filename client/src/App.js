@@ -12,7 +12,6 @@ import Recipe from "./Components/recipe/Recipe";
 import Search from "./Components/dashboard/Search";
 import RecipeForm from "./Components/recipe-creation/RecipeForm";
 import ProfileView from "./Components/profile/ProfileView";
-import Comments from "./Components/recipe/Comments";
 import Reset from "./Components/auth/Reset";
 import UserRecipes from "./Components/dashboard/UserRecipes";
 import FavoriteRecipes from "./Components/dashboard/FavoriteRecipes";
