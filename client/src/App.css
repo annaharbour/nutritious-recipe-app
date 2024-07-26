@@ -607,7 +607,6 @@ button {
 
 .reply-list .comment-box {
 	max-width: 610px;
-
 }
 .comment-box .comment-head {
 	background: #fcfcfc;
@@ -692,7 +691,6 @@ button {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
-
 
 /* Recipes */
 
@@ -929,6 +927,16 @@ button {
 	color: var(--dark-color);
 }
 
+@keyframes slide-in {
+	from {
+		left: 100%;
+	}
+	to {
+		left: 50%;
+		transform: translateX(-50%) translateY(-50%);
+	}
+}
+
 .nutrient-grid {
 	margin: 2rem auto;
 	width: 80%;
@@ -941,16 +949,6 @@ button {
 	background-color: white;
 	color: var(--dark-color);
 	border-radius: 5px;
-}
-
-@keyframes slide-in {
-	from {
-		left: 100%;
-	}
-	to {
-		left: 50%;
-		transform: translateX(-50%) translateY(-50%);
-	}
 }
 
 .nutrient-grid .classification {
@@ -998,6 +996,7 @@ button {
 	.rating {
 		display: grid;
 	}
+	  
 
 	.recipe-list li {
 		display: flex;
@@ -1011,20 +1010,20 @@ button {
 		display: none;
 	}
 	.comments-container {
-		grid-template-columns: 1fr; 
-		padding: 0 1rem; 
+		grid-template-columns: 1fr;
+		padding: 0 1rem;
 	}
 
 	.comments-list {
 		padding-left: 42px;
 		padding-right: 16px;
 		width: 100%;
-		max-width: 100%; 
+		max-width: 100%;
 	}
 
 	.comments-list .comment-box {
-		width: 100%; 
-		max-width: 100%; 
+		width: 100%;
+		max-width: 100%;
 	}
 
 	.comments-list .comment-box:before,
@@ -1045,7 +1044,6 @@ button {
 	}
 	.comment-form textarea {
 		width: 90%;
-		font-size: 1rem; 
+		font-size: 1rem;
 	}
-	
 }

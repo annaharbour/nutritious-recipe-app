@@ -4,33 +4,33 @@ import { getRating, rateRecipe } from "../../services/ratingService";
 
 function RatingComponent({ recipe, showToast }) {
 	const userInfo = useAuth().userInfo;
-	const userId = userInfo._id;
+	const userId = userInfo ? userInfo._id : null;
 	const [loading, setLoading] = useState(false);
 	const [stars, setStars] = useState(null);
 	const [meanRating, setMeanRating] = useState(null);
+	const [hoveredStar, setHoveredStar] = useState(null); 
 
 	useEffect(() => {
 		const fetchRating = async () => {
 			try {
 				const res = await getRating(recipe._id);
-				res.meanRating && setMeanRating(res.meanRating);
-				res.userRating && setStars(res.userRating);
+				if (res.meanRating) setMeanRating(res.meanRating);
+				if (res.userRating) setStars(res.userRating);
 			} catch (error) {
 				console.error("Error fetching user rating:", error);
 			}
 		};
 
 		fetchRating();
-	}, [recipe, userId]);
+	}, [recipe._id, userId]);
 
 	const handleRateRecipe = async (newStars) => {
 		setLoading(true);
 		try {
 			const res = await rateRecipe(recipe._id, newStars);
-			if (res.userRating && res.userRating !== null) {
+			if (res.userRating !== null) {
 				setStars(res.userRating);
 				setMeanRating(res.meanRating);
-				console.log(meanRating)
 			}
 			showToast("Rating submitted", "success");
 		} catch (error) {
@@ -46,6 +46,7 @@ function RatingComponent({ recipe, showToast }) {
 				const starIndex = index + 1;
 				const isUserRating = stars === starIndex;
 				const isMeanRatingOrBelow = meanRating >= starIndex;
+				const isHovered = hoveredStar === starIndex;
 
 				return (
 					<i
@@ -54,9 +55,12 @@ function RatingComponent({ recipe, showToast }) {
 						key={starIndex}
 						style={{
 							cursor: loading ? "not-allowed" : "pointer",
-							color: isMeanRatingOrBelow ? "gold" : "#F9F6EE",
-							fontSize: isUserRating ? "2rem" : "1.5rem",
+							color: isMeanRatingOrBelow || isHovered ? "gold" : "#F9F6EE",
+							fontSize: isHovered || isUserRating ? "2rem" : "1.5rem",
+							transition: 'font-size 0.3s ease',
 						}}
+						onMouseEnter={() => setHoveredStar(starIndex)}
+						onMouseLeave={() => setHoveredStar(null)}
 						onClick={() => !loading && handleRateRecipe(starIndex)}
 					/>
 				);
