@@ -744,6 +744,14 @@ button {
 	margin-top: 1rem;
 }
 
+.links > span {
+	cursor: pointer;
+}
+
+.links > span:hover {
+	color: var(--honolulu-blue)
+}
+
 .trending li {
 	grid-template-columns: 1fr 1fr 1fr 1fr;
 }
