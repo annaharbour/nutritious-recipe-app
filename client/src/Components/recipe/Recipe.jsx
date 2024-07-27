@@ -136,8 +136,9 @@ function Recipe({ showToast }) {
 					<i className="fa-solid fa-glass-water"></i> View Nutrition
 				</span>
 			</div>
+			<h3>Recipe</h3>
+			<span className="portion">Serves {recipe.servings}</span>
 			<Ingredients
-				servings={recipe.servings}
 				ingredients={recipe.ingredients}
 			/>
 			<Comments

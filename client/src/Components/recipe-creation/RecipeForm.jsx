@@ -52,7 +52,7 @@ const RecipeForm = ({ showToast }) => {
 			if (recipeIngredients.length === 0) {
 				showToast("Please add ingredients to calculate nutrition", "error");
 				return;
-			};
+			}
 
 			const ingredientsPayload = recipeIngredients.map(
 				({ _id, portionId, amount }) => ({
@@ -174,16 +174,6 @@ const RecipeForm = ({ showToast }) => {
 	const handleSaveRecipe = async (e) => {
 		e.preventDefault();
 		try {
-			const hasLiquid = recipeIngredients.some(
-				(ingredient) => ingredient.classification === "Liquid"
-			);
-
-			if (!hasLiquid) {
-				showToast("Liquid required", "error");
-				setCategory("Liquid");
-				return;
-			}
-
 			await createRecipe(recipeName, recipeIngredients);
 			navigate("/dashboard");
 		} catch (error) {
@@ -310,27 +300,33 @@ const RecipeForm = ({ showToast }) => {
 				</div>
 
 				{recipeIngredients && recipeIngredients.length > 0 && (
-					<>
-						<RecipeIngredients
-							recipeIngredients={recipeIngredients}
-							handleRemoveIngredient={handleRemoveIngredient}
-						/>
-						<br></br>
-						<button
-							className="btn btn-primary"
-							disabled={loading}
-							type="submit">
-							Post Recipe
-						</button>
-						<button className="btn btn-primary" disabled={loading} onClick={fetchRecipeNutrition}>
-							Nutrition
-						</button>
-						
-					</>
+					<RecipeIngredients
+						recipeIngredients={recipeIngredients}
+						handleRemoveIngredient={handleRemoveIngredient}
+					/>
 				)}
+				<br></br>
+				{loading && <i className="fa fa-spinner spinner"></i>}
+				<br></br>
+				<button className="btn btn-primary" disabled={loading} type="submit">
+					Post Recipe
+				</button>
+				<button
+					className="btn btn-primary"
+					disabled={loading}
+					onClick={fetchRecipeNutrition}>
+					Nutrition
+				</button>
 			</form>
 
-			{recipeNutrition.length > 0 && <Nutrients recipe={recipeNutrition} loading={loading} panelOpen={panelOpen} onClose={() => setPanelOpen(false)}/>}
+			{recipeNutrition.length > 0 && (
+				<Nutrients
+					recipe={recipeNutrition}
+					loading={loading}
+					panelOpen={panelOpen}
+					onClose={() => setPanelOpen(false)}
+				/>
+			)}
 		</div>
 	);
 };

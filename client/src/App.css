@@ -3,6 +3,7 @@
 	--primary-color: #699b46;
 	--dark-color: #14281f;
 	--light-color: #ebd92d;
+	--mid-color: #d6c328
 	--danger-color: #96100f;
 	--success-color: #7cb518;
 	--orange-pantone: #ff5400ff;
@@ -38,6 +39,7 @@ body {
 
 i {
 	margin: 0 0.5rem;
+	cursor: pointer;
 }
 
 ul {
@@ -74,7 +76,6 @@ nav ul {
 
 nav a {
 	color: white;
-	list-style: none;
 	padding-right: 1rem;
 }
 
@@ -110,22 +111,36 @@ nav i {
 	}
 }
 
+
 .btn {
 	display: inline-block;
 	background: var(--light-color);
 	color: #333;
 	padding: 0.5rem 1.5rem;
+	box-shadow: 0 .1rem .1rem 0 var(--dark-color);
+	border-radius: 5px;
 	border: none;
 	cursor: pointer;
 	margin: 0.5rem;
-	transition: opacity 0.2s ease-in;
 	outline: none;
 }
 
+.btn:hover {
+	background: var(--mid-color);
+}
+
+
+
 .btn-warning {
+	background: var(--pumpkin);
+	color: white;
+}
+
+.btn-warning:hover {
 	background: var(--orange-pantone);
 	color: white;
 }
+
 
 .line {
 	height: 1px;
@@ -838,13 +853,12 @@ button {
 
 /* Recipe Ingredients */
 
-.recipe-ingredients ul {
+.recipe-ingredients {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
 	width: 80vw;
 	justify-content: space-evenly;
-	list-style: none;
 	margin: 2rem 2rem;
 }
 
@@ -861,6 +875,10 @@ button {
 	width: 175px;
 	height: 175px;
 	border-radius: 50%;
+}
+
+.create-recipe .ingredient {
+	cursor: pointer;
 }
 
 /* ingredient pie chart */
@@ -987,11 +1005,6 @@ button {
 /* Media Queries */
 
 @media screen and (max-width: 768px) {
-	.ingredients {
-		width: 90%;
-		grid-template-columns: repeat(2, 1fr);
-	}
-
 	.tabs {
 		width: 90%;
 		grid-template-columns: repeat(3, 1fr);
@@ -1004,7 +1017,6 @@ button {
 	.rating {
 		display: grid;
 	}
-	  
 
 	.recipe-list li {
 		display: flex;

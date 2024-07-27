@@ -29,12 +29,15 @@ function RecipeIngredients({ handleRemoveIngredient, recipeIngredients }) {
 
 			<ul>
 				{ingredients.map((ingredient) => (
+					
 					<Ingredient
 						key={ingredient._id}
 						ingredient={ingredient}
 						handleRemoveIngredient={handleRemoveIngredient}
 					/>
+					
 				))}
+				
 			</ul>
 		</div>
 	);
