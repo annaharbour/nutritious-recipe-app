@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Acme&family=Figtree:ital,wght@0,300..900;1,300..900&family=Outfit:wght@100..900&display=swap");
+
 :root {
 	/* Color Pallete */
 	--primary-color: #699b46;
@@ -13,6 +15,11 @@
 	--blue-green: #0096c7ff;
 	--honolulu-blue: #0077b6ff;
 	--marian-blue: #023e8aff;
+
+	/* Fonts */
+	--figtree: "Figtree", sans-serif;
+	--acme: "Acme", sans-serif;
+	--outfit: "Outfit", sans-serif;
 
 	/* Sizes */
 	--h2-min-size: 0.8rem;
@@ -30,11 +37,11 @@
 }
 
 body {
-	font-family: "myriad-pro", "Times New Roman", Times, serif;
 	font-size: 1.5rem;
 	line-height: 1.6;
 	background-color: #fff;
 	color: #333;
+	font-family: var(--outfit);
 }
 
 i {
@@ -47,12 +54,26 @@ ul {
 }
 
 h1 {
+	font-size: 4rem;
+	font-family: var(--acme);
+}
+
+h2 {
+	font-size: 3rem;
+	font-family: var(--figtree);
+}
+
+h3 {
 	font-size: 2rem;
+	font-family: var(--acme);
+	font-weight: 500;
+	color: var(--marian-blue)
 }
 
 a {
 	text-decoration: none;
 	color: var(--pacific-cyan);
+	cursor: pointer;
 }
 
 a:visited {
@@ -62,12 +83,18 @@ a:visited {
 	text-decoration: underline;
 }
 
+
+input {
+	font-family: var(--figtree);
+}
 /* Nav */
 
 nav {
 	background-color: var(--primary-color);
 	color: #fff;
 	padding: 1rem;
+	font-family: var(--figtree);
+	font-weight: 500;
 }
 
 nav ul {
@@ -100,6 +127,7 @@ nav i {
 
 .spinner {
 	animation: spin 2s linear infinite;
+	color: var(--pacific-cyan)
 }
 
 @keyframes spin {
@@ -111,26 +139,28 @@ nav i {
 	}
 }
 
-
 .btn {
 	display: inline-block;
 	background: var(--light-color);
 	color: #333;
 	padding: 0.5rem 1.5rem;
-	box-shadow: 0 .1rem .1rem 0 var(--dark-color);
+	box-shadow: 0 0.1rem 0.1rem 0 var(--dark-color);
 	border-radius: 5px;
 	border: none;
 	cursor: pointer;
-	margin: 0.5rem;
+	margin: .5rem;
 	outline: none;
+	font-family: var(--figtree);
+	font-weight: 400;
 }
 
 .btn:active {
 	transform: translateY(0.1rem);
-	box-shadow: 0 .05 .05 0 var(--dark-color);
+	box-shadow: 0 0.05 0.05 0 var(--dark-color);
 }
 
-.btn:hover, .btn:disabled {
+.btn:hover,
+.btn:disabled {
 	background: var(--mid-color);
 }
 
@@ -139,7 +169,8 @@ nav i {
 	color: white;
 }
 
-.btn-warning:hover, .btn-warning:disabled {
+.btn-warning:hover,
+.btn-warning:disabled {
 	background: var(--orange-pantone);
 	color: white;
 }
@@ -158,6 +189,7 @@ nav i {
 	position: relative;
 	width: 100vw;
 	height: 25rem;
+	margin-bottom: 2rem;
 }
 
 .header .img {
@@ -202,6 +234,7 @@ nav i {
 	padding: 0 0.5rem;
 	border-radius: 5px;
 	color: white;
+	font-family: var(--acme);
 }
 
 .low-carb {
@@ -441,6 +474,7 @@ button {
 .create-recipe label {
 	color: var(--marian-blue);
 	font-size: 2rem;
+	font-family: var(--acme);
 }
 
 .category {
@@ -463,7 +497,7 @@ button {
 }
 
 .category-current {
-	font-weight: bold;
+	font-weight: 400;
 }
 
 .category-next {
@@ -766,7 +800,7 @@ button {
 }
 
 .links > span:hover {
-	color: var(--honolulu-blue)
+	color: var(--honolulu-blue);
 }
 
 .trending li {

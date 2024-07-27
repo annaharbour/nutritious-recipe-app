@@ -177,7 +177,7 @@ const RecipeForm = ({ showToast }) => {
 			setLoading(true);
 			await createRecipe(recipeName, recipeIngredients);
 			setLoading(false);
-			navigate("/dashboard");
+			navigate("/recipes");
 		} catch (error) {
 			showToast("Error saving recipe");
 		}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const Dashboard = ({ showToast }) => {
+const Dashboard = () => {
 	const userInfo = useAuth().userInfo;
 	const navigate = useNavigate();
 

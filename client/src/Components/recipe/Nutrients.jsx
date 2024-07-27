@@ -26,7 +26,7 @@ function Nutrients({ recipe, loading, panelOpen, onClose }) {
 
 		return (
 			<div className="nutrient-grid" key={classification}>
-				<h4 className="classification">{classification}</h4>
+				<h3 className="classification">{classification}</h3>
 				<ul className="nutrients">
 					{sortedNutrients.map((nutrient) => (
 						<li
@@ -48,7 +48,7 @@ function Nutrients({ recipe, loading, panelOpen, onClose }) {
 	return (panelOpen && recipe.length > 0) && (
 		<div className="panel ">
 			<i className="fa fa-x" onClick={onClose}/>
-			<h2>Nutrition</h2>
+			<h1>Nutrition</h1>
 			{loading ? <i className="fa fa-spinner spinner"></i> : nutrientList}
 			</div>
 	);

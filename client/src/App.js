@@ -79,9 +79,7 @@ const App = () => {
 					/>
 					<Route
 						path="/recipes/trending"
-						element={
-							<PrivateRoute showToast={showToastMessage} Component={Trending} />
-						}
+						element={<Trending showToast={showToastMessage} />}
 					/>
 					<Route
 						path="/recipes/create"

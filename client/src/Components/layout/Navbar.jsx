@@ -42,7 +42,7 @@ const Navbar = () => {
 				</Link>
 			</li>
 			<li>
-				<Link to="/recipes/search">
+				<Link to="/recipes/trending">
 					<i className="fa-solid fa-blender"></i>Trending
 				</Link>
 			</li>

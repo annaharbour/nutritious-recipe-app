@@ -125,6 +125,7 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 					showToast={showToast}
 					addResponse={handleAddResponse}
 					commentId={comment._id}
+					user={userInfo._id}
 				/>
 			)}
 		</div>
