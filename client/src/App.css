@@ -853,7 +853,7 @@ button {
 
 /* Recipe Ingredients */
 
-.recipe-ingredients {
+.recipe-ingredients ul {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;

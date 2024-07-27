@@ -7,7 +7,8 @@ function Ingredients({ ingredients }) {
 	);
 
 	return (
-		<ul className="recipe-ingredients">
+		<div className="recipe-ingredients">
+		<ul>
 			{sortedIngredients.map((ingredient) => (
 				<li className="ingredient" key={ingredient._id}>
 					<img
@@ -19,6 +20,7 @@ function Ingredients({ ingredients }) {
 				</li>
 			))}
 		</ul>
+		</div>
 	);
 }
 
