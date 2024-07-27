@@ -3,7 +3,7 @@
 	--primary-color: #699b46;
 	--dark-color: #14281f;
 	--light-color: #ebd92d;
-	--mid-color: #d6c328
+	--mid-color: #d6c328;
 	--danger-color: #96100f;
 	--success-color: #7cb518;
 	--orange-pantone: #ff5400ff;
@@ -125,22 +125,24 @@ nav i {
 	outline: none;
 }
 
-.btn:hover {
-	background: var(--mid-color);
+.btn:active {
+	transform: translateY(0.1rem);
+	box-shadow: 0 .05 .05 0 var(--dark-color);
 }
 
-
+.btn:hover, .btn:disabled {
+	background: var(--mid-color);
+}
 
 .btn-warning {
 	background: var(--pumpkin);
 	color: white;
 }
 
-.btn-warning:hover {
+.btn-warning:hover, .btn-warning:disabled {
 	background: var(--orange-pantone);
 	color: white;
 }
-
 
 .line {
 	height: 1px;
