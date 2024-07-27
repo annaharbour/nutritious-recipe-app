@@ -161,17 +161,17 @@ nav i {
 
 .btn:hover,
 .btn:disabled {
-	background: var(--mid-color);
+	background-color: var(--mid-color);
 }
 
 .btn-warning {
-	background: var(--pumpkin);
+	background-color: var(--pumpkin);
 	color: white;
 }
 
 .btn-warning:hover,
 .btn-warning:disabled {
-	background: var(--orange-pantone);
+	background-color: var(--orange-pantone);
 	color: white;
 }
 

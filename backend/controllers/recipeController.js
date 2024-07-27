@@ -54,7 +54,7 @@ const calculateRecipeNutrition = async (req, res) => {
 };
 
 const createRecipe = async (req, res) => {
-	const { name, ingredients } = req.body;
+	const { name, ingredients, servings } = req.body;
 
 	const userId = req.user.id || req.user._id;
 
@@ -88,6 +88,7 @@ const createRecipe = async (req, res) => {
 			name: name,
 			ingredients: populatedIngredients,
 			userId: userId,
+			servings: servings
 		});
 
 		await newRecipe.calculateNutrition();

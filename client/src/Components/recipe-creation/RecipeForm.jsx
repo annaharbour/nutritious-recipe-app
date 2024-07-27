@@ -175,7 +175,7 @@ const RecipeForm = ({ showToast }) => {
 		e.preventDefault();
 		try {
 			setLoading(true);
-			await createRecipe(recipeName, recipeIngredients);
+			await createRecipe(recipeName, recipeIngredients, servings);
 			setLoading(false);
 			navigate("/recipes");
 		} catch (error) {
