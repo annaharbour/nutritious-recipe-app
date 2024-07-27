@@ -174,7 +174,9 @@ const RecipeForm = ({ showToast }) => {
 	const handleSaveRecipe = async (e) => {
 		e.preventDefault();
 		try {
+			setLoading(true);
 			await createRecipe(recipeName, recipeIngredients);
+			setLoading(false);
 			navigate("/dashboard");
 		} catch (error) {
 			showToast("Error saving recipe");
@@ -209,7 +211,6 @@ const RecipeForm = ({ showToast }) => {
 						}}
 						value={servings}
 						min="1"
-						max="12"
 					/>
 				</div>
 				<div className="form-group category">
@@ -272,7 +273,8 @@ const RecipeForm = ({ showToast }) => {
 								className="amount"
 								type="number"
 								value={selectedAmount}
-								min="1"
+								step="any"
+								min="0"
 								max="12"
 								onChange={(e) => setSelectedAmount(e.target.value)}
 								required
