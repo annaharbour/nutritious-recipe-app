@@ -54,8 +54,7 @@ const calculateRecipeNutrition = async (req, res) => {
 };
 
 const createRecipe = async (req, res) => {
-	const { name, ingredients, servings } = req.body;
-
+	const { name, ingredients, servings} = req.body;
 	const userId = req.user.id || req.user._id;
 
 	try {
@@ -87,8 +86,8 @@ const createRecipe = async (req, res) => {
 		const newRecipe = new Recipe({
 			name: name,
 			ingredients: populatedIngredients,
+			servings: servings,
 			userId: userId,
-			servings: servings
 		});
 
 		await newRecipe.calculateNutrition();
@@ -103,6 +102,7 @@ const createRecipe = async (req, res) => {
 		res.status(500).json({ error: "Error creating recipe" });
 	}
 };
+
 
 const getRecipes = async (req, res) => {
 	try {

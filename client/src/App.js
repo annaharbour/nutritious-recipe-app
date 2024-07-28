@@ -55,7 +55,7 @@ const App = () => {
 			<Navbar />
 			<ToastContainer limit={3} />
 			<Routes>
-				<Route path="account" element={<PrivateRoute Component={Profile} />} />
+				<Route path="account" element={<PrivateRoute showToast={showToastMessage} Component={Profile} />} />
 				<Route path="profiles">
 					<Route path=":id" element={<ProfileView />} />
 				</Route>
@@ -95,10 +95,6 @@ const App = () => {
 						path="search"
 						element={<Search showToast={showToastMessage} />}
 					/>
-					{/* <Route
-						path=":id/comments"
-						element={<Comments showToast={showToastMessage} />}
-					/> */}
 				</Route>
 				<Route path="*" element={<Login />} />
 			</Routes>

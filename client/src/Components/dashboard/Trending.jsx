@@ -29,16 +29,17 @@ function Trending() {
 			{recipes && recipes.length !== 0 ? (
 				<ul className="trending recipe-list">
 					{recipes.map((recipe) => (
-						<li>
+						<li key={recipe._id}>
 							<span>
 								<span className="number">{recipes.indexOf(recipe) + 1}</span>
 							</span>
-							<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
+							<Link to={`/recipes/${recipe._id}`}>
 								<h4>{recipe.name}</h4>
 							</Link>
 							<span className="recipe labels">
 								{recipe.labels.map((label) => (
 									<span
+										key={label}
 										className={`label ${label
 											.toLowerCase()
 											.replace(/\s+/g, "-")}`}>
@@ -52,7 +53,9 @@ function Trending() {
 				</ul>
 			) : (
 				<div>
-					<p>Oops! We're having an error in our rating system. Check back later!</p>
+					<p>
+						Oops! We're having an error in our rating system. Check back later!
+					</p>
 				</div>
 			)}
 			<div className="links">

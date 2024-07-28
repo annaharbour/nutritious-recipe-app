@@ -20,6 +20,7 @@ function Profile({ showToast }) {
 			try {
 				setLoading(true);
 				let response = await getUser();
+				console.log(response)
 				setUserInfo(response);
 				const { name, email, phone } = response;
 				setFormData({

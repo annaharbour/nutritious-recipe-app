@@ -95,6 +95,7 @@ nav {
 	padding: 1rem;
 	font-family: var(--figtree);
 	font-weight: 500;
+	font-size: 1rem;
 }
 
 nav ul {
@@ -1041,6 +1042,7 @@ button {
 /* Media Queries */
 
 @media screen and (max-width: 768px) {
+	
 	.tabs {
 		width: 90%;
 		grid-template-columns: repeat(3, 1fr);
@@ -1102,4 +1104,6 @@ button {
 		width: 90%;
 		font-size: 1rem;
 	}
+
+
 }

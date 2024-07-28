@@ -31,13 +31,13 @@ function UserRecipes() {
 			{userRecipes && userRecipes.length !== 0 ? (
 				<ul className="recipe-list">
 					{userRecipes.map((recipe) => (
-						<li>
-							<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
+						<li key={recipe._id}>
+							<Link to={`/recipes/${recipe._id}`}>
 								<h4>{recipe.name}</h4>
 							</Link>
 							<span className="recipe labels">
 								{recipe.labels.map((label) => (
-									<span
+									<span key={label}
 										className={`label ${label
 											.toLowerCase()
 											.replace(/\s+/g, "-")}`}>
