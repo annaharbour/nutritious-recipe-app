@@ -22,7 +22,6 @@ function Profile({ showToast }) {
             try {
                 setLoading(true);
                 let response = await getUser();
-                console.log(response);
                 setUserInfo(response);
                 const { name, email, phone } = response;
                 setFormData({
@@ -46,7 +45,10 @@ function Profile({ showToast }) {
         if (window.confirm("Are you sure you want to delete your account?")) {
             try {
                 const res = await deleteUser(userInfo._id);
-                console.log(res.data);
+				if (res) {
+					showToast("Account deleted successfully", "success");
+					navigate("/");
+				}
             } catch (error) {
                 console.error(error);
             }

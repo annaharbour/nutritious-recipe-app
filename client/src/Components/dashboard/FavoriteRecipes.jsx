@@ -12,7 +12,6 @@ function FavoriteRecipes() {
 			try {
 				setLoading(true);
 				const res = await getUserFavorites();
-				console.log(res);
 				setFavorites(res);
 				setLoading(false);
 			} catch (err) {
@@ -33,7 +32,7 @@ function FavoriteRecipes() {
 			{favorites && favorites.length !== 0 ? (
 				<ul className="recipe-list">
 					{favorites.map((recipe) => (
-						<li>
+						<li key={recipe._id}>
 							<Link key={recipe._id} to={`/recipes/${recipe._id}`}>
 								<h4>{recipe.name}</h4>
 							</Link>

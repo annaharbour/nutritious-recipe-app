@@ -263,13 +263,13 @@ const Search = ({ showToast }) => {
 				{loading && <i className="fa fa-spinner spinner"></i>}
 					{results && results.length > 0 ? (
 						results.map((recipe) => (
-							<li>
+							<li key={recipe._id}>
 								<Link to={`/recipes/${recipe._id}`} key={recipe._id}>
 									{recipe.name}
 								</Link>
 								<div className="recipe labels">
 									{recipe.labels.map((label) => (
-										<span
+										<span key={label}
 											className={`label ${label
 												.toLowerCase()
 												.replace(/\s+/g, "-")}`}>

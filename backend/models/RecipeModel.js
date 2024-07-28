@@ -117,7 +117,7 @@ recipeSchema.methods.calculateNutrition = async function () {
 
 	this.labels = [];
 
-	if (proteinRatio > 0.3 && carbRatio < 0.4 && fatRatio < 0.3) {
+	if (totalCalores < 300) {
 		this.labels.push("Lean");
 	}
 	if (carbRatio < 0.25) {

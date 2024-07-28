@@ -56,12 +56,12 @@ const Comments = ({ showToast, panelOpen, onClose, recipe }) => {
 				<div className="comments-container">
 					<div className="comment-main-level">
 						<h2>Comments</h2>
-						<links>
+						<div className="links">
 							<span onClick={onClose}>
 								<i className="fas fa-arrow-left" />
 								Back to recipe
 							</span>
-						</links>
+						</div>
 						{loading && <i className="fa fa-spinner spinner"></i>}
 
 						{comments.length > 0 ? (
