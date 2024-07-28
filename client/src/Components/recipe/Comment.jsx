@@ -112,9 +112,12 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 				<ul className="reply-list">
 					{responses.map((response, index) => (
 						<Response
+							userInfo={userInfo}
 							showToast={showToast}
 							key={index}
 							response={response}
+							originalPoster={comment.user}
+							user={userInfo._id}
 							deleteResponse={handleDeleteResponse}
 						/>
 					))}
@@ -125,7 +128,6 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 					showToast={showToast}
 					addResponse={handleAddResponse}
 					commentId={comment._id}
-					user={userInfo._id}
 				/>
 			)}
 		</div>
