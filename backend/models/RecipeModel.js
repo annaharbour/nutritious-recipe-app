@@ -63,29 +63,33 @@ recipeSchema.methods.calculateNutrition = async function () {
 		);
 
 		for (const nutrient of ingredientNutrition) {
+			nutrient.amount /= servings;
 			const existingNutrient = totalNutrition.find((n) =>
 				n._id.equals(nutrient._id)
 			);
 			if (existingNutrient) {
-				existingNutrient.amount += nutrient.amount /= servings;
+				existingNutrient.amount += nutrient.amount;
 			} else {
 				totalNutrition.push(nutrient);
-			}
-
-			if (nutrient.macro && nutrient.macro === true) {
-				if (nutrient.name === "Energy") {
-					totalCalories += nutrient.amount;
-				} else if (nutrient.name === "Carbohydrates") {
-					totalCarbohydrates += nutrient.amount;
-				} else if (nutrient.name === "Protein") {
-					totalProtein += nutrient.amount;
-				} else if (nutrient.name === "Fat") {
-					totalFat += nutrient.amount;
-				}
 			}
 		}
 	}
 
+	for (nutrient of totalNutrition) {
+		if (nutrient.name === "Energy") {
+			totalCalories += nutrient.amount;
+			console.log('Calories', totalCalories);
+		} else if (nutrient.name === "Carbohydrates") {
+			totalCarbohydrates += nutrient.amount;
+			console.log('Carbs', totalCarbohydrates);
+		} else if (nutrient.name === "Protein") {
+			totalProtein += nutrient.amount;
+			console.log('Protein', totalProtein);
+		} else if (nutrient.name === "Fat") {
+			totalFat += nutrient.amount;
+			console.log('Fat', totalFat)
+		}
+	}
 	if (totalCalories < 300) {
 		this.labels.push("Lean");
 	}
@@ -95,14 +99,17 @@ recipeSchema.methods.calculateNutrition = async function () {
 	if ((totalProtein * 4) / totalCalories > 0.4) {
 		this.labels.push("High Protein");
 	}
-	if (totalFat < 20) {
+	if ((totalFat * 4) / totalCalories < .3) {
 		this.labels.push("Low Fat");
 	}
 	if (totalCalories > 400) {
 		this.labels.push("Bulking");
 	}
 
+	console.log(this.labels)
+
 	this.nutrition = totalNutrition;
+	
 	return totalNutrition;
 };
 
