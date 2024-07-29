@@ -63,8 +63,14 @@ recipeSchema.methods.calculateNutrition = async function () {
 		);
 
 		for (const nutrient of ingredientNutrition) {
-			nutrient.amount /= servings;
-			totalNutrition.push(nutrient);
+			const existingNutrient = totalNutrition.find((n) =>
+				n._id.equals(nutrient._id)
+			);
+			if (existingNutrient) {
+				existingNutrient.amount += nutrient.amount /= servings;
+			} else {
+				totalNutrition.push(nutrient);
+			}
 
 			if (nutrient.macro && nutrient.macro === true) {
 				if (nutrient.name === "Energy") {
