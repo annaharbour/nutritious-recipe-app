@@ -6,41 +6,43 @@ const recipeSchema = new mongoose.Schema({
 	userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
 	servings: { type: Number, default: 1 },
 	ingredients: [
-	  {
-		_id: { type: mongoose.Schema.Types.ObjectId, ref: "ingredient" },
-		amount: Number,
-		portionId: Number,
-		category: String,
-		description: String,
-		modifier: String,
-		gramWeight: Number,
-		imageUrl: String,
-	  },
+		{
+			_id: { type: mongoose.Schema.Types.ObjectId, ref: "ingredient" },
+			amount: Number,
+			portionId: Number,
+			category: String,
+			description: String,
+			modifier: String,
+			gramWeight: Number,
+			imageUrl: String,
+		},
 	],
 	nutrition: [
-	  {
-		type: mongoose.Schema.Types.Mixed,
-		default: {},
-	  },
+		{
+			type: mongoose.Schema.Types.Mixed,
+			default: {},
+		},
 	],
 	labels: [
-	  {
-		type: String,
-		enum: [
-		  "Lean",
-		  "Low Carb",
-		  "High Protein",
-		  "Low Fat",
-		  "Bulking",
-		  "Balanced",
-		],
-	  },
+		{
+			type: String,
+			enum: [
+				"Lean",
+				"Low Carb",
+				"High Protein",
+				"Low Fat",
+				"Bulking",
+				"Balanced",
+			],
+		},
 	],
 	createDate: { type: Date, default: Date.now },
-  });
-  
+});
+
 recipeSchema.methods.calculateNutrition = async function () {
 	const totalNutrition = [];
+	this.labels = [];
+	const servings = this.servings || 1;
 	let totalCalories = 0;
 	let totalCarbohydrates = 0;
 	let totalProtein = 0;
@@ -60,22 +62,14 @@ recipeSchema.methods.calculateNutrition = async function () {
 			amount
 		);
 
-		ingredientNutrition.forEach((nutrient) => {
-			const existingNutrient = totalNutrition.find((n) =>
-				n._id.equals(nutrient._id)
-			);
-			if (existingNutrient) {
-				existingNutrient.amount += nutrient.amount;
-			} else {
-				totalNutrition.push(nutrient);
-			}
+		for (const nutrient of ingredientNutrition) {
+			nutrient.amount /= servings;
+			totalNutrition.push(nutrient);
 
-			// Sum up macros
 			if (nutrient.macro && nutrient.macro === true) {
 				if (nutrient.name === "Energy") {
 					totalCalories += nutrient.amount;
-				}
-				if (nutrient.name === "Carbohydrates") {
+				} else if (nutrient.name === "Carbohydrates") {
 					totalCarbohydrates += nutrient.amount;
 				} else if (nutrient.name === "Protein") {
 					totalProtein += nutrient.amount;
@@ -83,67 +77,27 @@ recipeSchema.methods.calculateNutrition = async function () {
 					totalFat += nutrient.amount;
 				}
 			}
-		});
+		}
 	}
 
-	totalNutrition.sort((a, b) => {
-		// Sort by classification
-		const classificationA = a.classification.toLowerCase();
-		const classificationB = b.classification.toLowerCase();
-		if (classificationA < classificationB) {
-			return -1;
-		}
-		if (classificationA > classificationB) {
-			return 1;
-		}
-		// Sort by name
-		const nameA = a.name.toLowerCase();
-		const nameB = b.name.toLowerCase();
-		if (nameA < nameB) {
-			return -1;
-		}
-		if (nameA > nameB) {
-			return 1;
-		}
-		return 0;
-	});
-
-	this.nutrition = totalNutrition;
-
-	// Determine macro ratios
-	const carbRatio = totalCalories ? (totalCarbohydrates * 4) / totalCalories : 0;
-	const proteinRatio = totalCalories ? (totalProtein * 4) / totalCalories : 0;
-	const fatRatio = totalCalories ? (totalFat * 9) / totalCalories : 0;
-
-	this.labels = [];
-
-	if (totalCalores < 300) {
+	if (totalCalories < 300) {
 		this.labels.push("Lean");
 	}
-	if (carbRatio < 0.25) {
+	if ((totalCarbohydrates * 4) / totalCalories < 0.1) {
 		this.labels.push("Low Carb");
 	}
-	if (proteinRatio > 0.4) {
+	if ((totalProtein * 4) / totalCalories > 0.4) {
 		this.labels.push("High Protein");
 	}
-	if (fatRatio < 0.2) {
+	if (totalFat < 20) {
 		this.labels.push("Low Fat");
 	}
 	if (totalCalories > 400) {
 		this.labels.push("Bulking");
 	}
-	if (this.labels.length === 0) {
-		this.labels.push("Balanced");
-	}
 
-	// Calculate nutrition per serving
-	const servings = this.servings || 1;
-	this.nutrition.forEach((nutrient) => {
-		nutrient.amount /= servings;
-	});
-
+	this.nutrition = totalNutrition;
 	return totalNutrition;
 };
-
 
 module.exports = mongoose.model("recipe", recipeSchema);

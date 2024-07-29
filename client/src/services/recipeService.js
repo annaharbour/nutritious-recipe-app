@@ -29,8 +29,6 @@ export const getRecipeById = async (id) => {
 
 export const createRecipe = async (name, ingredients, servings) => {
 	try {
-	
-		console.log(name, ingredients)
 		const res = await axiosInstance.post("/", {
 			name: name,
 			ingredients: ingredients,
@@ -42,10 +40,12 @@ export const createRecipe = async (name, ingredients, servings) => {
 	}
 };
 
-
-export const calculateRecipeNutrition = async (recipe) => {
+export const calculateRecipeNutrition = async ({ingredients, servings}) => {
 	try {
-		const res = await axiosInstance.post("/nutrition", recipe);
+		const res = await axiosInstance.post("/nutrition", {
+			ingredients: ingredients,
+			servings: servings,
+		});
 		return res;
 	} catch (error) {
 		throw new Error(error);

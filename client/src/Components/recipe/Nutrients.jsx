@@ -11,6 +11,10 @@ function Nutrients({ recipe, loading, panelOpen, onClose }) {
 	];
 
 	const nutrientList = classifications.map((classification) => {
+		if (!recipe || recipe.length === 0) {
+			console.log("No recipe");
+			return null;
+		}
 		// Filter nutrients by classification and sort them
 		const sortedNutrients = recipe
 			.filter((nutrient) => nutrient.classification === classification)
@@ -45,12 +49,15 @@ function Nutrients({ recipe, loading, panelOpen, onClose }) {
 		);
 	});
 
-	return (panelOpen && recipe.length > 0) && (
-		<div className="panel ">
-			<i className="fa fa-x" onClick={onClose}/>
-			<h1>Nutrition</h1>
-			{loading ? <i className="fa fa-spinner spinner"></i> : nutrientList}
+	return (
+		panelOpen &&
+		recipe.length > 0 && (
+			<div className="panel ">
+				<i className="fa fa-x" onClick={onClose} />
+				<h1>Nutrition</h1>
+				{loading ? <i className="fa fa-spinner spinner"></i> : nutrientList}
 			</div>
+		)
 	);
 }
 

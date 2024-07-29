@@ -5,56 +5,8 @@ const Rating = require("../models/RatingModel");
 const Comment = require("../models/CommentModel");
 const cloudFrontUrl = process.env.CLOUDFRONT_URL;
 
-const calculateRecipeNutrition = async (req, res) => {
-	const { ingredients, servings } = req.body;
-	// const { ingredients } = req.body;
-	if (!ingredients) {
-		return res.status(400).json({ error: "Ingredients are required" });
-	}
-
-	try {
-		const populatedIngredients = await Promise.all(
-			ingredients.map(async (ingredient) => {
-				if (!ingredient._id) {
-					throw new Error("Ingredient ID is missing");
-				}
-
-				const ingredientData = await Ingredient.findById(ingredient._id).lean();
-				if (!ingredientData) {
-					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
-				}
-
-				const foodPortion = ingredientData.foodPortions.find(
-					(portion) =>
-						portion._id.toString() === ingredient.portionId.toString()
-				);
-
-				return {
-					...ingredient,
-					description: ingredientData.description,
-					category: ingredientData.category,
-					modifier: foodPortion ? foodPortion.modifier : "g",
-					gramWeight: foodPortion ? foodPortion.gramWeight : "100",
-				};
-			})
-		);
-
-		const recipe = new Recipe({
-			ingredients: populatedIngredients,
-			servings,
-		});
-
-		const totalNutrition = await recipe.calculateNutrition();
-
-		return res.json(totalNutrition);
-	} catch (err) {
-		console.error("Error in calculateRecipeNutrition:", err.message);
-		return res.status(500).json({ error: err.message });
-	}
-};
-
 const createRecipe = async (req, res) => {
-	const { name, ingredients, servings} = req.body;
+	const { name, ingredients, servings } = req.body;
 	const userId = req.user.id || req.user._id;
 
 	try {
@@ -103,6 +55,43 @@ const createRecipe = async (req, res) => {
 	}
 };
 
+const calculateRecipeNutrition = async (req, res) => {
+	const { ingredients, servings } = req.body;
+	try {
+		const populatedIngredients = await Promise.all(
+			ingredients.map(async (ingredient) => {
+				const ingredientData = await Ingredient.findById(ingredient._id).lean();
+				if (!ingredientData) {
+					throw new Error(`Ingredient with ID ${ingredient._id} not found.`);
+				}
+
+				const foodPortion = ingredientData.foodPortions.find(
+					(portion) =>
+						portion._id.toString() === ingredient.portionId.toString()
+				);
+
+				return {
+					...ingredient,
+					description: ingredientData.description,
+					category: ingredientData.category,
+					modifier: foodPortion ? foodPortion.modifier : "g",
+					gramWeight: foodPortion ? foodPortion.gramWeight : 100,
+				};
+			})
+		);
+
+		const newRecipe = new Recipe({
+			ingredients: populatedIngredients,
+			servings: servings,
+		});
+
+		const recipe = await newRecipe.calculateNutrition();
+		res.status(201).json(recipe);
+	} catch (error) {
+		console.error("Error creating recipe:", error);
+		res.status(500).json({ error: "Error creating recipe" });
+	}
+};
 
 const getRecipes = async (req, res) => {
 	try {
