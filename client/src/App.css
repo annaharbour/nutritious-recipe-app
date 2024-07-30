@@ -982,12 +982,13 @@ button {
 
 .panel .fa-x {
 	position: absolute;
-	font-size: 2rem;
-	top: 1rem;
-	right: 1rem;
+	font-size: 1.5rem;
+	top: .5rem;
+	right: .5rem;
 	cursor: pointer;
 	color: var(--dark-color);
 }
+
 
 @keyframes slide-in {
 	from {
