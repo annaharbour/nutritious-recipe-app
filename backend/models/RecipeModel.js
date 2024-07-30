@@ -78,16 +78,12 @@ recipeSchema.methods.calculateNutrition = async function () {
 	for (nutrient of totalNutrition) {
 		if (nutrient.name === "Energy") {
 			totalCalories += nutrient.amount;
-			console.log('Calories', totalCalories);
 		} else if (nutrient.name === "Carbohydrates") {
 			totalCarbohydrates += nutrient.amount;
-			console.log('Carbs', totalCarbohydrates);
 		} else if (nutrient.name === "Protein") {
 			totalProtein += nutrient.amount;
-			console.log('Protein', totalProtein);
 		} else if (nutrient.name === "Fat") {
 			totalFat += nutrient.amount;
-			console.log('Fat', totalFat)
 		}
 	}
 	if (totalCalories < 300) {
@@ -105,8 +101,6 @@ recipeSchema.methods.calculateNutrition = async function () {
 	if (totalCalories > 400) {
 		this.labels.push("Bulking");
 	}
-
-	console.log(this.labels)
 
 	this.nutrition = totalNutrition;
 	
