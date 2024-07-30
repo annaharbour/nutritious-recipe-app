@@ -1,7 +1,10 @@
 import React from "react";
 import Ingredient from "./Ingredient";
 
-function RecipeIngredients({ handleRemoveIngredient, recipeIngredients }) {
+function RecipeIngredients({
+	handleRemoveIngredient,
+	recipeIngredients,
+}) {
 	const ingredients = recipeIngredients.sort((a, b) =>
 		a.category.toString().localeCompare(b.category.toString())
 	);
@@ -29,15 +32,12 @@ function RecipeIngredients({ handleRemoveIngredient, recipeIngredients }) {
 
 			<ul>
 				{ingredients.map((ingredient) => (
-					
 					<Ingredient
 						key={ingredient._id}
 						ingredient={ingredient}
 						handleRemoveIngredient={handleRemoveIngredient}
 					/>
-					
 				))}
-				
 			</ul>
 		</div>
 	);

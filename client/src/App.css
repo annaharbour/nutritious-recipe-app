@@ -67,7 +67,7 @@ h3 {
 	font-size: 2rem;
 	font-family: var(--acme);
 	font-weight: 500;
-	color: var(--marian-blue)
+	color: var(--marian-blue);
 }
 
 a {
@@ -82,7 +82,6 @@ a:visited {
 	color: var(--marian-blue);
 	text-decoration: underline;
 }
-
 
 input {
 	font-family: var(--figtree);
@@ -128,7 +127,7 @@ nav i {
 
 .spinner {
 	animation: spin 2s linear infinite;
-	color: var(--pacific-cyan)
+	color: var(--pacific-cyan);
 }
 
 @keyframes spin {
@@ -149,7 +148,7 @@ nav i {
 	border-radius: 5px;
 	border: none;
 	cursor: pointer;
-	margin: .5rem;
+	margin: 0.5rem;
 	outline: none;
 	font-family: var(--figtree);
 	font-weight: 400;
@@ -967,18 +966,18 @@ button {
 
 .panel {
 	margin: auto;
-	padding: 2rem 0 2rem 0;
+	padding: 1rem;
 	animation: slide-in 1s ease-out forwards;
 	position: fixed;
-	height: 100vh;
-	width: 100vw;
+	height: 100%;
+	width: 100%;
 	top: 50%;
 	left: 100%;
 	transform: translateY(-50%);
 	background-color: var(--blue-green);
 	opacity: 1.5;
 	z-index: 100;
-	overflow-y: auto;
+	overflow-y: scroll;
 }
 
 .panel .fa-x {
@@ -1000,12 +999,11 @@ button {
 	}
 }
 
-
 .nutrient-grid {
 	margin: 2rem auto;
+	padding: 1rem;
 	width: 80%;
 	display: grid;
-	justify-items: center;
 	border: 1px solid var(--pacific-cyan);
 	-webkit-box-shadow: 0 1px 1px var(--marian-blue);
 	-moz-box-shadow: 0 1px 1px var(--marian-blue);
@@ -1016,17 +1014,17 @@ button {
 }
 
 .nutrient-grid .classification {
-	width: 100%;
+	margin: auto;
 	text-align: center;
-	background-color: var(--pacific-cyan);
-	color: white;
+	color: var(--pacific-cyan);
 }
 
 .nutrients {
 	width: 100%;
 	height: 100%;
-	padding: 1rem;
+	font-size: 1.5rem;
 	display: grid;
+	gap: 1rem;
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	justify-content: center;
 	align-items: center;
@@ -1043,7 +1041,14 @@ button {
 /* Media Queries */
 
 @media screen and (max-width: 768px) {
-	
+	.nutrient-grid {
+		justify-content: center;
+	}
+
+	.nutrients {
+		font-size: 1rem;
+	}
+
 	.tabs {
 		width: 90%;
 		grid-template-columns: repeat(3, 1fr);
@@ -1105,6 +1110,4 @@ button {
 		width: 90%;
 		font-size: 1rem;
 	}
-
-
 }
