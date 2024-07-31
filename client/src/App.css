@@ -983,8 +983,8 @@ button {
 .panel .fa-x {
 	position: absolute;
 	font-size: 1.5rem;
-	top: .5rem;
-	right: .5rem;
+	top: 1rem;
+	right: 1rem;
 	cursor: pointer;
 	color: var(--dark-color);
 }
@@ -1104,11 +1104,18 @@ button {
 		padding-left: 30px;
 	}
 
+
 	.reply-form textarea {
 		width: 100%;
 	}
 	.comment-form textarea {
 		width: 90%;
 		font-size: 1rem;
+	}
+
+	.panel .fa-x {
+		font-size: 1rem;
+		right: .5rem;
+		top: .5rem;
 	}
 }

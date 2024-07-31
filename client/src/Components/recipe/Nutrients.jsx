@@ -12,7 +12,6 @@ function Nutrients({ recipe, loading, panelOpen, onClose }) {
 
 	const nutrientList = classifications.map((classification) => {
 		if (!recipe || recipe.length === 0) {
-			console.log("No recipe");
 			return null;
 		}
 		// Filter nutrients by classification and sort them
