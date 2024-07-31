@@ -89,13 +89,13 @@ recipeSchema.methods.calculateNutrition = async function () {
 	if (totalCalories < 300) {
 		this.labels.push("Lean");
 	}
-	if ((totalCarbohydrates * 4) / totalCalories < 0.1) {
+	if (totalCarbohydrates < 30) {
 		this.labels.push("Low Carb");
 	}
-	if ((totalProtein * 4) / totalCalories > 0.4) {
+	if (totalProtein > 20) {
 		this.labels.push("High Protein");
 	}
-	if ((totalFat * 4) / totalCalories < .3) {
+	if (totalFat < 10) {
 		this.labels.push("Low Fat");
 	}
 	if (totalCalories > 400) {

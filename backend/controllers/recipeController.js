@@ -95,33 +95,53 @@ const calculateRecipeNutrition = async (req, res) => {
 
 const getRecipes = async (req, res) => {
 	try {
-		const recipes = await Recipe.find();
-		const ratings = await Rating.find();
+		const recipes = await Recipe.aggregate([
+			{
+				$lookup: {
+					from: "ratings",
+					localField: "_id",
+					foreignField: "recipe",
+					as: "recipeRatings",
+				},
+			},
+			{
+				$addFields: {
+					averageRating: {
+						$cond: {
+							if: { $gt: [{ $size: "$recipeRatings" }, 0] },
+							then: { $avg: "$recipeRatings.meanRating" },
+							else: 0,
+						},
+					},
+				},
+			},
+			{
+				$sort: { averageRating: -1 },
+			},
+			{
+				$limit: 10,
+			},
+			{
+				$project: {
+					name: 1,
+					userId: 1,
+					servings: 1,
+					ingredients: 1,
+					nutrition: 1,
+					labels: 1,
+					createDate: 1,
+					averageRating: 1,
+				},
+			},
+		]);
 
-		// Loop through the recipes and calculate the average rating for each recipe
-		recipes.forEach((recipe) => {
-			const recipeRatings = ratings.filter(
-				(rating) => rating.recipe.toString() === recipe._id.toString()
-			);
-			const totalRating = recipeRatings.reduce(
-				(acc, rating) => acc + rating.value,
-				0
-			);
-			const averageRating = recipeRatings.length
-				? totalRating / recipeRatings.length
-				: 0;
-			recipe.averageRating = averageRating;
-		});
-
-		// Sort recipes by averageRating in descending order
-		recipes.sort((a, b) => b.averageRating - a.averageRating);
-
-		// Return the top 10 recipes
-		return res.json(recipes.slice(0, 10));
+		return res.json(recipes);
 	} catch (err) {
+		console.error(err);
 		return res.status(500).json({ error: "Failed to fetch recipes." });
 	}
 };
+
 
 const updateRecipeById = async (req, res) => {
 	const recipeId = req.params.id;
