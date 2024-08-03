@@ -22,7 +22,7 @@ const Landing = ({ showToast }) => {
 		<section className="landing">
 			<div className="dark-overlay">
 				<div className="landing-inner">
-					<h1>Harbour Health</h1>
+					<h1>Siren Smoothies</h1>
 					{formToShow === "register" && (
 						<Register showToast={showToast} showForm={showForm} />
 					)}
