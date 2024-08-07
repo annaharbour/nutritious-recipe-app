@@ -135,7 +135,7 @@ const sendPasswordResetEmail = async (req, res) => {
 		});
 
 		const mailOptions = {
-			from: "admin@blendit.com",
+			from: "admin@sirensmoothies.com",
 			to: user.email,
 			subject: "Password Reset Request",
 			text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
