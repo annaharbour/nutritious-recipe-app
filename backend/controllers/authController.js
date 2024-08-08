@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.jwtSecret;
 const User = require("../models/UserModel");
 const nodemailer = require("nodemailer");
+let aws = require("@aws-sdk/client-ses");
+let { defaultProvider } = require("@aws-sdk/credential-provider-node");
 
 const register = async (req, res) => {
 	const { name, email, phone, password } = req.body;
@@ -111,7 +113,7 @@ const sendPasswordResetEmail = async (req, res) => {
 	try {
 		const user = await User.findOne({ email });
 		if (!user) {
-			return res.status(404).json({ msg: "User not found" });
+			return res.status(404).json({ msg: 'User not found' });
 		}
 
 		const payload = {
@@ -121,23 +123,31 @@ const sendPasswordResetEmail = async (req, res) => {
 		};
 
 		const resetToken = jwt.sign(payload, process.env.jwtSecret, {
-			expiresIn: "1h",
+			expiresIn: '1h',
 		});
 
-		const transporter = nodemailer.createTransport({
-			host: "sandbox.smtp.mailtrap.io",
-			port: 587,
-			secure: false, // use SSL
-			auth: {
-				user: process.env.EMAIL_USER,
-				pass: process.env.EMAIL_PASS,
+		console.log(process.env.AWS_ACCESS_KEY_ID);
+		console.log(process.env.AWS_SECRET_ACCESS_KEY);
+		const ses = new aws.SES({
+			apiVersion: "2010-12-01",
+			region: "us-east-1",
+			credentials: {
+				accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+				secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 			},
+		  });	  
+
+
+		const transporter = nodemailer.createTransport({
+			SES: { ses, aws },
+			sendingRate: 1,
+			maxConnections: 1,
 		});
 
 		const mailOptions = {
-			from: "admin@sirensmoothies.com",
+			from: process.env.EMAIL_ADDRESS,
 			to: user.email,
-			subject: "Password Reset Request",
+			subject: 'Password Reset Request',
 			text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
             Please click on the following link, or paste this into your browser to complete the process:\n\n
             http://${req.headers.host}/auth/reset/${resetToken}\n\n
@@ -146,17 +156,18 @@ const sendPasswordResetEmail = async (req, res) => {
 
 		transporter.sendMail(mailOptions, async (err, response) => {
 			if (err) {
-				return res.status(500).json({ msg: "Error sending email" });
+				console.log(err);
+				return res.status(500).json({ msg: 'Error sending email:', error: err});
 			}
 
 			user.resetPasswordToken = resetToken;
 			user.resetPasswordExpires = Date.now() + 3600000;
 			await user.save();
-
-			res.status(200).json({ msg: "Password reset email sent" });
+			res.status(200).json({ msg: 'Password reset email sent' });
+			
 		});
 	} catch (error) {
-		res.status(500).json({ msg: "Server Error", error: error.message });
+		res.status(500).json({ msg: 'Server Error', error: error.message });
 	}
 };
 

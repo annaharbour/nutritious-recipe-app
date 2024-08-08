@@ -53,7 +53,7 @@ const App = () => {
 	return (
 		<Router>
 			<Navbar />
-			<ToastContainer limit={3} />
+			<ToastContainer limit={1} />
 			<Routes>
 				<Route path="account" element={<PrivateRoute showToast={showToastMessage} Component={Profile} />} />
 				<Route path="profiles">
