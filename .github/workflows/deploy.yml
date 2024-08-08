@@ -1,0 +1,45 @@
+name: Deploy Node.js App and Nginx Config
+
+on:
+  push:
+    branches:
+      - main
+      - steve/adding-cdk-to-automate-provisioning
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Copy Node.js backend app to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i /dev/stdin -r ./backend/* ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/home/ec2-user/app/backend <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+
+      - name: Copy Node.js client app to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i /dev/stdin -r ./client/* ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/home/ec2-user/app/client <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+
+      - name: Copy Nginx config to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -i /dev/stdin ./nginx/nginx.conf ec2-user@${{ secrets.EC2_PUBLIC_IP }}:/etc/nginx/conf.d/myapp.conf <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+
+      - name: Deploy Node.js app and Nginx config
+        run: |
+          ssh -o StrictHostKeyChecking=no -i /dev/stdin ec2-user@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+          npm install --global pm2
+          
+          cd /home/ec2-user/app/backend
+          npm install
+          pm2 restart all || pm2 start server.js --name "siren-smoothies-api"
+          
+          sudo cp /home/ec2-user/nginx.conf /etc/nginx/conf.d/default.conf
+          sudo systemctl restart nginx
+          EOF <<< "${{ secrets.SSH_PRIVATE_KEY }}"
