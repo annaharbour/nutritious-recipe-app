@@ -60,7 +60,6 @@ export class Ec2Stack extends cdk.Stack {
             'echo "0 0 * * * root certbot renew --quiet" | tee -a /etc/crontab > /dev/null',
 
             'sudo chmod -R 755 /home/ec2-user',
-            'sudo chown -R nginx:nginx /home/ec2-user/app',
 
             // Reload Nginx to apply the new certificates
             'systemctl reload nginx'
@@ -70,7 +69,7 @@ export class Ec2Stack extends cdk.Stack {
 
 
         // EC2 Instance with Elastic IP
-        const instance = new ec2.Instance(this, 'MyInstance', {
+        const instance = new ec2.Instance(this, 'MyInstanceNodeJsNginxV1', {
             vpc,
             instanceType: new ec2.InstanceType('t3.micro'),
             machineImage: ec2.MachineImage.latestAmazonLinux2023(), // Use Amazon Linux 2
