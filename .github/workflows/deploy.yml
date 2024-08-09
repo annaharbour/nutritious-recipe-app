@@ -65,6 +65,6 @@ jobs:
               whoami
               cd /home/ec2-user/app
               ls -al
-#              npm run build
-#              npm run start
+              npm run build
+              npm run start
               
