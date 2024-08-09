@@ -29,6 +29,7 @@ jobs:
         - name: Setup NGINX and start API
           uses: appleboy/ssh-action@v1.0.3
           env:
+            FOO: "testing!!"
             CLOUDFRONT_URL: ${{secrets.CLOUDFRONT_URL}}
 #            mongoURI: ${{secrets.MONGOURI}}
             mongoURI: 123test
@@ -60,7 +61,7 @@ jobs:
             script_stop: true
             envs: CLOUDFRONT_URL,mongoURI,jwtSecret,FDC_API_KEY,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,SESSION_SECRET,clientURI,serverURI,PORT,EMAIL_USER,EMAIL_PASS,SMTP_HOST,EMAIL_ADDRESS,EMAIL_PORT,SMTP_USER,SMTP_PASS,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,BUCKET_NAME,BUCKET_REGION,BUCKET_ACCESS_KEY,BUCKET_SECRET_ACCESS_KEY
             script: |
-              echo $mongoURI
+              echo "I am $FOO"
               whoami
               cd /home/ec2-user/app
               ls -al
