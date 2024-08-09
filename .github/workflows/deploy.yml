@@ -64,6 +64,6 @@ jobs:
               cd /home/ec2-user/app
               ls -al
               npm run build
-              pm2 stop siren-smoothies-api
+              pm2 stop all
               pm2 start --name siren-smoothies-api
               
