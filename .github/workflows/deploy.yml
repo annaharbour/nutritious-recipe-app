@@ -32,7 +32,7 @@ jobs:
             FOO: "testing!!"
             CLOUDFRONT_URL: ${{secrets.CLOUDFRONT_URL}}
 #            mongoURI: ${{secrets.MONGOURI}}
-            mongoURI: 123test
+            mongoURI: testing too!
             jwtSecret: ${{secrets.JWTSECRET}}
             FDC_API_KEY: ${{secrets.FDC_API_KEY}}
             GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
@@ -62,6 +62,7 @@ jobs:
             envs: FOO,CLOUDFRONT_URL,mongoURI,jwtSecret,FDC_API_KEY,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,SESSION_SECRET,clientURI,serverURI,PORT,EMAIL_USER,EMAIL_PASS,SMTP_HOST,EMAIL_ADDRESS,EMAIL_PORT,SMTP_USER,SMTP_PASS,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,BUCKET_NAME,BUCKET_REGION,BUCKET_ACCESS_KEY,BUCKET_SECRET_ACCESS_KEY
             script: |
               echo "I am $FOO"
+              echo "I am $mongoURI"
               whoami
               cd /home/ec2-user/app
               ls -al
