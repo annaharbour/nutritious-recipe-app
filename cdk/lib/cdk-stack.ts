@@ -36,14 +36,39 @@ export class Ec2Stack extends cdk.Stack {
         const userData = ec2.UserData.forLinux();
         userData.addCommands(
             // Update packages
-            'yum update -y',
+            'dnf update -y',
+
             // Install Nginx
-            'amazon-linux-extras install nginx1 -y',
+            'dnf install -y nginx',
             'systemctl start nginx',
             'systemctl enable nginx',
+
             // Install Node.js 20
             'curl -sL https://rpm.nodesource.com/setup_20.x | bash -',
-            'yum install -y nodejs'
+            'dnf install -y nodejs',
+
+            // Install snapd
+            'dnf install -y snapd',
+            'systemctl enable --now snapd.socket',
+            'ln -s /var/lib/snapd/snap /snap',
+
+            // Install Certbot using snapd
+            'snap install core',
+            'snap install --classic certbot',
+            'ln -s /snap/bin/certbot /usr/bin/certbot',
+
+            // Install Certbot Nginx plugin using snapd
+            'snap install certbot-nginx',
+
+            // Obtain SSL certificates from Let's Encrypt
+            // TODO: replace email
+            'certbot --nginx --non-interactive --agree-tos --email your-email@example.com -d sirensmoothies.com -d www.sirensmoothies.com',
+
+            // Set up automatic renewal (handled by default by Certbot)
+            'echo "0 0 * * * root certbot renew --quiet" | tee -a /etc/crontab > /dev/null',
+
+            // Reload Nginx to apply the new certificates
+            'systemctl reload nginx'
         );
 
         const keyPair = ec2.KeyPair.fromKeyPairName(this, 'KeyPair', 'my-github-actions-key');
@@ -53,7 +78,7 @@ export class Ec2Stack extends cdk.Stack {
         const instance = new ec2.Instance(this, 'MyInstance', {
             vpc,
             instanceType: new ec2.InstanceType('t3.micro'),
-            machineImage: ec2.MachineImage.latestAmazonLinux2(), // Use Amazon Linux 2
+            machineImage: ec2.MachineImage.latestAmazonLinux2023(), // Use Amazon Linux 2
             securityGroup,
             role,
             vpcSubnets: {
