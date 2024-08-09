@@ -17,10 +17,10 @@ router.get(
 	"/google/callback",
 	passport.authenticate("google", { failureRedirect: "/" }),
 	(req, res) => {
-		const token = jwt.sign({ user: req.user }, process.env.jwtSecret, {
+		const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET, {
 			expiresIn: "5 days",
 		});
-		const redirectUrl = `${process.env.clientURI}/auth?token=${token}&user=${JSON.stringify(
+		const redirectUrl = `${process.env.CLIENT_URI}/auth?token=${token}&user=${JSON.stringify(
 			req.user
 		)}`;
 		res.redirect(redirectUrl);
@@ -28,7 +28,7 @@ router.get(
 );
 
 router.get('/reset/:resetToken', (req, res) => {
-	res.redirect(`${process.env.clientURI}/reset/${req.params.resetToken}`);
+	res.redirect(`${process.env.CLIENT_URI}/reset/${req.params.resetToken}`);
 });
 
 router.post('/reset/:resetToken', resetPassword);
