@@ -30,7 +30,8 @@ jobs:
           uses: appleboy/ssh-action@v1.0.3
           env:
             CLOUDFRONT_URL: ${{secrets.CLOUDFRONT_URL}}
-            mongoURI: ${{secrets.MONGOURI}}
+#            mongoURI: ${{secrets.MONGOURI}}
+            mongoURI: 123test
             jwtSecret: ${{secrets.JWTSECRET}}
             FDC_API_KEY: ${{secrets.FDC_API_KEY}}
             GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
