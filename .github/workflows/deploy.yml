@@ -28,15 +28,40 @@ jobs:
             EXCLUDE: "/.git/, /node_modules/, /backend/node_modules/, /client/node_modules/, /.github/, /cdk/"
         - name: Setup NGINX and start API
           uses: appleboy/ssh-action@v1.0.3
+          env:
+            CLOUDFRONT_URL: ${{secrets.CLOUDFRONT_URL}}
+            mongoURI: ${{secrets.MONGOURI}}
+            jwtSecret: ${{secrets.JWTSECRET}}
+            FDC_API_KEY: ${{secrets.FDC_API_KEY}}
+            GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+            GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
+            SESSION_SECRET: ${{secrets.SESSION_SECRET}}
+            clientURI: ${{secrets.CLIENTURI}}
+            serverURI: ${{secrets.SERVERURI}}
+            PORT: ${{secrets.PORT}}
+            EMAIL_USER: ${{secrets.SMTP_USER}}
+            EMAIL_PASS: ${{secrets.SMTP_PASS}}
+            SMTP_HOST: ${{secrets.SMTP_HOST}}
+            EMAIL_ADDRESS: ${{secrets.EMAIL_ADDRESS}}
+            EMAIL_PORT: ${{secrets.EMAIL_PORT}}
+            SMTP_USER: ${{secrets.SMTP_USER}}
+            SMTP_PASS: ${{secrets.SMTP_PASS}}
+            AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+            AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            BUCKET_NAME: ${{secrets.BUCKET_NAME}}
+            BUCKET_REGION: ${{secrets.BUCKET_REGION}}
+            BUCKET_ACCESS_KEY: ${{secrets.BUCKET_ACCESS_KEY}}
+            BUCKET_SECRET_ACCESS_KEY: ${{secrets.BUCKET_SECRET_ACCESS_KEY}}
           with:
             host: ${{ secrets.EC2_PUBLIC_IP }}
             username: ec2-user
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             script_stop: true
+            envs: CLOUDFRONT_URL,mongoURI,jwtSecret,FDC_API_KEY,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,SESSION_SECRET,clientURI,serverURI,PORT,EMAIL_USER,EMAIL_PASS,SMTP_HOST,EMAIL_ADDRESS,EMAIL_PORT,SMTP_USER,SMTP_PASS,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,BUCKET_NAME,BUCKET_REGION,BUCKET_ACCESS_KEY,BUCKET_SECRET_ACCESS_KEY
             script: |
               whoami
-              ls -al
               cd /home/ec2-user/app
+              ls -al
               npm run build
               npm run start
               
