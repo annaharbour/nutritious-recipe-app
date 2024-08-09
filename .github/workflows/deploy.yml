@@ -32,7 +32,7 @@ jobs:
             FOO: "testing!!"
             CLOUDFRONT_URL: ${{secrets.CLOUDFRONT_URL}}
 #            mongoURI: ${{secrets.MONGOURI}}
-            mongoURI: testing too!
+            mongoURI: "testing too!"
             jwtSecret: ${{secrets.JWTSECRET}}
             FDC_API_KEY: ${{secrets.FDC_API_KEY}}
             GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
