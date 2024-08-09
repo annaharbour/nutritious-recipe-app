@@ -59,6 +59,9 @@ export class Ec2Stack extends cdk.Stack {
             // Set up automatic renewal (handled by default by Certbot)
             'echo "0 0 * * * root certbot renew --quiet" | tee -a /etc/crontab > /dev/null',
 
+            'sudo chmod -R 755 /home/ec2-user',
+            'sudo chown -R nginx:nginx /home/ec2-user/app',
+
             // Reload Nginx to apply the new certificates
             'systemctl reload nginx'
         );
