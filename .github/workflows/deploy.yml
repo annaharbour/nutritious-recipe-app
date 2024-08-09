@@ -65,4 +65,6 @@ jobs:
               npm run build
               pm2 stop all || true
               pm2 start --name siren-smoothies-api backend/server.js
+              chmod +x ./nginx/deploy_nginx_config.sh
+              ./nginx/deploy_nginx_config.sh
               
