@@ -23,12 +23,15 @@ ssh-keygen -t rsa -b 4096 -f my-github-actions-key -C "github-actions"
 aws ec2 import-key-pair --key-name "my-github-actions-key" --public-key-material fileb://my-github-actions-key.pub
 
 # Make sure to save your new keypair public and private values, we have to add the private key to a github actions secret for deployments
+# Create Github Action Secret "SSH_PRIVATE_KEY" with the private generate key
 
 # bootstrap the environment
 cdk bootstrap
 
 # deploy the stack
 cdk deploy
+
+# Create Github Action Secret "EC2_PUBLIC_IP" with output from 'cdk deploy'
 ```
 
 Helpful commands when connecting to the instance over SSH
