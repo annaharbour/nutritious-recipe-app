@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
 // import * as route53 from 'aws-cdk-lib/aws-route53';
-import { Construct } from 'constructs';
+import {Construct} from 'constructs';
 
 export class Ec2Stack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -62,7 +62,7 @@ export class Ec2Stack extends cdk.Stack {
             'systemctl reload nginx'
         );
 
-        const keyPair = ec2.KeyPair.fromKeyPairName(this, 'KeyPair', 'my-github-actions-key');
+        const keyPair = ec2.KeyPair.fromKeyPairName(this, 'KeyPair', 'my-github-actions-key-siren-smoothies');
 
 
         // EC2 Instance with Elastic IP
@@ -98,6 +98,6 @@ export class Ec2Stack extends cdk.Stack {
 
         // Output the domain name and Elastic IP
         // new cdk.CfnOutput(this, 'DomainName', { value: `example.com` });
-        new cdk.CfnOutput(this, 'ElasticIP', { value: eip.ref });
+        new cdk.CfnOutput(this, 'ElasticIP', {value: eip.ref});
     }
 }

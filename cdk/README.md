@@ -17,15 +17,15 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 ```shell
 
 # have to generate the key pair for the ec2 instance locally first time
-ssh-keygen -t rsa -b 4096 -f my-github-actions-key -C "github-actions"
+ssh-keygen -t rsa -b 4096 -f my-github-actions-key-siren-smoothies -C "github-actions"
 
 # create the key pair in aws
-aws ec2 import-key-pair --key-name "my-github-actions-key" --public-key-material fileb://my-github-actions-key.pub
+aws ec2 import-key-pair --key-name "my-github-actions-key-siren-smoothies" --public-key-material fileb://my-github-actions-key-siren-smoothies.pub
 
 # Make sure to save your new keypair public and private values, we have to add the private key to a github actions secret for deployments
 # Create Github Action Secret "SSH_PRIVATE_KEY" with the private generate key
 
-# bootstrap the environment
+# bootstrap the environment, only once
 cdk bootstrap
 
 # deploy the stack
