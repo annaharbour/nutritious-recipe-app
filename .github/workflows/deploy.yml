@@ -8,18 +8,21 @@ on:
 
 jobs:
   Deploy:
-    name: Deploy to EC2
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: easingthemes/ssh-deploy@v5.0.0
-        name: Deploy over SSH
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.EC2_PUBLIC_IP }}
-          REMOTE_USER: ec2-user
-          SCRIPT_AFTER: |
-            ./script
-            echo "hey this worked"
-            cd /home/ec2-user
-            git clone git@github.com:annaharbour/Blend.git the-app
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Install Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: '20.x'
+        - name: Install npm dependencies and build for backend and client
+          run: npm run build
+        - name: Deploy to Server
+          uses: easingthemes/ssh-deploy@main
+          with:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            ARGS: "-rlgoDzvc -i --delete"
+            REMOTE_HOST: ${{ secrets.EC2_PUBLIC_IP }}
+            REMOTE_USER: ec2-user
+            TARGET: /home/ec2-user/app
+            EXCLUDE: "/node_modules/"
