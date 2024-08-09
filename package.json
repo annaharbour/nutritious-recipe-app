@@ -8,7 +8,7 @@
 		"server": "nodemon backend/server.js",
 		"client": "npm start --prefix client",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
-		"build": "npm install && npm install --prefix backend && npm install --prefix client && npm run build --prefix client"
+		"build": "npm install --frozen-lockfile && npm install --prefix backend --frozen-lockfile && npm install --prefix client --frozen-lockfile && npm run build --prefix client"
 	},
 	"author": "Anna Harbour",
 	"license": "ISC",
