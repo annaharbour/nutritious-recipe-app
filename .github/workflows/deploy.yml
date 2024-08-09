@@ -31,8 +31,7 @@ jobs:
           env:
             FOO: "testing!!"
             CLOUDFRONT_URL: ${{secrets.CLOUDFRONT_URL}}
-#            mongoURI: ${{secrets.MONGOURI}}
-            MONGO_URI: "testing too!"
+            MONGO_URI: ${{secrets.MONGOURI}}
             jwtSecret: ${{secrets.JWTSECRET}}
             FDC_API_KEY: ${{secrets.FDC_API_KEY}}
             GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
