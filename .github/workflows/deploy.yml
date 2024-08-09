@@ -38,3 +38,5 @@ jobs:
               ls -al
               cd /home/ec2-user/app
               npm run build
+              npm run start
+              
