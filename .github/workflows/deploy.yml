@@ -15,8 +15,8 @@ jobs:
           uses: actions/setup-node@v4
           with:
             node-version: '20.x'
-        - name: Install npm dependencies and build for backend and client
-          run: npm run build
+#        - name: Install npm dependencies and build for backend and client
+#          run: npm run build
         - name: Deploy to Server
           uses: easingthemes/ssh-deploy@main
           with:
@@ -26,3 +26,13 @@ jobs:
             REMOTE_USER: ec2-user
             TARGET: /home/ec2-user/app
             EXCLUDE: "/.git/, /node_modules/, /backend/node_modules/, /client/node_modules/, /.github/, /cdk/"
+        - name: Setup NGINX and start API
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.EC2_PUBLIC_IP }}
+            username: ec2-user
+            key: ${{ secrets.KSSH_PRIVATE_KEYEY }}
+            script_stop: true
+            script: |
+              whoami
+              ls -al
