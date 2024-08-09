@@ -12,20 +12,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Build & Deploy
-        env:
-          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          HOSTNAME: ${{secrets.EC2_PUBLIC_IP}}
-          USER_NAME: 'ec2-user'
-
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-
-              # Now we have got the access of EC2 and we will start the deploy .
-              echo "it is working!" &&
-              mkdir -p /home/ec2-user/app &&
-              cd /home/ec2-user/app &&
-              git checkout master
-              '
+      - uses: easingthemes/ssh-deploy@v5.0.0
+        name: Deploy over SSH
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.EC2_PUBLIC_IP }}
+          REMOTE_USER: ec2-user
+          SCRIPT_AFTER: |
+            ./script
+            echo "hey this worked"
+            cd /home/ec2-user
+            git clone git@github.com:annaharbour/Blend.git the-app
