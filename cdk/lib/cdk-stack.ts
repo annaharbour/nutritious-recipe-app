@@ -46,6 +46,7 @@ export class Ec2Stack extends cdk.Stack {
             // Install Node.js 20
             'curl -sL https://rpm.nodesource.com/setup_20.x | bash -',
             'dnf install -y nodejs',
+            'npm install --global pm2',
 
             // Install Certbot using pip
             'dnf install -y python3 python3-pip',
