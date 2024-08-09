@@ -24,5 +24,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
               # Now we have got the access of EC2 and we will start the deploy .
-              echo "it is working!"
+              echo "it is working!" &&
+              mkdir -p /home/ec2-user/remove-this-later
               '
