@@ -47,21 +47,12 @@ export class Ec2Stack extends cdk.Stack {
             'curl -sL https://rpm.nodesource.com/setup_20.x | bash -',
             'dnf install -y nodejs',
 
-            // Install snapd
-            'dnf install -y snapd',
-            'systemctl enable --now snapd.socket',
-            'ln -s /var/lib/snapd/snap /snap',
-
-            // Install Certbot using snapd
-            'snap install core',
-            'snap install --classic certbot',
-            'ln -s /snap/bin/certbot /usr/bin/certbot',
-
-            // Install Certbot Nginx plugin using snapd
-            'snap install certbot-nginx',
+            // Install Certbot using pip
+            'dnf install -y python3 python3-pip',
+            'pip3 install certbot certbot-nginx',
 
             // Obtain SSL certificates from Let's Encrypt
-            // TODO: replace email
+            // TODO: point sirensmoothies.com to new hosted zone first, and then run this or validation checks will fail, also must replace email with valid email
             'certbot --nginx --non-interactive --agree-tos --email your-email@example.com -d sirensmoothies.com -d www.sirensmoothies.com',
 
             // Set up automatic renewal (handled by default by Certbot)
