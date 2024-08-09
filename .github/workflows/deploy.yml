@@ -32,7 +32,7 @@ jobs:
             FOO: "testing!!"
             CLOUDFRONT_URL: ${{secrets.CLOUDFRONT_URL}}
 #            mongoURI: ${{secrets.MONGOURI}}
-            mongoURI: "testing too!"
+            MONGO_URI: "testing too!"
             jwtSecret: ${{secrets.JWTSECRET}}
             FDC_API_KEY: ${{secrets.FDC_API_KEY}}
             GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
@@ -59,10 +59,10 @@ jobs:
             username: ec2-user
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             script_stop: true
-            envs: FOO,CLOUDFRONT_URL,mongoURI,jwtSecret,FDC_API_KEY,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,SESSION_SECRET,clientURI,serverURI,PORT,EMAIL_USER,EMAIL_PASS,SMTP_HOST,EMAIL_ADDRESS,EMAIL_PORT,SMTP_USER,SMTP_PASS,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,BUCKET_NAME,BUCKET_REGION,BUCKET_ACCESS_KEY,BUCKET_SECRET_ACCESS_KEY
+            envs: FOO,CLOUDFRONT_URL,MONGO_URI,jwtSecret,FDC_API_KEY,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,SESSION_SECRET,clientURI,serverURI,PORT,EMAIL_USER,EMAIL_PASS,SMTP_HOST,EMAIL_ADDRESS,EMAIL_PORT,SMTP_USER,SMTP_PASS,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,BUCKET_NAME,BUCKET_REGION,BUCKET_ACCESS_KEY,BUCKET_SECRET_ACCESS_KEY
             script: |
               echo "I am $FOO"
-              echo "I am $mongoURI"
+              echo "I am $MONGO_URI"
               whoami
               cd /home/ec2-user/app
               ls -al
