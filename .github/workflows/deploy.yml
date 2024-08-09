@@ -25,4 +25,4 @@ jobs:
             REMOTE_HOST: ${{ secrets.EC2_PUBLIC_IP }}
             REMOTE_USER: ec2-user
             TARGET: /home/ec2-user/app
-            EXCLUDE: "/node_modules/"
+            EXCLUDE: "/.git/, /node_modules/, /backend/node_modules/, /client/node_modules/, /.github/, /cdk/"
