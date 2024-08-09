@@ -25,5 +25,7 @@ jobs:
 
               # Now we have got the access of EC2 and we will start the deploy .
               echo "it is working!" &&
-              mkdir -p /home/ec2-user/remove-this-later
+              mkdir -p /home/ec2-user/app &&
+              cd /home/ec2-user/app &&
+              git checkout master
               '
