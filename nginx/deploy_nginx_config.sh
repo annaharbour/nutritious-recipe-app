@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-CONFIG_FILE_PATH="./nginx/nginx-http.conf"
+CONFIG_FILE_PATH="./nginx/nginx.conf"
 DESTINATION_DIR="/etc/nginx/conf.d/"
 NGINX_SERVICE="nginx"
 
