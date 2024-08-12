@@ -9,7 +9,7 @@ dotenv.config();
 const FDC_API_KEY = process.env.FDC_API_KEY;
 
 const fdcids = [
-	2343062, 2343010, 2343013 , 2343014 
+	1934350     
 ];
 
 const getFoodData = async (ids) => {
