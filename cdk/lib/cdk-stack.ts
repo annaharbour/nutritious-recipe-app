@@ -53,7 +53,6 @@ export class Ec2Stack extends cdk.Stack {
             'pip3 install certbot certbot-nginx',
 
             // Obtain SSL certificates from Let's Encrypt
-            // TODO: point sirensmoothies.com to new hosted zone first, and then run this or validation checks will fail, also must replace email with valid email
             'certbot --nginx --non-interactive --agree-tos --email anna.c.harbour@gmail.com -d sirensmoothies.com -d www.sirensmoothies.com',
 
             // Set up automatic renewal (handled by default by Certbot)
