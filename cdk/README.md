@@ -41,11 +41,14 @@ Helpful commands when connecting to the instance over SSH
 sudo -i
 ```
 
-
-```json
-{
-    "KeyFingerprint": "86:6f:57:15:4e:66:4f:36:fd:46:92:1c:46:2d:7d:d9",
-    "KeyName": "my-github-actions-key",
-    "KeyPairId": "key-077c2fd31ba75ee2f"
-}
+# Caveats
+## Installing Certs for HTTPS/SSL Support
+In order for certbot to fetch and install a valid certificate into the NGINX instance, it must first validate that the 
+domain name's DNS records contain an A record that points to the server from which the request is originating.
+If it doesn't contain this A record at time of CDK deployment, you can manually connect to the EC2 instance and run:
+```shell
+certbot --nginx --non-interactive --agree-tos --email anna.c.harbour@gmail.com -d sirensmoothies.com -d www.sirensmoothies.com
 ```
+If this command fails, it is most likely that the NGINX configuration does not have a server block containing server names
+for the domains "sirensmoothies.com" and "www.sirensmoothies.com". Ensure this is resolved and run any remaining instructions
+from the previous certbot CLI output.
