@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const jwtSecret = process.env.jwtSecret;
+const jwtSecret = process.env.JWT_SECRET;
 const User = require("../models/UserModel");
 const nodemailer = require("nodemailer");
 let aws = require("@aws-sdk/client-ses");
@@ -122,7 +122,7 @@ const sendPasswordResetEmail = async (req, res) => {
 			},
 		};
 
-		const resetToken = jwt.sign(payload, process.env.jwtSecret, {
+		const resetToken = jwt.sign(payload, process.env.JWT_SECRET, {
 			expiresIn: '1h',
 		});
 
@@ -176,7 +176,7 @@ const resetPassword = async (req, res) => {
 	const { password } = req.body;
 
 	try {
-		const decoded = jwt.verify(resetToken, process.env.jwtSecret);
+		const decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
 
 		const user = await User.findOne({
 			_id: decoded.user.id,

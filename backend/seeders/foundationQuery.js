@@ -1,5 +1,5 @@
 require("dotenv").config();
-const db = process.env.mongoURI;
+const db = process.env.MONGO_URI;
 const Ingredient = require("../models/IngredientModel");
 const Nutrient = require("../models/NutrientModel");
 const mongoose = require("mongoose");

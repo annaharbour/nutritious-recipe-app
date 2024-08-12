@@ -6,7 +6,7 @@ const Ingredient = require("../models/IngredientModel");
 const Nutrient = require("../models/NutrientModel");
 const jsonFilePath = path.join(__dirname, "./ingredients.json");
 
-mongoose.connect(process.env.mongoURI, {
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
