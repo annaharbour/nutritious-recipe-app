@@ -62,12 +62,13 @@ jobs:
             script_stop: true
             envs: NODE_ENV,CLOUDFRONT_URL,MONGO_URI,JWT_SECRET,FDC_API_KEY,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,SESSION_SECRET,CLIENT_URI,SERVER_URI,PORT,EMAIL_USER,EMAIL_PASS,SMTP_HOST,EMAIL_ADDRESS,EMAIL_PORT,SMTP_USER,SMTP_PASS,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,BUCKET_NAME,BUCKET_REGION,BUCKET_ACCESS_KEY,BUCKET_SECRET_ACCESS_KEY
             script: |
+              echo $CLIENT_URI
               whoami
               cd /home/ec2-user/app
               ls -al
               npm run build
               pm2 stop all || true
-              pm2 start --name siren-smoothies-api backend/server.js
+              pm2 start --name siren-smoothies-api backend/server.js --update-env
               chmod +x ./nginx/deploy_nginx_config.sh
               ./nginx/deploy_nginx_config.sh
               
