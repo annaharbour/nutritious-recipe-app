@@ -16,7 +16,7 @@ jobs:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
             ARGS: "-rlgoDzvc -i --delete"
 #            REMOTE_HOST: ${{ secrets.EC2_PUBLIC_IP }}
-            REMOTE_HOST: "3.234.129.210"
+            REMOTE_HOST: "52.45.138.94"
             REMOTE_USER: ec2-user
             TARGET: /home/ec2-user/app
             EXCLUDE: "/.git/, /node_modules/, /backend/node_modules/, /client/node_modules/, /.github/, /cdk/"
@@ -49,7 +49,7 @@ jobs:
             BUCKET_SECRET_ACCESS_KEY: ${{secrets.BUCKET_SECRET_ACCESS_KEY}}
           with:
 #            host: ${{ secrets.EC2_PUBLIC_IP }}
-            host: "3.234.129.210"
+            host: "52.45.138.94"
             username: ec2-user
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             script_stop: true
