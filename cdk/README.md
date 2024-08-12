@@ -43,7 +43,8 @@ sudo -i
 
 # Caveats
 ## Installing Certs for HTTPS/SSL Support
-In order for certbot to fetch and install a valid certificate into the NGINX instance, it must first validate that the 
+1. Change the DNS A record to point to new server IP address
+2. In order for certbot to fetch and install a valid certificate into the NGINX instance, it must first validate that the 
 domain name's DNS records contain an A record that points to the server from which the request is originating.
 If it doesn't contain this A record at time of CDK deployment, you can manually connect to the EC2 instance and run:
 ```shell
