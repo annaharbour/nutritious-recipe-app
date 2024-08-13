@@ -79,6 +79,10 @@ function Recipe({ showToast }) {
 		}
 	};
 
+	if(loading){
+		return <i className="fa fa-spinner spinner"></i>;
+	}
+
 	if (error) {
 		return <NotFound message={error} />;
 	}
