@@ -1,9 +1,16 @@
-import React from 'react'
+import React from "react";
 
-function NotFound({message}) {
-  return (
-    <div>404: {message}</div>
-  )
+function NotFound({ message }) {
+	return (
+		<section className="landing">
+			<div className="dark-overlay">
+				<div className="landing-inner">
+					<h1>404</h1>
+					<p>{message || "Not Found"}</p>
+				</div>
+			</div>
+		</section>
+	);
 }
 
-export default NotFound
+export default NotFound;
