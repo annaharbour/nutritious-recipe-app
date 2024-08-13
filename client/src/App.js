@@ -96,7 +96,7 @@ const App = () => {
 						element={<Search showToast={showToastMessage} />}
 					/>
 				</Route>
-				<Route path="*" element={<NotFound />} />
+				{/* <Route path="*" element={<NotFound />} /> */}
 			</Routes>
 		</Router>
 	);
