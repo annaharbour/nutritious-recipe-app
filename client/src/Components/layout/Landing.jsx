@@ -31,7 +31,7 @@ const Landing = ({ showToast }) => {
 					)}
 					{!formToShow && (
 						<>
-							<h2>Time to up your smoothie game</h2>
+							<h4>Time to up your smoothie game</h4>
 							<div className="buttons">
 								<button
 									onClick={() => showForm("register")}
