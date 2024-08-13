@@ -16,8 +16,7 @@ import Reset from "./Components/auth/Reset";
 import UserRecipes from "./Components/dashboard/UserRecipes";
 import FavoriteRecipes from "./Components/dashboard/FavoriteRecipes";
 import Trending from "./Components/dashboard/Trending";
-import Login from "./Components/auth/Login";
-
+import NotFound from "./Components/layout/NotFound";
 const App = () => {
 	const showToastMessage = (msg, type) => {
 		switch (type) {
@@ -96,7 +95,7 @@ const App = () => {
 						element={<Search showToast={showToastMessage} />}
 					/>
 				</Route>
-				<Route path="*" element={<Login />} />
+				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</Router>
 	);
