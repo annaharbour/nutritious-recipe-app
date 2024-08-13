@@ -6,6 +6,7 @@ import { getIngredientsByCategory } from "../../services/ingredientService";
 const Search = ({ showToast }) => {
 	const [loading, setLoading] = useState(false);
 	const [recipeName, setRecipeName] = useState("");
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [userName, setUserName] = useState("");
 	const [ingredients, setIngredients] = useState([]);
 	const [includeIngredients, setIncludeIngredients] = useState([]);
@@ -26,6 +27,10 @@ const Search = ({ showToast }) => {
 		"Liquid",
 		"Flavor",
 	];
+
+	const toggleDropdown = () => {
+		setIsDropdownOpen((prev) => !prev);
+	};
 
 	const [category, setCategory] = useState(ingredientCategories[0]);
 
@@ -65,7 +70,6 @@ const Search = ({ showToast }) => {
 		}
 	};
 
-	
 	const handleDeselectIngredient = (ingredientId) => {
 		setIncludeIngredients((prev) =>
 			prev.filter((ing) => ing._id !== ingredientId)
@@ -138,7 +142,9 @@ const Search = ({ showToast }) => {
 		<section className="search-recipes">
 			<form className="form">
 				<h2>Search Recipes</h2>
-
+				<h4>
+					<u>Search by Name</u>
+				</h4>
 				<div className="form-group name-search">
 					<input
 						type="text"
@@ -156,82 +162,79 @@ const Search = ({ showToast }) => {
 					/>
 				</div>
 				<div className="form-group">
-					<div className="tabs">
-						{ingredientCategories.map((cat) => (
-							<button
-								type="button"
-								key={cat}
-								className={`tab-button ${cat === category ? "active" : ""}`}
-								onClick={() => setCategory(cat)}>
-								{cat}
-							</button>
-						))}
-					</div>
-					<ul className="ingredients">
-						{!category ? (
-							<i>Include or exclude ingredients from each category</i>
-						) : (
-							ingredients.map((ingredient) => {
-								const isIncluded = includeIngredients.some(
-									(ing) => ing._id === ingredient._id
-								);
-								const isExcluded = excludeIngredients.some(
-									(ing) => ing._id === ingredient._id
-								);
-
-								return (
-									// <span
-									// 	key={ingredient._id}
-									// 	className={`ingredient ${isIncluded ? "included" : ""} ${
-									// 		isExcluded ? "excluded" : ""
-									// 	}`}>
-									// 	<i
-									// 		className="fa-solid fa-check"
-									// 		style={{ visibility: !isIncluded ? "visible" : "hidden" }}
-									// 		onClick={() =>
-									// 			handleIncludeIngredient(ingredient._id)
-									// 		}></i>
-									// 	<i
-									// 		style={{ visibility: isExcluded ? "hidden" : "visible" }}
-									// 		className="fa-solid fa-x"
-									// 		onClick={() =>
-									// 			handleExcludeIngredient(ingredient._id)
-									// 		}></i>
-									// 	<span className={`${isExcluded && "strike-through"}`}>
-									// 		{ingredient.description}
-									// 	</span>
-									// </span>
-									<span
-									key={ingredient._id}
-									className={`ingredient ${isIncluded ? "included" : ""} ${
-										isExcluded ? "excluded" : ""
-									}`}>
-									<i
-										className={`fa-solid fa-check `}
-										style={!isIncluded ? {"color": "#7cb518"} : {}}
-
-										onClick={() =>
-											isIncluded
-												? handleDeselectIngredient(ingredient._id)
-												: handleIncludeIngredient(ingredient._id)
-										}></i>
-									<i
-										className={`fa-solid fa-x`}
-										style={!isExcluded ? {"color": "#ff5400ff"} : {}}
-										onClick={() =>
-											isExcluded
-												? handleDeselectIngredient(ingredient._id)
-												: handleExcludeIngredient(ingredient._id)
-										}></i>
-									<span className={`${isExcluded && "strike-through"}`}>
-										{ingredient.description}
-									</span>
-								</span>
-								);
-							})
-						)}
-					</ul>
+					<h4
+						type="button"
+						className="dropdown-toggle-btn"
+						onClick={toggleDropdown}>
+						<u>Include or Exclude Ingredients</u>
+						<i
+							className={
+								!isDropdownOpen ? `fa fa-caret-down` : "fa fa-caret-up"
+							}></i>
+					</h4>
 				</div>
+				{isDropdownOpen && (
+					<div className="form-group">
+						<div className="tabs">
+							{ingredientCategories.map((cat) => (
+								<button
+									type="button"
+									key={cat}
+									className={`tab-button ${cat === category ? "active" : ""}`}
+									onClick={() => setCategory(cat)}>
+									{cat}
+								</button>
+							))}
+						</div>
+
+						<ul className="ingredients">
+							{!category ? (
+								<i>Include or exclude ingredients from each category</i>
+							) : (
+								ingredients.map((ingredient) => {
+									const isIncluded = includeIngredients.some(
+										(ing) => ing._id === ingredient._id
+									);
+									const isExcluded = excludeIngredients.some(
+										(ing) => ing._id === ingredient._id
+									);
+
+									return (
+										<span
+											key={ingredient._id}
+											className={`ingredient ${isIncluded ? "included" : ""} ${
+												isExcluded ? "excluded" : ""
+											}`}>
+											<i
+												className={`fa-solid fa-check `}
+												style={!isIncluded ? { color: "#7cb518" } : {}}
+												onClick={() =>
+													isIncluded
+														? handleDeselectIngredient(ingredient._id)
+														: handleIncludeIngredient(ingredient._id)
+												}></i>
+											<i
+												className={`fa-solid fa-x`}
+												style={!isExcluded ? { color: "#ff5400ff" } : {}}
+												onClick={() =>
+													isExcluded
+														? handleDeselectIngredient(ingredient._id)
+														: handleExcludeIngredient(ingredient._id)
+												}></i>
+											<span className={`${isExcluded && "strike-through"}`}>
+												{ingredient.description}
+											</span>
+										</span>
+									);
+								})
+							)}
+						</ul>
+					</div>
+				)}
+				<h4>
+					<u>Optimizations</u>
+				</h4>
+
 				<div className="form-group optimizations">
 					<div className="optimization">
 						<input
