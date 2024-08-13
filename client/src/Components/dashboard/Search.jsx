@@ -65,6 +65,16 @@ const Search = ({ showToast }) => {
 		}
 	};
 
+	
+	const handleDeselectIngredient = (ingredientId) => {
+		setIncludeIngredients((prev) =>
+			prev.filter((ing) => ing._id !== ingredientId)
+		);
+		setExcludeIngredients((prev) =>
+			prev.filter((ing) => ing._id !== ingredientId)
+		);
+	};
+
 	const handleIncludeIngredient = (ingredientId) => {
 		if (ingredientId) {
 			const newExcludeIngredients = excludeIngredients.filter(
@@ -170,27 +180,53 @@ const Search = ({ showToast }) => {
 								);
 
 								return (
+									// <span
+									// 	key={ingredient._id}
+									// 	className={`ingredient ${isIncluded ? "included" : ""} ${
+									// 		isExcluded ? "excluded" : ""
+									// 	}`}>
+									// 	<i
+									// 		className="fa-solid fa-check"
+									// 		style={{ visibility: !isIncluded ? "visible" : "hidden" }}
+									// 		onClick={() =>
+									// 			handleIncludeIngredient(ingredient._id)
+									// 		}></i>
+									// 	<i
+									// 		style={{ visibility: isExcluded ? "hidden" : "visible" }}
+									// 		className="fa-solid fa-x"
+									// 		onClick={() =>
+									// 			handleExcludeIngredient(ingredient._id)
+									// 		}></i>
+									// 	<span className={`${isExcluded && "strike-through"}`}>
+									// 		{ingredient.description}
+									// 	</span>
+									// </span>
 									<span
-										key={ingredient._id}
-										className={`ingredient ${isIncluded ? "included" : ""} ${
-											isExcluded ? "excluded" : ""
-										}`}>
-										<i
-											className="fa-solid fa-check"
-											style={{ visibility: !isIncluded ? "visible" : "hidden" }}
-											onClick={() =>
-												handleIncludeIngredient(ingredient._id)
-											}></i>
-										<i
-											style={{ visibility: isExcluded ? "hidden" : "visible" }}
-											className="fa-solid fa-x"
-											onClick={() =>
-												handleExcludeIngredient(ingredient._id)
-											}></i>
-										<span className={`${isExcluded && "strike-through"}`}>
-											{ingredient.description}
-										</span>
+									key={ingredient._id}
+									className={`ingredient ${isIncluded ? "included" : ""} ${
+										isExcluded ? "excluded" : ""
+									}`}>
+									<i
+										className={`fa-solid fa-check `}
+										style={!isIncluded ? {"color": "#7cb518"} : {}}
+
+										onClick={() =>
+											isIncluded
+												? handleDeselectIngredient(ingredient._id)
+												: handleIncludeIngredient(ingredient._id)
+										}></i>
+									<i
+										className={`fa-solid fa-x`}
+										style={!isExcluded ? {"color": "#ff5400ff"} : {}}
+										onClick={() =>
+											isExcluded
+												? handleDeselectIngredient(ingredient._id)
+												: handleExcludeIngredient(ingredient._id)
+										}></i>
+									<span className={`${isExcluded && "strike-through"}`}>
+										{ingredient.description}
 									</span>
+								</span>
 								);
 							})
 						)}
@@ -258,9 +294,9 @@ const Search = ({ showToast }) => {
 
 			<div className="recipes">
 				<h3>Results:</h3>
-				
+
 				<ul className="recipe-list">
-				{loading && <i className="fa fa-spinner spinner"></i>}
+					{loading && <i className="fa fa-spinner spinner"></i>}
 					{results && results.length > 0 ? (
 						results.map((recipe) => (
 							<li key={recipe._id}>
@@ -269,7 +305,8 @@ const Search = ({ showToast }) => {
 								</Link>
 								<div className="recipe labels">
 									{recipe.labels.map((label) => (
-										<span key={label}
+										<span
+											key={label}
 											className={`label ${label
 												.toLowerCase()
 												.replace(/\s+/g, "-")}`}>
