@@ -17,6 +17,7 @@ import UserRecipes from "./Components/dashboard/UserRecipes";
 import FavoriteRecipes from "./Components/dashboard/FavoriteRecipes";
 import Trending from "./Components/dashboard/Trending";
 import NotFound from "./Components/layout/NotFound";
+
 const App = () => {
 	const showToastMessage = (msg, type) => {
 		switch (type) {
