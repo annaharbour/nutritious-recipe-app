@@ -126,8 +126,6 @@ const sendPasswordResetEmail = async (req, res) => {
 			expiresIn: '1h',
 		});
 
-		console.log(process.env.AWS_ACCESS_KEY_ID);
-		console.log(process.env.AWS_SECRET_ACCESS_KEY);
 		const ses = new aws.SES({
 			apiVersion: "2010-12-01",
 			region: "us-east-1",
