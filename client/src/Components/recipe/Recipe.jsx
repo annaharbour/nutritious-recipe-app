@@ -79,10 +79,6 @@ function Recipe({ showToast }) {
 		}
 	};
 
-	if (loading) {
-		return <p>Loading...</p>;
-	}
-
 	if (error) {
 		return <NotFound message={error} />;
 	}
