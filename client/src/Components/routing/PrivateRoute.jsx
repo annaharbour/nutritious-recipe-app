@@ -6,7 +6,8 @@ const PrivateRoute = ({ Component, showToast, ...rest }) => {
 	const { isLoggedIn, isLoading } = useAuth();
 
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <i className="fa fa-spinner spinner"></i>
+		;
 	}
 
 	if (!isLoggedIn) {
