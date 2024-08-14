@@ -21,21 +21,25 @@ const Register = ({ showToast, showForm }) => {
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
+		const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+	
 		if (password !== password2) {
 			showToast("Passwords do not match", "error");
+		} else if (!regex.test(password)) {  // Check if password does NOT match the pattern
+			showToast("Password should be at least 8 characters and contain at least one uppercase, one lowercase letter, and one number", "error");
 		} else {
 			try {
 				await registerUser(name, email, phone, password);
 				navigate("/dashboard");
 			} catch (err) {
 				showToast(
-					err.message,
-					"error" || "Registration failed. Please try again.",
+					err.message || "Registration failed. Please try again.",
 					"error"
 				);
 			}
 		}
 	};
+	
 	return (
 		<section className="container">
 			<h4 className="lead">
