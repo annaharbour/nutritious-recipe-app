@@ -16,7 +16,7 @@ function ResponseForm({ commentId, addResponse, showToast }) {
 			showToast("Response added successfully!", "success");
 		} catch (err) {
 			console.log(err);
-			showToast("Failed to add response. Please try again later.", "error");
+			showToast("Failed to add response. 😣 Try again.", "error");
 		}
 	};
 

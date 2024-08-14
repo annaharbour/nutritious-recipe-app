@@ -94,14 +94,14 @@ const RecipeForm = ({ showToast }) => {
 					},
 				]);
 			} else {
-				showToast("You can only add up to a dozen ingredients");
+				showToast("You can only include up to a dozen ingredients", "error");
 			}
 
 			setSelectedIngredient(null);
 			setSelectedPortion("");
 			setSelectedAmount(1);
 		} catch {
-			showToast("Error adding ingredient, please try again", "error");
+			showToast("Error adding ingredient, please try again 😣", "error");
 		} finally {
 			setLoading(false);
 		}
@@ -114,7 +114,7 @@ const RecipeForm = ({ showToast }) => {
 			);
 			setRecipeIngredients(updatedIngredients);
 		} catch (error) {
-			showToast("Error removing ingredient, please try again", "error");
+			showToast("Error removing ingredient, please try again 😣", "error");
 		}
 	};
 
@@ -151,7 +151,7 @@ const RecipeForm = ({ showToast }) => {
 			setLoading(false);
 			navigate("/recipes");
 		} catch (error) {
-			showToast("Error saving recipe");
+			showToast("Error saving recipe. 😣 Try again.", "error");
 			setLoading(false);
 		}
 	};
@@ -170,7 +170,7 @@ const RecipeForm = ({ showToast }) => {
 			setTimeout(() => setPanelOpen(true), 1000);
 		} catch (error) {
 			console.error("Error calculating recipe nutrition:", error);
-			showToast("Error calculating recipe nutrition", "error");
+			showToast("Error calculating recipe nutrition 😣 Try again", "error");
 		} finally {
 			setLoading(false);
 		}

@@ -29,15 +29,16 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 			setLikes(updatedLikes.length);
 			setUserHasLiked(!userHasLiked);
 		} catch (err) {
-			showToast("Error liking comment", "error");
+			showToast("Error liking comment 😣", "error");
 		}
 	};
 
 	const handleDeleteComment = async () => {
 		try {
 			await deleteComment(comment);
+			showToast("Comment deleted successfully", "success");
 		} catch (err) {
-			showToast("Error deleting comment", "error");
+			showToast("Error deleting comment 😣", "error");
 		}
 	};
 
@@ -66,7 +67,7 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 			setResponses(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
 			showToast("Response deleted successfully", "success");
 		} catch (err) {
-			showToast(err.message, "error");
+			showToast("Whoops! 😣 Error deleting response, try again.", "error");
 		}
 	};
 

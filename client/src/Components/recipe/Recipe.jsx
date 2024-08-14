@@ -55,46 +55,8 @@ function Recipe({ showToast }) {
 		};
 	
 		fetchSavedRecipes();
-	}, [userId, id]); // Trigger this effect only when userId or id changes
+	}, [userId, id]); 
 	
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		try {
-	// 			setLoading(true);
-	// 			// Fetch recipe data
-	// 			const recipeData = await getRecipeById(id);
-	// 			if (recipeData) {
-	// 				// Set Recipe Data
-	// 				setRecipe(recipeData);
-	// 				// Find Recipe Author
-	// 				const authorData = await getUserById(recipeData.userId);
-	// 				if (authorData) {
-	// 					setRecipeAuthor(authorData);
-	// 				}
-	// 			} else {
-	// 				setError("Recipe not found");
-	// 			}
-	// 			setLoading(false);
-	// 		} catch (err) {
-	// 			setError("Failed to fetch data. Please try again later.");
-	// 			setLoading(false);
-	// 		}
-	// 	};
-	// 	const fetchSavedRecipes = async () => {
-	// 		try {
-	// 			if (userId) {
-	// 				setLoading(true);
-	// 				const res = await getUserFavorites(userId);
-	// 				setIsSaved(res.some((item) => item._id === id));
-	// 				setLoading(false);
-	// 			}
-	// 		} catch (err) {
-	// 			setLoading(false);
-	// 		}
-	// 	};
-	// 	fetchData();
-	// 	fetchSavedRecipes();
-	// }, [id, isSaved, userId]);
 
 	const toggleSave = async () => {
 		try {
@@ -109,7 +71,7 @@ function Recipe({ showToast }) {
 			);
 			setLoading(false);
 		} catch (err) {
-			showToast(err.message, "error");
+			showToast("Whoops! Error saving recipe 😣", "error");
 			setLoading(false);
 		}
 	};
@@ -119,7 +81,7 @@ function Recipe({ showToast }) {
 	}
 
 	if (!recipe || !recipeAuthor) {
-		return <NotFound message="Recipe not found." />;
+		return <NotFound message="Recipe not found. 😣 Bummer." />;
 	}
 
 	return (

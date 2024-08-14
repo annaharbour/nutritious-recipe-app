@@ -31,7 +31,7 @@ const Comments = ({ showToast, panelOpen, onClose, recipe }) => {
 			setComments(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
 			showToast("Comment deleted successfully", "success");
 		} catch (err) {
-			showToast("Failed to delete comment. Please try again", "error");
+			showToast("Failed to delete comment. 😣 Please try again", "error");
 		}
 	};
 

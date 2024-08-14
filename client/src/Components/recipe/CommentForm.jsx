@@ -9,12 +9,13 @@ const CommentForm = ({ showToast, loading, handleAddComment }) => {
 		e.preventDefault();
 		try {
 			if (!text) {
-				showToast("Please enter a comment before submitting.");
+				showToast("Please enter a comment before submitting.", "error");
 				return;
 			}
 			await handleAddComment(id, text);
 			setText("");
 		} catch (error) {
+			showToast("Failed to add comment. 😣 Try again.", "error");
 			console.error(error);
 		}
 	};

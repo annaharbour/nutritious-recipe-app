@@ -14,7 +14,7 @@ function Response({
 		try {
 			await deleteResponse(response);
 		} catch (err) {
-			showToast(err.message, "error");
+			showToast("Whoops! Try deleting your response again.", "error");
 		}
 	};
 

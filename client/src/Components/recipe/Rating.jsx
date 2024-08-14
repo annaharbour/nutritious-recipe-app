@@ -18,7 +18,7 @@ function RatingComponent({ recipe, showToast }) {
 				if (res.meanRating) setMeanRating(res.meanRating);
 				if (res.userRating) setStars(res.userRating);
 			} catch (error) {
-				console.error("Error fetching user rating:", error);
+				console.error("Error fetching user rating:", "error");
 			}
 		};
 
@@ -35,7 +35,6 @@ function RatingComponent({ recipe, showToast }) {
 			}
 			showToast("Rating submitted", "success");
 		} catch (error) {
-			console.error("Error rating recipe:", error);
 			showToast("Error rating recipe", "error");
 		}
 		setLoading(false);
