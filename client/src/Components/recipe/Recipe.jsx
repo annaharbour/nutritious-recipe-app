@@ -36,10 +36,10 @@ function Recipe({ showToast }) {
 				setLoading(false);
 			}
 		};
-	
+
 		fetchRecipe();
 	}, [id]);
-	
+
 	useEffect(() => {
 		const fetchSavedRecipes = async () => {
 			if (userId) {
@@ -53,10 +53,9 @@ function Recipe({ showToast }) {
 				}
 			}
 		};
-	
+
 		fetchSavedRecipes();
-	}, [userId, id]); 
-	
+	}, [userId, id]);
 
 	const toggleSave = async () => {
 		try {
@@ -76,6 +75,10 @@ function Recipe({ showToast }) {
 		}
 	};
 
+	if (loading) {
+		return <i className="fa fa-spinner spinner"></i>;
+	}
+
 	if (error) {
 		return <NotFound message={error} />;
 	}
@@ -93,7 +96,6 @@ function Recipe({ showToast }) {
 					<Link to={`/profiles/${recipeAuthor._id}`}>{recipeAuthor.name}</Link>
 				</h6>
 			)}
-
 			<div className="ratings">
 				{userInfo ? (
 					<i
@@ -107,6 +109,9 @@ function Recipe({ showToast }) {
 				) : (
 					<Link to="/dashboard">Create an Account to Save</Link>
 				)}
+				Save this Recipe
+			</div>
+			<div className="ratings">
 				{userInfo && <Rating showToast={showToast} recipe={recipe} />}
 			</div>
 
@@ -131,9 +136,7 @@ function Recipe({ showToast }) {
 			</div>
 			<h3>Recipe</h3>
 			<span className="portion">Serves {recipe.servings}</span>
-			<Ingredients
-				ingredients={recipe.ingredients}
-			/>
+			<Ingredients ingredients={recipe.ingredients} />
 			<Comments
 				recipe={recipe._id}
 				panelOpen={commentPanelOpen}

@@ -8,10 +8,9 @@ function RatingComponent({ recipe, showToast }) {
 	const [loading, setLoading] = useState(false);
 	const [stars, setStars] = useState(null);
 	const [meanRating, setMeanRating] = useState(null);
-	const [hoveredStar, setHoveredStar] = useState(null); 
+	const [hoveredStar, setHoveredStar] = useState(null);
 
 	useEffect(() => {
-		console.log(userId)
 		const fetchRating = async () => {
 			try {
 				const res = await getRating(recipe._id);
@@ -21,7 +20,6 @@ function RatingComponent({ recipe, showToast }) {
 				console.error("Error fetching user rating:", "error");
 			}
 		};
-
 		fetchRating();
 	}, [recipe._id, userId]);
 
@@ -57,7 +55,7 @@ function RatingComponent({ recipe, showToast }) {
 							cursor: loading ? "not-allowed" : "pointer",
 							color: isMeanRatingOrBelow || isHovered ? "gold" : "#F9F6EE",
 							fontSize: isHovered || isUserRating ? "2rem" : "1.5rem",
-							transition: 'font-size 0.3s ease',
+							transition: "font-size 0.3s ease",
 						}}
 						onMouseEnter={() => setHoveredStar(starIndex)}
 						onMouseLeave={() => setHoveredStar(null)}
@@ -65,6 +63,8 @@ function RatingComponent({ recipe, showToast }) {
 					/>
 				);
 			})}
+
+			({meanRating && meanRating} / 5)
 		</div>
 	);
 }
