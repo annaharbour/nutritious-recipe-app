@@ -142,7 +142,6 @@ const getRecipes = async (req, res) => {
 	}
 };
 
-
 const updateRecipeById = async (req, res) => {
 	const recipeId = req.params.id;
 	const { name, ingredients } = req.body;
@@ -277,61 +276,69 @@ const toggleSaveRecipe = async (req, res) => {
 		return res.status(500).json({ error: err.message });
 	}
 };
-
 const searchRecipes = async (req, res) => {
-	const {
-		recipeName,
-		userName,
-		includeIngredients,
-		excludeIngredients,
-		optimizations,
-	} = req.query;
+    const { recipeName, userName, includeIngredients, excludeIngredients, optimizations } = req.query;
 
-	try {
-		// Build query object
-		let query = {};
+    try {
+        // Build query object
+        let query = {};
 
-		if (recipeName) {
-			query.name = { $regex: recipeName, $options: "i" };
-		}
+        // Recipe name matching
+        if (recipeName) {
+            query.name = { $regex: recipeName, $options: "i" };
+        }
 
-		if (userName) {
-			const user = await User.findOne({ username: userName });
-			if (user) {
-				query.userId = user._id;
-			}
-		}
+        // User name matching
+        if (userName) {
+            const user = await User.findOne({ username: userName });
+            if (user) {
+                query.userId = user._id;
+            }
+        }
 
-		if (includeIngredients) {
-			query["ingredients._id"] = { $in: includeIngredients.split(",") };
-		}
+        // Ingredients logic
+        const ingredientQuery = [];
 
-		if (excludeIngredients) {
-			query["ingredients._id"] = { $nin: excludeIngredients.split(",") };
-		}
+        // Include ingredients
+        if (includeIngredients) {
+            const includeArray = includeIngredients.split(",");
+            ingredientQuery.push({ "ingredients._id": { $all: includeArray } }); // Must include all specified ingredients
+        }
 
-		if (optimizations) {
-			const optimizationObject = JSON.parse(optimizations); // Parse the JSON string
+        // Exclude ingredients
+        if (excludeIngredients) {
+            const excludeArray = excludeIngredients.split(",");
+            ingredientQuery.push({ "ingredients._id": { $nin: excludeArray } }); // Must not include any specified ingredients
+        }
 
-			const tags = [];
-			if (optimizationObject.bulking) tags.push("Bulking");
-			if (optimizationObject.lean) tags.push("Lean");
-			if (optimizationObject.highProtein) tags.push("High Protein");
-			if (optimizationObject.lowCarb) tags.push("Low Carb");
-			if (optimizationObject.lowFat) tags.push("Low Fat");
+        // Combine include and exclude conditions
+        if (ingredientQuery.length > 0) {
+            query.$and = ingredientQuery;
+        }
 
-			if (tags.length > 0) {
-				query.labels = { $all: tags }; // Ensure all specified tags are included
-			}
-		}
+        // Optimizations handling
+        if (optimizations) {
+            const optimizationObject = JSON.parse(optimizations);
 
-		const recipes = await Recipe.find(query).lean();
-		res.json(recipes);
-	} catch (err) {
-		console.error("Error searching recipes:", err);
-		res.status(500).json({ error: "Error searching recipes" });
-	}
+            const tags = [];
+            if (optimizationObject.bulking) tags.push("Bulking");
+            if (optimizationObject.lean) tags.push("Lean");
+            if (optimizationObject.highProtein) tags.push("High Protein");
+            if (optimizationObject.lowCarb) tags.push("Low Carb");
+            if (optimizationObject.lowFat) tags.push("Low Fat");
+
+            if (tags.length > 0) {
+                query.labels = { $all: tags }; 
+            }
+        }
+        const recipes = await Recipe.find(query).lean();
+        res.json(recipes);
+    } catch (err) {
+        console.error("Error searching recipes:", err);
+        res.status(500).json({ error: "Error searching recipes" });
+    }
 };
+
 
 module.exports = {
 	createRecipe,
