@@ -98,18 +98,24 @@ function Recipe({ showToast }) {
 			)}
 			<div className="ratings">
 				{userInfo ? (
-					<i
-						className="fa-solid fa-bookmark"
-						onClick={toggleSave}
-						disabled={loading}
-						style={{
-							fontSize: "2rem",
-							color: !isSaved ? "#F9F6EE" : "#ebd92d",
-						}}></i>
+					<>
+						<i
+							className="fa-solid fa-bookmark"
+							onClick={toggleSave}
+							disabled={loading}
+							style={{
+								fontSize: "2rem",
+								color: !isSaved ? "#F9F6EE" : "#ebd92d",
+							}}></i>
+						Save this Recipe
+					</>
 				) : (
-					<Link to="/dashboard">Create an Account to Save</Link>
+					<h6>
+						<Link to="/dashboard">
+							Create an account to save, rate, and comment!
+						</Link>
+					</h6>
 				)}
-				Save this Recipe
 			</div>
 			<div className="ratings">
 				{userInfo && <Rating showToast={showToast} recipe={recipe} />}
@@ -127,9 +133,11 @@ function Recipe({ showToast }) {
 				</ul>
 			</div>
 			<div className="links">
-				<span onClick={() => setCommentPanelOpen(true)}>
-					<i className="fa-solid fa-comment"></i> View Comments
-				</span>
+				{userInfo && (
+					<span onClick={() => setCommentPanelOpen(true)}>
+						<i className="fa-solid fa-comment"></i> View Comments
+					</span>
+				)}
 				<span onClick={() => setNutritionPanelOpen(true)}>
 					<i className="fa-solid fa-glass-water"></i> View Nutrition
 				</span>
@@ -137,6 +145,7 @@ function Recipe({ showToast }) {
 			<h3>Recipe</h3>
 			<span className="portion">Serves {recipe.servings}</span>
 			<Ingredients ingredients={recipe.ingredients} />
+
 			<Comments
 				recipe={recipe._id}
 				panelOpen={commentPanelOpen}

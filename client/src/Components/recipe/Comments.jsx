@@ -12,7 +12,7 @@ const Comments = ({ showToast, panelOpen, onClose, recipe }) => {
 	const [comments, setComments] = useState([]);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
-
+	
 	useEffect(() => {
 		const fetchComments = async () => {
 			try {
