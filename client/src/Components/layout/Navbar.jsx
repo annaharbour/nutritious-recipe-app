@@ -17,12 +17,17 @@ const Navbar = () => {
 	const authLinks = (
 		<ul>
 			<li>
+				<Link to="/account">
+					<i className="fa-solid fa-user"></i>Account
+				</Link>
+			</li>
+			<li>
 				<Link to="/dashboard">
 					<i className="fa-solid fa-blender"></i>Dashboard
 				</Link>
 			</li>
 			<li onClick={logout}>
-				<i className="fas fa-user" />
+				<i className="fas fa-sign-out" />
 				<Link to="/">Logout</Link>
 			</li>
 		</ul>
@@ -33,7 +38,7 @@ const Navbar = () => {
 			<li>
 				<Link to="/">
 					<i className="fas fa-user" />
-					Sign Up
+					Sign In
 				</Link>
 			</li>
 			<li>
