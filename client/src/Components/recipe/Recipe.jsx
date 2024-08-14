@@ -23,43 +23,78 @@ function Recipe({ showToast }) {
 	const [commentPanelOpen, setCommentPanelOpen] = useState(false);
 
 	useEffect(() => {
-		const fetchData = async () => {
+		const fetchRecipe = async () => {
 			try {
 				setLoading(true);
-				// Fetch recipe data
 				const recipeData = await getRecipeById(id);
-				if (recipeData) {
-					// Set Recipe Data
-					setRecipe(recipeData);
-					// Find Recipe Author
-					const authorData = await getUserById(recipeData.userId);
-					if (authorData) {
-						setRecipeAuthor(authorData);
-					}
-				} else {
-					setError("Recipe not found");
-				}
+				setRecipe(recipeData);
+				const authorData = await getUserById(recipeData.userId);
+				setRecipeAuthor(authorData);
 				setLoading(false);
 			} catch (err) {
-				setError("Failed to fetch data. Please try again later.");
+				setError("Failed to fetch recipe data.");
 				setLoading(false);
 			}
 		};
+	
+		fetchRecipe();
+	}, [id]);
+	
+	useEffect(() => {
 		const fetchSavedRecipes = async () => {
-			try {
-				if (userId) {
+			if (userId) {
+				try {
 					setLoading(true);
 					const res = await getUserFavorites(userId);
 					setIsSaved(res.some((item) => item._id === id));
 					setLoading(false);
+				} catch (err) {
+					setLoading(false);
 				}
-			} catch (err) {
-				setLoading(false);
 			}
 		};
-		fetchData();
+	
 		fetchSavedRecipes();
-	}, [id, isSaved, userId]);
+	}, [userId, id]); // Trigger this effect only when userId or id changes
+	
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		try {
+	// 			setLoading(true);
+	// 			// Fetch recipe data
+	// 			const recipeData = await getRecipeById(id);
+	// 			if (recipeData) {
+	// 				// Set Recipe Data
+	// 				setRecipe(recipeData);
+	// 				// Find Recipe Author
+	// 				const authorData = await getUserById(recipeData.userId);
+	// 				if (authorData) {
+	// 					setRecipeAuthor(authorData);
+	// 				}
+	// 			} else {
+	// 				setError("Recipe not found");
+	// 			}
+	// 			setLoading(false);
+	// 		} catch (err) {
+	// 			setError("Failed to fetch data. Please try again later.");
+	// 			setLoading(false);
+	// 		}
+	// 	};
+	// 	const fetchSavedRecipes = async () => {
+	// 		try {
+	// 			if (userId) {
+	// 				setLoading(true);
+	// 				const res = await getUserFavorites(userId);
+	// 				setIsSaved(res.some((item) => item._id === id));
+	// 				setLoading(false);
+	// 			}
+	// 		} catch (err) {
+	// 			setLoading(false);
+	// 		}
+	// 	};
+	// 	fetchData();
+	// 	fetchSavedRecipes();
+	// }, [id, isSaved, userId]);
 
 	const toggleSave = async () => {
 		try {
@@ -78,10 +113,6 @@ function Recipe({ showToast }) {
 			setLoading(false);
 		}
 	};
-
-	if(loading){
-		return <i className="fa fa-spinner spinner"></i>;
-	}
 
 	if (error) {
 		return <NotFound message={error} />;

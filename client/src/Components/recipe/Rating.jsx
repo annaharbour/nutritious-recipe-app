@@ -11,6 +11,7 @@ function RatingComponent({ recipe, showToast }) {
 	const [hoveredStar, setHoveredStar] = useState(null); 
 
 	useEffect(() => {
+		console.log(userId)
 		const fetchRating = async () => {
 			try {
 				const res = await getRating(recipe._id);
