@@ -3,15 +3,17 @@ import { sendPasswordResetEmail } from '../../services/authService';
 
 function PasswordResetRequest({ showToast, showForgotten }) {
   const [email, setEmail] = useState('');
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
       await sendPasswordResetEmail(email);
-      showToast('Password reset link sent to your email.', 'success');
+      showToast('Password reset link sent to your email - may take up to 5 minutes to arrive.', 'success');
     } catch (error) {
       showToast('Failed to send reset link. Please try again.', 'error');
+    } finally {
+      setTimeout(() => setIsSubmitting(false), 500);
     }
   };
 
@@ -26,7 +28,7 @@ function PasswordResetRequest({ showToast, showForgotten }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button type="submit" className="btn btn-primary">Send Reset Link</button>
+        <button type="submit" disabled={isSubmitting} className="btn btn-primary">Send Reset Link</button>
       </form>
       <br></br>
       <button className='btn' onClick={()=>showForgotten(false)}>Back</button>
