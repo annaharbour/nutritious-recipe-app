@@ -1129,4 +1129,8 @@ button {
 		right: .5rem;
 		top: .5rem;
 	}
+
+	.nav-header {
+		display: none;
+	}
 }

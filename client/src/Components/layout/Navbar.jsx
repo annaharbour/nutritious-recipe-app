@@ -16,6 +16,9 @@ const Navbar = () => {
 
 	const authLinks = (
 		<ul>
+			<li className="nav-header" style={{ "margin-right": "1rem" }}>
+				<h4>SIREN SMOOTHIES</h4>
+			</li>
 			<li>
 				<Link to="/account">
 					<i className="fa-solid fa-user"></i>Account
@@ -35,6 +38,10 @@ const Navbar = () => {
 
 	const guestLinks = (
 		<ul>
+			<li className="nav-header" style={{ "margin-right": "1rem" }}>
+				<h4>SIREN SMOOTHIES</h4>
+			</li>
+
 			<li>
 				<Link to="/">
 					<i className="fas fa-user" />
