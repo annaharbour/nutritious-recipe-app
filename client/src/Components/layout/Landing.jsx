@@ -32,6 +32,8 @@ const Landing = ({ showToast }) => {
 					{!formToShow && (
 						<>
 							<h4>Time to up your smoothie game</h4>
+							<h3>We're in beta!</h3>
+							<h6>Your feedback makes the site better! Reach out at sirensmoothies@gmail.com</h6>
 							<div className="buttons">
 								<button
 									onClick={() => showForm("register")}
