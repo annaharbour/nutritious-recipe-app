@@ -9,6 +9,19 @@ const axiosInstance = axios.create({
 	},
 });
 
+axiosInstance.interceptors.request.use(
+	(config) => {
+		const token = localStorage.getItem("token");
+		if (token) {
+			config.headers["x-auth-token"] = token;
+		}
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
+
 export const getAllUsers = async () => {
 	try {
 		const res = await axiosInstance.get("/");
@@ -58,7 +71,6 @@ export const getUserFavorites = async () => {
 	try {
 		const res = await axiosInstance.get(`/favorites`);
 		return res.data;
-		
 	} catch (error) {
 		console.error(error);
 		throw new Error(error.response.data.message || "No favorites found");

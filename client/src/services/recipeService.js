@@ -9,6 +9,19 @@ const axiosInstance = axios.create({
 	},
 });
 
+axiosInstance.interceptors.request.use(
+	(config) => {
+		const token = localStorage.getItem("token");
+		if (token) {
+			config.headers["x-auth-token"] = token;
+		}
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
+
 export const getRecipes = async () => {
 	try {
 		const res = await axiosInstance.get("/");
@@ -40,7 +53,7 @@ export const createRecipe = async (name, ingredients, servings) => {
 	}
 };
 
-export const calculateRecipeNutrition = async ({ingredients, servings}) => {
+export const calculateRecipeNutrition = async ({ ingredients, servings }) => {
 	try {
 		const res = await axiosInstance.post("/nutrition", {
 			ingredients: ingredients,

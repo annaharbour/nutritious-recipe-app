@@ -7,6 +7,7 @@ function UserRecipes() {
 	const [loading, setLoading] = useState(false);
 	const userInfo = useAuth().userInfo;
 	const [userRecipes, setUserRecipes] = useState([]);
+
 	useEffect(() => {
 		const fetchRecipes = async () => {
 			try {

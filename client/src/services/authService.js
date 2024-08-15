@@ -33,7 +33,9 @@ export const register = async (name, email, phone, password) => {
 		setAuthToken(res.data.token);
 		return res;
 	} catch (error) {
-		throw new Error(error.response.data.message || "Registration failed. Please try again.");
+		throw new Error(
+			error.response.data.message || "Registration failed. Please try again."
+		);
 	}
 };
 

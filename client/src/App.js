@@ -54,7 +54,12 @@ const App = () => {
 			<Navbar />
 			<ToastContainer limit={1} />
 			<Routes>
-				<Route path="account" element={<PrivateRoute showToast={showToastMessage} Component={Profile} />} />
+				<Route
+					path="account"
+					element={
+						<PrivateRoute showToast={showToastMessage} Component={Profile} />
+					}
+				/>
 				<Route path="profiles">
 					<Route path=":id" element={<ProfileView />} />
 				</Route>
@@ -72,9 +77,16 @@ const App = () => {
 						path=""
 						element={<UserRecipes showToast={showToastMessage} />}
 					/>
-					<Route
+					{/* <Route
 						path="/recipes/favorites"
 						element={<FavoriteRecipes showToast={showToastMessage} />}
+					/> */}
+					<Route
+						path="/recipes/favorites"
+						element={<PrivateRoute
+							showToast={showToastMessage}
+							Component={FavoriteRecipes}
+						/>}
 					/>
 					<Route
 						path="/recipes/trending"
