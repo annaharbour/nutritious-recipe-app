@@ -64,7 +64,7 @@ function RatingComponent({ recipe, showToast }) {
 				);
 			})}
 
-			({meanRating && meanRating} / 5)
+			({meanRating && meanRating.toFixed(2)} / 5)
 		</div>
 	);
 }
