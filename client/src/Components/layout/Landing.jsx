@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Login from "../auth/Login";
 import Register from "../auth/Register";
 import { useAuth } from "../auth/AuthContext";
@@ -31,9 +31,7 @@ const Landing = ({ showToast }) => {
 					)}
 					{!formToShow && (
 						<>
-							<h5>Time to up your smoothie game</h5>
-							<h3>We're in beta!</h3>
-							<h6>Your feedback makes the site better! Reach out at sirensmoothies@gmail.com</h6>
+							<h5>Personalized Smoothie Recipes</h5>					
 							<div className="buttons">
 								<button
 									onClick={() => showForm("register")}
@@ -46,6 +44,8 @@ const Landing = ({ showToast }) => {
 									Login
 								</button>
 							</div>
+							<Link to='/recipes/search'>Search Our Recipe Catalog!</Link>
+							<Link to='/recipes/trending'>See Trending Recipes!</Link>
 						</>
 					)}
 				</div>

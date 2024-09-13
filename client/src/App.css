@@ -72,15 +72,12 @@ h3 {
 
 a {
 	text-decoration: none;
-	color: var(--pacific-cyan);
+	color: var(--marian-blue);
 	cursor: pointer;
 }
 
-a:visited {
-	font-style: bold;
-	text-shadow: 0.1rem;
-	color: var(--marian-blue);
-	text-decoration: underline;
+a:hover {
+	font-weight: bold;
 }
 
 input {

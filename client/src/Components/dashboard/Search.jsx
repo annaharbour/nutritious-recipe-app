@@ -145,6 +145,8 @@ const Search = ({ showToast }) => {
 				<h4>
 					<u>Search by Name</u>
 				</h4>
+				<h6>Know the recipe name or recipe creator's name you're searching for?</h6>
+
 				<div className="form-group name-search">
 					<input
 						type="text"
@@ -167,11 +169,14 @@ const Search = ({ showToast }) => {
 						className="dropdown-toggle-btn"
 						onClick={toggleDropdown}>
 						<u>Include or Exclude Ingredients</u>
+						
 						<i
 							className={
 								!isDropdownOpen ? `fa fa-caret-down` : "fa fa-caret-up"
 							}></i>
 					</h4>
+					<h6><i className="fa fa-check"/>Search for recipes that include ingredients you love!</h6>
+					<h6><i className="fa fa-x"/>Exclude recipes calling for ingredients you hate!</h6>
 				</div>
 				{isDropdownOpen && (
 					<div className="form-group">
@@ -234,6 +239,7 @@ const Search = ({ showToast }) => {
 				<h4>
 					<u>Optimizations</u>
 				</h4>
+				<h6>What tag matches your macro requirements?</h6>
 
 				<div className="form-group optimizations">
 					<div className="optimization">
@@ -321,7 +327,7 @@ const Search = ({ showToast }) => {
 							</li>
 						))
 					) : (
-						<div>No results found</div>
+						<div>No results</div>
 					)}
 				</ul>
 			</div>
