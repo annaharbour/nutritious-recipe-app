@@ -20,15 +20,16 @@ const Navbar = () => {
 				<h4>SIREN SMOOTHIES</h4>
 			</li>
 			<li>
-				<Link to="/account">
-					<i className="fa-solid fa-user"></i>Account
-				</Link>
-			</li>
-			<li>
 				<Link to="/dashboard">
 					<i className="fa-solid fa-blender"></i>Dashboard
 				</Link>
 			</li>
+			<li>
+				<Link to="/account">
+					<i className="fa-solid fa-user"></i>Account
+				</Link>
+			</li>
+		
 			<li onClick={logout}>
 				<i className="fas fa-sign-out" />
 				<Link to="/">Logout</Link>

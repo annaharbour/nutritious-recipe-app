@@ -39,7 +39,7 @@ const RecipeForm = ({ showToast }) => {
 				setIngredients(res.data);
 				setLoading(false);
 			} catch (error) {
-				console.error("Error fetching ingredients:", error);
+				console.error("Error fetching ingredients", error);
 			}
 		};
 
@@ -69,7 +69,7 @@ const RecipeForm = ({ showToast }) => {
 			);
 
 			if (!portion || portion === undefined) {
-				showToast("Please select a portion", "error");
+				showToast("Please select a portion 🧐", "error");
 				return;
 			}
 
@@ -78,7 +78,7 @@ const RecipeForm = ({ showToast }) => {
 			);
 			if (isIngredientAdded) {
 				showToast(
-					ingredient.description + " already included in recipe",
+					ingredient.description + " already included in recipe 🧐",
 					"error"
 				);
 				return;
@@ -94,7 +94,7 @@ const RecipeForm = ({ showToast }) => {
 					},
 				]);
 			} else {
-				showToast("You can only include up to a dozen ingredients", "error");
+				showToast("You can only include up to a dozen ingredients 🫣", "error");
 			}
 
 			setSelectedIngredient(null);
@@ -145,7 +145,9 @@ const RecipeForm = ({ showToast }) => {
 		try {
 			setLoading(true);
 			if (recipeIngredients.length === 0) {
-				showToast("Please add ingredients to calculate nutrition", "error");
+				showToast("Please add ingredients to save recipe 🍉", "error");
+				setLoading(false);
+				return;
 			}
 			await createRecipe(recipeName, recipeIngredients, servings);
 			setLoading(false);
@@ -160,7 +162,7 @@ const RecipeForm = ({ showToast }) => {
 		try {
 			setLoading(true);
 			if (recipeIngredients.length === 0) {
-				showToast("Please add ingredients to calculate nutrition", "error");
+				showToast("Please add ingredients to calculate nutrition 🍒", "error");
 			}
 			const res = await calculateRecipeNutrition({
 				ingredients: recipeIngredients,
@@ -179,6 +181,7 @@ const RecipeForm = ({ showToast }) => {
 	return (
 		<div className="create-recipe">
 			<h2>Create a Recipe</h2>
+			<h6>Create a recipe with up to a dozen ingredients from multiple food categories and get a nutrition breakdown per serving!</h6>
 
 			<form className="form" onSubmit={handleSaveRecipe}>
 				<div className="form-group">
@@ -192,6 +195,7 @@ const RecipeForm = ({ showToast }) => {
 					/>
 				</div>
 				<div className="form-group portion">
+					
 					<label htmlFor="servings">Servings:</label>
 					<input
 						type="number"
@@ -207,6 +211,7 @@ const RecipeForm = ({ showToast }) => {
 					/>
 				</div>
 				<div className="form-group category">
+
 					<label htmlFor="category">
 						<i className="fa fa-caret-left" onClick={handleGoBack} />
 						<span
@@ -303,12 +308,15 @@ const RecipeForm = ({ showToast }) => {
 				<br></br>
 				{loading && <i className="fa fa-spinner spinner"></i>}
 				<br></br>
+
 				<button className="btn btn-primary" disabled={loading} type="submit">
 					Post Recipe
 				</button>
 			</form>
-
-			<button className="btn btn-secondary" onClick={fetchRecipeNutrition}>
+			<button
+				className="btn btn-secondary"
+				disabled={loading}
+				onClick={fetchRecipeNutrition}>
 				Calculate Nutrition
 			</button>
 			<br></br>

@@ -53,7 +53,7 @@ function RatingComponent({ recipe, showToast }) {
 						key={starIndex}
 						style={{
 							cursor: loading ? "not-allowed" : "pointer",
-							color: isMeanRatingOrBelow || isHovered ? "gold" : "#F9F6EE",
+							color: isMeanRatingOrBelow || isHovered ? "gold" : "#FBEEAC",
 							fontSize: isHovered || isUserRating ? "2rem" : "1.5rem",
 							transition: "font-size 0.3s ease",
 						}}

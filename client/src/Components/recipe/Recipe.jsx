@@ -105,7 +105,7 @@ function Recipe({ showToast }) {
 							disabled={loading}
 							style={{
 								fontSize: "2rem",
-								color: !isSaved ? "#F9F6EE" : "#ebd92d",
+								color: !isSaved ? "#FBEEAC" : "#ebd92d",
 							}}></i>
 						Save this Recipe
 					</>
