@@ -287,6 +287,14 @@ nav i {
 	text-align: center;
 }
 
+.landing-links {
+	font-weight: bold;
+}
+
+.landing-links:hover {
+	font-weight: 900;
+}
+
 /* Dashboard */
 
 .dash-grid {

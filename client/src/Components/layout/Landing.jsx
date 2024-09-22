@@ -18,11 +18,45 @@ const Landing = ({ showToast }) => {
 		}
 	}, [isLoggedIn, navigate]);
 
+	// return (
+	// 	<section className="landing">
+	// 		<div className="dark-overlay">
+	// 			<div className="landing-inner">
+	// 				<h1>Siren Smoothies</h1>
+	// 				{formToShow === "register" && (
+	// 					<Register showToast={showToast} showForm={showForm} />
+	// 				)}
+	// 				{formToShow === "login" && (
+	// 					<Login showToast={showToast} showForm={showForm} />
+	// 				)}
+	// 				{!formToShow && (
+	// 					<>
+	// 						<h5>Personalized Smoothie Recipes</h5>
+	// 						<div className="buttons">
+	// 							<button
+	// 								onClick={() => showForm("register")}
+	// 								className="btn btn-light">
+	// 								Sign Up
+	// 							</button>
+	// 							<button
+	// 								onClick={() => showForm("login")}
+	// 								className="btn btn-light">
+	// 								Login
+	// 							</button>
+	// 						</div>
+	// 						<Link to='/recipes/search'>Search Our Recipe Catalog!</Link>
+	// 						<Link to='/recipes/trending'>See Trending Recipes!</Link>
+	// 					</>
+	// 				)}
+	// 			</div>
+	// 		</div>
+	// 	</section>
+	// );
 	return (
 		<section className="landing">
 			<div className="dark-overlay">
 				<div className="landing-inner">
-					<h1>Siren Smoothies</h1>
+					<h1>Welcome to Siren Smoothies</h1>
 					{formToShow === "register" && (
 						<Register showToast={showToast} showForm={showForm} />
 					)}
@@ -31,7 +65,19 @@ const Landing = ({ showToast }) => {
 					)}
 					{!formToShow && (
 						<>
-							<h5>Personalized Smoothie Recipes</h5>					
+							<p>
+								Discover delicious smoothie recipes tailored
+								to your nutritional goals and taste preferences!
+							</p>
+							<Link className="landing-links" to="/recipes/search">
+								Search Our  Recipe Catalog
+							</Link>
+							 
+							<Link className="landing-links" to="/recipes/trending">
+								Check Out Trending Recipes
+							</Link>
+							
+							<p>Ready to bookmark recipes, create your own, and engage in our community by rating and commenting?</p>
 							<div className="buttons">
 								<button
 									onClick={() => showForm("register")}
@@ -44,8 +90,6 @@ const Landing = ({ showToast }) => {
 									Login
 								</button>
 							</div>
-							<Link to='/recipes/search'>Search Our Recipe Catalog!</Link>
-							<Link to='/recipes/trending'>See Trending Recipes!</Link>
 						</>
 					)}
 				</div>
