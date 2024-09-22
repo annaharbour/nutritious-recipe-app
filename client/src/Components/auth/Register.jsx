@@ -98,7 +98,7 @@ const Register = ({ showToast, showForm }) => {
 				</div>
 				<input type="submit" className="btn btn-primary" value="Register" />
 			</form>
-			<a href={`${authURL}/google`}>Sign Up With Google</a>
+			<a className="landing-links" href={`${authURL}/google`}>Sign Up With Google</a>
 			<p>
 				<span onClick={() => showForm("login")}>
 					Already have an account? <u>Login here!</u>

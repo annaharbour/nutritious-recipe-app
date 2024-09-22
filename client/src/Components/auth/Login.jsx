@@ -71,10 +71,10 @@ const Login = ({ showToast, showForm }) => {
 					</div>
 					<input type="submit" className="btn btn-primary" value="Login" />
 				</form>
-				<a href={`${authURL}/google`}>Sign Up With Google</a>
+				<a className="landing-links" href={`${authURL}/google`}>Sign Up With Google</a>
 				<p>
 					<span onClick={() => showForm("register")}>
-						Don't have an account? <span className="link">Sign Up!</span>
+						Don't have an account? <u><span className="link">Sign Up!</span></u>
 					</span>
 				</p>
 				<p>

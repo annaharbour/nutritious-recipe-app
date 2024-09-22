@@ -66,18 +66,19 @@ const Landing = ({ showToast }) => {
 					{!formToShow && (
 						<>
 							<p>
-								Discover delicious smoothie recipes tailored
-								to your nutritional goals and taste preferences!
+								Discover and create delicious smoothie recipes tailored to your
+								nutritional goals and taste preferences!
+							</p>
+							<p>
+								Sign up for Siren Smoothies to create, bookmark, rate, and comment on original recipes 😋
 							</p>
 							<Link className="landing-links" to="/recipes/search">
-								Search Our  Recipe Catalog
+								Search Our Recipe Catalog
 							</Link>
-							 
+
 							<Link className="landing-links" to="/recipes/trending">
 								Check Out Trending Recipes
 							</Link>
-							
-							<p>Ready to bookmark recipes, create your own, and engage in our community by rating and commenting?</p>
 							<div className="buttons">
 								<button
 									onClick={() => showForm("register")}
