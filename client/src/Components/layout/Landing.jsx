@@ -18,40 +18,6 @@ const Landing = ({ showToast }) => {
 		}
 	}, [isLoggedIn, navigate]);
 
-	// return (
-	// 	<section className="landing">
-	// 		<div className="dark-overlay">
-	// 			<div className="landing-inner">
-	// 				<h1>Siren Smoothies</h1>
-	// 				{formToShow === "register" && (
-	// 					<Register showToast={showToast} showForm={showForm} />
-	// 				)}
-	// 				{formToShow === "login" && (
-	// 					<Login showToast={showToast} showForm={showForm} />
-	// 				)}
-	// 				{!formToShow && (
-	// 					<>
-	// 						<h5>Personalized Smoothie Recipes</h5>
-	// 						<div className="buttons">
-	// 							<button
-	// 								onClick={() => showForm("register")}
-	// 								className="btn btn-light">
-	// 								Sign Up
-	// 							</button>
-	// 							<button
-	// 								onClick={() => showForm("login")}
-	// 								className="btn btn-light">
-	// 								Login
-	// 							</button>
-	// 						</div>
-	// 						<Link to='/recipes/search'>Search Our Recipe Catalog!</Link>
-	// 						<Link to='/recipes/trending'>See Trending Recipes!</Link>
-	// 					</>
-	// 				)}
-	// 			</div>
-	// 		</div>
-	// 	</section>
-	// );
 	return (
 		<section className="landing">
 			<div className="dark-overlay">
@@ -69,7 +35,7 @@ const Landing = ({ showToast }) => {
 								Discover and create delicious smoothie recipes tailored to your
 								nutritional goals and taste preferences!
 							</p>
-							<p>
+							<p className="nav-header">
 								Sign up for Siren Smoothies to create, bookmark, rate, and comment on original recipes 😋
 							</p>
 							<Link className="landing-links" to="/recipes/search">
@@ -77,7 +43,7 @@ const Landing = ({ showToast }) => {
 							</Link>
 
 							<Link className="landing-links" to="/recipes/trending">
-								Check Out Trending Recipes
+								View Trending Recipes
 							</Link>
 							<div className="buttons">
 								<button
