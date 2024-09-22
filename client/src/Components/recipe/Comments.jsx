@@ -7,12 +7,13 @@ import {
 } from "../../services/commentService";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
+import ReactGA from "react-ga4";
 
 const Comments = ({ showToast, panelOpen, onClose, recipe }) => {
 	const [comments, setComments] = useState([]);
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
-	
+
 	useEffect(() => {
 		const fetchComments = async () => {
 			try {
@@ -30,6 +31,7 @@ const Comments = ({ showToast, panelOpen, onClose, recipe }) => {
 			const res = await deleteCommentById(comment._id);
 			setComments(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
 			showToast("Comment deleted successfully", "success");
+			logComment(comment._id);
 		} catch (err) {
 			showToast("Failed to delete comment. 😣 Please try again", "error");
 		}
@@ -45,6 +47,14 @@ const Comments = ({ showToast, panelOpen, onClose, recipe }) => {
 		} catch {
 			setLoading(false);
 		}
+	};
+
+	const logComment = (comment) => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Commented on Recipe",
+			label: comment,
+		});
 	};
 
 	return error ? (

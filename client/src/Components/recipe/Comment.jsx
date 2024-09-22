@@ -8,6 +8,7 @@ import {
 	toggleLikeComment,
 } from "../../services/commentService";
 import { useAuth } from "../auth/AuthContext";
+import ReactGA from "react-ga4";
 
 const Comment = ({ comment, deleteComment, showToast }) => {
 	const userInfo = useAuth().userInfo;
@@ -53,6 +54,7 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 	const handleAddResponse = async (commentId, text) => {
 		try {
 			const res = await respondToComment(commentId, text);
+			logResponse(commentId);
 			setResponses(res.sort((a, b) => new Date(a.date) - new Date(b.date)));
 			setSeeReplyBox(false);
 			setSeeResponses(true);
@@ -69,6 +71,14 @@ const Comment = ({ comment, deleteComment, showToast }) => {
 		} catch (err) {
 			showToast("Whoops! 😣 Error deleting response, try again.", "error");
 		}
+	};
+
+	const logResponse = (comment) => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Responded to Comment",
+			label: comment,
+		});
 	};
 
 	return (

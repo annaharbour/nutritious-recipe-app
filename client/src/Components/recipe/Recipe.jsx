@@ -9,6 +9,7 @@ import Ingredients from "./Ingredients";
 import Nutrients from "./Nutrients";
 import Rating from "./Rating";
 import Comments from "./Comments";
+import ReactGA from "react-ga4";
 
 function Recipe({ showToast }) {
 	const userInfo = useAuth().userInfo;
@@ -68,11 +69,21 @@ function Recipe({ showToast }) {
 					: "Recipe unsaved successfully!",
 				"success"
 			);
+			logCreateRecipe(isSaved);
 			setLoading(false);
 		} catch (err) {
 			showToast("Whoops! Error saving recipe 😣", "error");
 			setLoading(false);
 		}
+	};
+
+	
+	const logCreateRecipe = (data) => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Save/Unsave Recipe",
+			label: data
+		});
 	};
 
 	if (loading) {

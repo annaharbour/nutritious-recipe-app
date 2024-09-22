@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { getRating, rateRecipe } from "../../services/ratingService";
+import ReactGA from "react-ga4";
 
 function RatingComponent({ recipe, showToast }) {
 	const userInfo = useAuth().userInfo;
@@ -27,6 +28,7 @@ function RatingComponent({ recipe, showToast }) {
 		setLoading(true);
 		try {
 			const res = await rateRecipe(recipe._id, newStars);
+			logRateRecipe(recipe._id);
 			if (res.userRating !== null) {
 				setStars(res.userRating);
 				setMeanRating(res.meanRating);
@@ -36,6 +38,15 @@ function RatingComponent({ recipe, showToast }) {
 			showToast("Error rating recipe", "error");
 		}
 		setLoading(false);
+	};
+
+	
+	const logRateRecipe = (data) => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Rated Recipe",
+			label: data,
+		});
 	};
 
 	return (

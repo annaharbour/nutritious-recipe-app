@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReactGA from "react-ga4"; // Google Analytics
 import Navbar from "./Components/layout/Navbar";
 import Landing from "./Components/layout/Landing";
 import Dashboard from "./Components/dashboard/Dashboard";
@@ -16,6 +17,20 @@ import Reset from "./Components/auth/Reset";
 import UserRecipes from "./Components/dashboard/UserRecipes";
 import FavoriteRecipes from "./Components/dashboard/FavoriteRecipes";
 import Trending from "./Components/dashboard/Trending";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+ReactGA.initialize("G-CCHRWFNRHC");
+
+const PageTracker = () => {
+	const location = useLocation();
+
+	useEffect(() => {
+		ReactGA.send({ hitType: "pageview", page: location.pathname });
+	}, [location]);
+
+	return null;
+};
 
 const App = () => {
 	const showToastMessage = (msg, type) => {
@@ -51,6 +66,7 @@ const App = () => {
 
 	return (
 		<Router>
+			<PageTracker />
 			<Navbar />
 			<ToastContainer limit={1} />
 			<Routes>
@@ -77,16 +93,14 @@ const App = () => {
 						path=""
 						element={<UserRecipes showToast={showToastMessage} />}
 					/>
-					{/* <Route
-						path="/recipes/favorites"
-						element={<FavoriteRecipes showToast={showToastMessage} />}
-					/> */}
 					<Route
 						path="/recipes/favorites"
-						element={<PrivateRoute
-							showToast={showToastMessage}
-							Component={FavoriteRecipes}
-						/>}
+						element={
+							<PrivateRoute
+								showToast={showToastMessage}
+								Component={FavoriteRecipes}
+							/>
+						}
 					/>
 					<Route
 						path="/recipes/trending"

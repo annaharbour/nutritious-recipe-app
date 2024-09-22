@@ -7,6 +7,7 @@ import {
 } from "../../services/recipeService";
 import Nutrients from "../recipe/Nutrients";
 import RecipeIngredients from "./RecipeIngredients";
+import ReactGA from "react-ga4";
 
 const RecipeForm = ({ showToast }) => {
 	const navigate = useNavigate();
@@ -150,12 +151,21 @@ const RecipeForm = ({ showToast }) => {
 				return;
 			}
 			await createRecipe(recipeName, recipeIngredients, servings);
+			logRecipeCreation(recipeName);
 			setLoading(false);
 			navigate("/recipes");
 		} catch (error) {
 			showToast("Error saving recipe. 😣 Try again.", "error");
 			setLoading(false);
 		}
+	};
+
+	const logRecipeCreation = (data) => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Created Recipe",
+			label: data,
+		});
 	};
 
 	const fetchRecipeNutrition = async () => {

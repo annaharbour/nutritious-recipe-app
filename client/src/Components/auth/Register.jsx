@@ -25,7 +25,7 @@ const Register = ({ showToast, showForm }) => {
 	
 		if (password !== password2) {
 			showToast("Passwords do not match", "error");
-		} else if (!regex.test(password)) {  // Check if password does NOT match the pattern
+		} else if (!regex.test(password)) { 
 			showToast("Password should be at least 8 characters and contain at least one uppercase, one lowercase letter, and one number", "error");
 		} else {
 			try {
