@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { resetPassword } from "../../services/authService";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import ReactGA from "react-ga4";
 
 function Reset({ showToast }) {
 	const [password, setPassword] = useState("");
@@ -18,10 +19,18 @@ function Reset({ showToast }) {
 		try {
 			await resetPassword(token, password);
 			showToast("Password has been reset successfully", "success");
+			logResetPassword();
 			navigate("/");
 		} catch (error) {
 			showToast("Failed to reset password. Please try again.", "error");
 		}
+	};
+
+	const logResetPassword = () => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Reset Password",
+		});
 	};
 
 	return (

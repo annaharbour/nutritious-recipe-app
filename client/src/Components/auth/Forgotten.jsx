@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { sendPasswordResetEmail } from '../../services/authService';
+import ReactGA from 'react-ga4';
 
 function PasswordResetRequest({ showToast, showForgotten }) {
   const [email, setEmail] = useState('');
@@ -10,12 +11,21 @@ function PasswordResetRequest({ showToast, showForgotten }) {
     try {
       await sendPasswordResetEmail(email);
       showToast('Password reset link sent to your email - may take up to 5 minutes to arrive.', 'success');
+      logForgotPassword(email);
     } catch (error) {
       showToast('Failed to send reset link. Please try again.', 'error');
     } finally {
       setTimeout(() => setIsSubmitting(false), 500);
     }
   };
+
+  const logForgotPassword = (email) => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Send Password Reset",
+			label: email
+		});
+	};
 
   return (
     <div>

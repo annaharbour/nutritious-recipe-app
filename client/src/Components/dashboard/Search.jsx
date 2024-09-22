@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { searchRecipes } from "../../services/recipeService";
 import { getIngredientsByCategory } from "../../services/ingredientService";
+import ReactGA from "react-ga4";
 
 const Search = ({ showToast }) => {
 	const [loading, setLoading] = useState(false);
@@ -65,9 +66,17 @@ const Search = ({ showToast }) => {
 			});
 			setResults(response);
 			setLoading(false);
+			logSearch();
 		} catch (err) {
 			console.error("Error searching recipes:", err);
 		}
+	};
+
+	const logSearch = () => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Search for Recipes",
+		});
 	};
 
 	const handleDeselectIngredient = (ingredientId) => {

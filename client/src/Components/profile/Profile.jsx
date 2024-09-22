@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getUser, updateUser, deleteUser } from "../../services/userService";
 import { useNavigate } from "react-router";
+import ReactGA from "react-ga4";
 
 function Profile({ showToast }) {
 	const navigate = useNavigate();
@@ -47,12 +48,21 @@ function Profile({ showToast }) {
 				const res = await deleteUser(userInfo._id);
 				if (res) {
 					showToast("Account deleted successfully", "success");
+					logDeleteAccount(userInfo._id);
 					navigate("/");
 				}
 			} catch (error) {
 				console.error(error);
 			}
 		}
+	};
+
+	const logDeleteAccount = (data) => {
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Delete Account",
+			label: data
+		});
 	};
 
 	const onChange = (e) =>
